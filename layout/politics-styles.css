@@ -1,0 +1,27 @@
+.politics {
+  padding: 2rem 0;
+}
+
+.politics p {
+  margin-bottom: 2rem;
+}
+
+ol {
+  counter-reset: item
+}
+
+li {
+  display: block;
+}
+
+ol > li:before {
+  content: counters(item, ".") " ";
+  counter-increment: item
+}
+
+ol > li {
+  margin-top: 2rem;
+  padding-left: 2rem;
+
+}
+

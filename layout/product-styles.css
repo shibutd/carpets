@@ -1,0 +1,182 @@
+
+/* PRODUCT MAIN SECTION */
+
+.product-main {
+  display: flex;
+  min-height: 50vh;
+}
+
+.product-main-images {
+  display: flex;
+  justify-content: center;
+  width: 40%;
+  margin: auto;
+  padding: 2rem;
+}
+
+.product-main-images img {
+  max-height: 100%;
+  max-width: 80%;
+}
+
+.product-main-props {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 2 1 60rem;
+  padding: 2rem 0;
+}
+
+.product-main-props h2, h4 {
+  font-weight: normal;
+}
+
+.product-main-size,
+.product-main-buttons {
+  display: flex;
+  margin: 3rem 0;
+}
+
+.product-main-size select {
+  padding: 0.5rem 1rem;
+  margin-left: 2rem;
+  font-size: 2rem;
+  font-family: 'PTRootUIWebRegular';
+}
+
+
+/* PRODUCT BUTTONS */
+
+.product-buy {
+  font-size: 1.6rem;
+  padding-left: 3rem;
+  padding-right: 3rem;
+  letter-spacing: 0.1rem;
+}
+
+.product-favorite,
+.product-compare {
+  height: 4rem;
+  width: 4rem;
+  border-radius: 50%;
+  margin-left: 2rem;
+  padding-top: 1.2rem;
+}
+
+
+/* PRODUCT DESCRIPTION */
+
+.property {
+  display: none;
+  padding: 2rem 0;
+}
+
+.product-desc-tab {
+  padding: 1rem 0;
+  border-bottom: 1px solid #C8C8C8;
+}
+
+.product-desc-tab span {
+  cursor: pointer;
+  font-size: 2rem;
+  margin-right: 10rem;
+}
+
+.product-desc-tab span:hover {
+  color: var(--button-color);
+}
+
+.active-tab {
+  padding: 1rem 0;
+  border-bottom: 2px solid var(--button-color);
+}
+
+.product-desc-desc p {
+  text-align: justify;
+  padding-bottom: 1rem;
+}
+
+.product-desc-props {
+  display: flex;
+  flex-direction: column;
+}
+
+.props {
+  display: flex;
+}
+
+.props div {
+  padding: 1rem 3rem;
+  font-size: 2rem;
+}
+
+.props-title {
+  width: 20rem;
+}
+
+.props-value {
+  flex: 1;
+  font-weight: bold;
+}
+
+
+/* AVAILABILITY SECTION */
+
+.product-desc-available {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.available-place {
+  display: flex;
+  width: 100%;
+  padding: 1rem;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  background: rgb(200, 200, 200);
+  border-radius: 5px;
+}
+
+.available-place-address {
+  width: 30%;
+  padding-left: 2rem;
+}
+
+.available-place-phone {
+  width: 30%;
+  text-align: center;
+
+}
+
+.available-place-availablity {
+  width: 40%;
+  text-align: right;
+}
+
+
+.product-desc-question p {
+  margin-bottom: 2rem;
+}
+
+.question-textarea {
+  width: 100%;
+  padding: 1rem;
+  margin-bottom: 2rem;
+  font-size: 1.4rem;
+  font-family: 'PTRootUIWebRegular';
+}
+
+
+/* SIMILAR SECTION */
+
+.similar {
+  display: flex;
+  padding: 2rem 0;
+}
+
+#similar-title {
+  display: flex;
+  width: 20%;
+  padding-right: 1rem;
+}

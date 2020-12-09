@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Алладин96 - магазин ковров в Екатеринбурге">
+  <meta name="robots" content="index,follow">
+  <link rel="stylesheet" href="./styles.css">
+  <title>Алладин96.ру | магазин ковров</title>
+</head>
+<body>
+  <header>
+    <nav class="top-nav">
+      <img id="logo" src="./icons/aladdin_logo.svg" alt="logo">
+      <div class="top-nav-address">
+        <button>Адреса магазинов</button>
+        <a href="">+7 (343) 237 47 47</a>
+      </div>
+      <ul>
+        <li><a href="promotions.html">Акции</a></li>
+        <li><a href="delivery.html">Доставка и оплата</a></li>
+        <li><a href="shops.html">Магазины</a></li>
+        <li><a href="contact.html">Обратная связь</a></li>
+      </ul>
+    </nav>
+
+    <nav class="search-nav">
+      <button>Каталог товаров</button>
+      <div class="search-nav-input">
+        <input type="text" placeholder="Поиск по товарам">
+        <a href="#"><img src="./icons/search-solid.svg" alt="search"></a>
+      </div>
+      <ul>
+        <li>
+          <a href="#">
+            <div class="search-nav-icon">
+              <img src="./icons/user-regular.svg" alt="user">
+              <p>Войти</p>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <div class="search-nav-icon">
+              <img src="./icons/heart-regular.svg" alt="heart">
+              <p>Избранное</p>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <div class="search-nav-icon">
+              <img src="./icons/chart-bar-regular.svg" alt="chart">
+              <p>Сравнение</p>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a href="cart.html">
+            <div class="search-nav-icon">
+              <img src="./icons/shopping-cart-solid.svg" alt="shopping-cart">
+              <p>Корзина</p>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Сarousel section -->
+    <section class="carousel">
+      <!-- Full-width images with number and caption text -->
+
+      <div class="slides">
+        <div class="slide fade">
+          <img src="./images/carousel-img1.jpg">
+        </div>
+        <div class="slide fade">
+          <img src="./images/carousel-img2.jpg">
+        </div>
+        <div class="slide fade">
+          <img src="./images/carousel-img3.jpg">
+        </div>
+      </div>
+      <!-- Next and previous buttons -->
+      <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+      <a class="next" onclick="plusSlides(1)">&#10095;</a>
+
+      <!-- The dots/circles -->
+      <div class="dots">
+        <span class="dot" onclick="currentSlide(1)"></span>
+        <span class="dot" onclick="currentSlide(2)"></span>
+        <span class="dot" onclick="currentSlide(3)"></span>
+      </div>
+    </section>
+    <!-- Сarousel section end -->
+
+    <!-- Categories section -->
+    <section class="categories">
+      <h3>Популярные категории</h3>
+      <div class="categories-cards">
+        <div class="categories-card">
+          <a href="#">
+            Российские ковры
+          </a>
+          <img src="./images/ros-kovry.jpg" alt="Российские ковры">
+        </div>
+        <div class="categories-card">
+          <a href="#">
+            Белорусские ковры
+          </a>
+          <img src="./images/belorys-kovry.jpg" alt="Белорусские ковры">
+        </div>
+        <div class="categories-card">
+          <a href="#">
+            Турецкие ковры
+          </a>
+          <img src="./images/tur-kovry.jpg" alt="Турецкие ковры">
+        </div>
+        <div class="categories-card">
+          <a href="#">
+            Детские ковры
+          </a>
+          <img src="./images/detskie-kovry.jpg" alt="Детские ковры">
+        </div>
+        <div class="categories-card">
+          <a href="#">
+            Ковровые покрытия
+          </a>
+          <img src="./images/kovr-pokritiya.jpg" alt="Ковровые покрытия">
+        </div>
+        <div class="categories-card">
+          <a href="#">
+            Циновки
+          </a>
+          <img src="./images/cinovki.jpg" alt="Циновки">
+        </div>
+        <div class="categories-card">
+          <a href="#">
+            Паласы
+          </a>
+          <img src="./images/palasy.jpg" alt="Паласы">
+        </div>
+        <div class="categories-card">
+          <a href="#">
+            Дорожки
+          </a>
+          <img src="./images/dorozhki.jpg" alt="Дорожки">
+        </div>
+      </div>
+    </section>
+    <!-- Categories section end -->
+
+    <!-- Hits section -->
+    <section class="hits">
+      <h3 id="hits-title">Хиты продаж</h3>
+      <div class="vertical-cards">
+
+        <div class="vertical-card">
+          <div class="vertical-card-image">
+            <img src="./images/hits-img2.jpg" alt="hits-img2">
+          </div>
+          <div class="vertical-card-title">
+            <a href="product.html">Ковер Домо 27005-29545n</a>
+          </div>
+          <div class="vertical-card-cost">
+            1000 ₽
+          </div>
+        </div>
+
+        <div class="vertical-card">
+          <div class="vertical-card-image">
+            <img src="./images/hits-img3.jpg" alt="hits-img3">
+          </div>
+          <div class="vertical-card-title">
+            <a href="product.html">Ковер Домо 27005-29545n</a>
+          </div>
+          <div class="vertical-card-cost">
+            1000 ₽
+          </div>
+        </div>
+
+        <div class="vertical-card">
+          <div class="vertical-card-image">
+            <img src="./images/hits-img1.jpg" alt="hits-img1">
+          </div>
+          <div class="vertical-card-title">
+            <a href="product.html">Ковер Домо 27005-29545n</a>
+          </div>
+          <div class="vertical-card-cost">
+            1000 ₽
+          </div>
+        </div>
+
+        <div class="vertical-card">
+          <div class="vertical-card-image">
+            <img src="./images/hits-img5.jpg" alt="hits-img5">
+          </div>
+          <div class="vertical-card-title">
+            <a href="product.html">Ковер Домо 27005-29545n</a>
+          </div>
+          <div class="vertical-card-cost">
+            1000 ₽
+          </div>
+        </div>
+
+        <div class="vertical-card">
+          <div class="vertical-card-image">
+            <img src="./images/hits-img5.jpg" alt="hits-img4">
+          </div>
+          <div class="vertical-card-title">
+            <a href="product.html">Ковер Домо 27005-29545n</a>
+          </div>
+          <div class="vertical-card-cost">
+            1000 ₽
+          </div>
+        </div>
+        <a class="prev-vertical-card" onclick="moveContentHits(-1)">&#10094;</a>
+        <a class="next-vertical-card" onclick="moveContentHits(1)">&#10095;</a>
+
+      </div>
+
+    </section>
+    <!-- Hits section end -->
+
+    <!-- Novelties section -->
+    <section class="novelties">
+      <h3 id="novelties-title">Новинки</h3>
+      <div class="vertical-cards">
+
+        <div class="vertical-card">
+          <div class="vertical-card-image">
+            <img src="./images/hits-img1.jpg" alt="hits-img1">
+          </div>
+          <div class="vertical-card-title">
+            <a href="product.html">Ковер Комфорт 22206-29766o</a>
+          </div>
+          <div class="vertical-card-cost">
+            2000 ₽
+          </div>
+        </div>
+
+        <div class="vertical-card">
+          <div class="vertical-card-image">
+            <img src="./images/hits-img2.jpg" alt="hits-img2">
+          </div>
+          <div class="vertical-card-title">
+            <a href="product.html">Ковер Комфорт 22206-29766n</a>
+          </div>
+          <div class="vertical-card-cost">
+            3000 ₽
+          </div>
+        </div>
+
+        <div class="vertical-card">
+          <div class="vertical-card-image">
+            <img src="./images/hits-img3.jpg" alt="hits-img3">
+          </div>
+          <div class="vertical-card-title">
+            <a href="product.html">Ковер Комфорт 22204-29766n</a>
+          </div>
+          <div class="vertical-card-cost">
+            5000 ₽
+          </div>
+        </div>
+
+        <div class="vertical-card">
+          <div class="vertical-card-image">
+            <img src="./images/hits-img4.jpg" alt="hits-img4">
+          </div>
+          <div class="vertical-card-title">
+            <a href="product.html">Ковер Домо 27005-29545n</a>
+          </div>
+          <div class="vertical-card-cost">
+            1000 ₽
+          </div>
+        </div>
+
+        <div class="vertical-card">
+          <div class="vertical-card-image">
+            <img src="./images/hits-img5.jpg" alt="hits-img5">
+          </div>
+          <div class="vertical-card-title">
+            <a href="product.html">Ковер Домо 27005-29545n</a>
+          </div>
+          <div class="vertical-card-cost">
+            1000 ₽
+          </div>
+        </div>
+        <a class="prev-vertical-card" onclick="moveContentNovelties(-1)">&#10094;</a>
+        <a class="next-vertical-card" onclick="moveContentNovelties(1)">&#10095;</a>
+
+      </div>
+    </section>
+    <!-- Novelties section end -->
+
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p><i>&copy Аладдин96, 2020</i></p>
+    <div>
+      <a href="politics.html">Политика обработки персональных данных</a>
+    </div>
+  </footer>
+  <!-- Footer end -->
+
+  <script>
+    var slideIndex;
+    showSlides(1);
+    var timer = setTimeout(plusSlides, 5000, 1);
+
+    function stopTimer() {
+      if (timer) {
+        clearTimeout(timer);
+      }
+    }
+
+    // Next/previous controls
+    function plusSlides(n) {
+      showSlides(slideIndex + n);
+    }
+
+    // Thumbnail image controls
+    function currentSlide(n) {
+      slideIndex = n;
+      showSlides(slideIndex);
+    }
+
+    function showSlides(n) {
+      var i;
+      var slides = document.getElementsByClassName("slide");
+      var dots = document.getElementsByClassName("dot");
+
+      stopTimer();
+
+      if (n > slides.length) {
+        slideIndex = 1
+      } else if (n < 1) {
+        slideIndex = slides.length
+      } else {
+        slideIndex = n;
+      }
+
+      for (i = 0; i < slides.length; i++) {
+          slides[i].style.display = "none";
+      }
+      for (i = 0; i < dots.length; i++) {
+          dots[i].className = dots[i].className.replace(" active", "");
+      }
+      slides[slideIndex-1].style.display = "block";
+      dots[slideIndex-1].className += " active";
+
+      timer = setTimeout(plusSlides, 5000, 1);
+    }
+  </script>
+  <script>
+    var startIndexHits;
+    var startIndexNovelties;
+    var cardsLength;
+    cardsLength = (document.documentElement.clientWidth <= 1280) ? 3 : 4;
+    showContent(1, 'hits');
+    showContent(1, 'novelties');
+
+    window.addEventListener('resize', function(event) {
+      if (document.documentElement.clientWidth <= 1280) {
+        cardsLength = 3;
+      } else {
+        cardsLength = 4;
+      }
+      showContent(startIndexHits, 'hits');
+      showContent(startIndexNovelties, 'novelties');
+    });
+
+    function moveContentHits(n) {
+      showContent(startIndexHits + n, 'hits');
+    }
+
+    function moveContentNovelties(n) {
+      showContent(startIndexNovelties + n, 'novelties');
+    }
+
+    function updateContent(index, cards) {
+      for (var i = 0; i < cards.length; i++) {
+        if ((i < index - 1) || (i >= (index + cardsLength - 1))) {
+          cards[i].style.display = "none";
+        } else {
+          cards[i].style.display = "flex";
+        }
+      }
+    }
+
+    function showContent(n, pattern) {
+      var index;
+      var targetSection = document.getElementsByClassName(pattern)[0];
+      var cards = targetSection.getElementsByClassName("vertical-card");
+
+      if (n < 1) {
+        index = 1;
+      } else if (n > (cards.length - cardsLength + 1)) {
+        index = cards.length - cardsLength + 1;
+      } else {
+        index = n;
+      }
+
+      if (pattern == 'hits') {
+        startIndexHits = index;
+        updateContent(startIndexHits, cards);
+      } else {
+        startIndexNovelties = index;
+        updateContent(startIndexNovelties, cards);
+      }
+    }
+  </script>
+
+</body>
+</html>

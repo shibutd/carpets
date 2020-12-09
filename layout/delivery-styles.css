@@ -1,0 +1,33 @@
+.delivery {
+  min-height: 70vh;
+}
+
+.delivery h5 {
+  padding-bottom: 2rem;
+}
+
+.delivery h5:nth-child(1) {
+  padding-top: 2rem;
+}
+
+.delivery p, h5 {
+  padding-bottom: 1rem;
+}
+
+.delivery ul li {
+  list-style: '*';
+  margin-left: 2rem;
+  padding-left: 1rem;
+}
+
+.delivery li:last-child {
+  padding-bottom: 3rem;
+}
+
+.delivery a {
+  display: block;
+  padding: 0 0 2rem 0;
+  columns: var(--button-color);
+  font-size: 2rem;
+  text-decoration: underline;
+}
