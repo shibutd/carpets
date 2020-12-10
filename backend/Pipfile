@@ -5,8 +5,11 @@ name = "pypi"
 
 [packages]
 django = "==3.0.*"
+djangorestframework = "*"
+djangorestframework-simplejwt = "*"
 
 [dev-packages]
+django-extensions = "*"
 
 [requires]
 python_version = "3.7"
