@@ -10,6 +10,7 @@ djangorestframework-simplejwt = "*"
 
 [dev-packages]
 django-extensions = "*"
+factory-boy = "*"
 
 [requires]
 python_version = "3.7"
