@@ -8,6 +8,7 @@ django = "==3.0.*"
 djangorestframework = "*"
 djangorestframework-simplejwt = "*"
 pillow = "*"
+django-polymorphic = "*"
 
 [dev-packages]
 django-extensions = "*"

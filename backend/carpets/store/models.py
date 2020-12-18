@@ -1,4 +1,8 @@
 from django.db import models
+from django.contrib.auth import get_user_model
+from polymorphic.models import PolymorphicModel
+
+from authentication.models import Address
 
 
 class Manufacturer(models.IntegerChoices):
@@ -15,7 +19,7 @@ class Material(models.IntegerChoices):
 
 class InStockManager(models.Manager):
     """
-    Manager for returning product that is in stock.
+    Manager for retrieving products that is in stock.
     """
 
     def in_stock(self):
@@ -72,3 +76,62 @@ class ProductImage(models.Model):
     class Meta:
         verbose_name = 'изображение товара'
         verbose_name_plural = 'изображения товаров'
+
+
+class Order(PolymorphicModel):
+    user = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.CASCADE,
+    )
+    # payment = models.ForeignKey(
+    #     'Payment',
+    #     on_delete=models.SET_NULL,
+    #     blank=True,
+    #     null=True,
+    # )
+    date_updated = models.DateTimeField(auto_now=True)
+    date_added = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'заказ'
+        verbose_name_plural = 'заказы'
+
+
+class PickupAddress:
+    SKL = 0
+    ART = 1
+    KAM = 2
+    choices = (
+        (SKL, 'Основной склад'),
+        (ART, 'Артемовский МАГАЗИН'),
+        (KAM, 'Камышлов, ул. Куйбышева, 2'),
+    )
+
+
+class PickupOrder(Order):
+    pickup_address = models.IntegerField(
+        choices=PickupAddress.choices,
+        default=PickupAddress.SKL,
+    )
+
+
+class DeliveryOrder(Order):
+    delivery_address = models.ForeignKey(
+        Address,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+    )
+
+
+class OrderLine(models.Model):
+    order = models.ForeignKey(
+        'Order',
+        related_name="lines",
+        on_delete=models.CASCADE,
+    )
+    product = models.ForeignKey(
+        'Product',
+        on_delete=models.CASCADE,
+    )
+    quantity = models.PositiveIntegerField(default=1)

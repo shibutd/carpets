@@ -71,3 +71,18 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+
+class Address(models.Model):
+
+    user = models.ForeignKey(
+        'CustomUser',
+        on_delete=models.CASCADE,
+    )
+    city = models.CharField(max_length=60)
+    street = models.CharField(max_length=60)
+    house_number = models.PositiveIntegerField()
+
+    class Meta:
+        verbose_name = 'адрес'
+        verbose_name_plural = 'адреса'

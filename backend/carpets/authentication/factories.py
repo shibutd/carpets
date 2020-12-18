@@ -1,6 +1,8 @@
 import factory
 from django.contrib.auth import get_user_model
 
+from authentication.models import Address
+
 
 class UserFactory(factory.django.DjangoModelFactory):
     """
@@ -19,3 +21,14 @@ class UserFactory(factory.django.DjangoModelFactory):
         """Override the default ``_create`` with our custom call."""
         manager = cls._get_manager(model_class)
         return manager.create_user(*args, **kwargs)
+
+
+class AddressFactory(factory.django.DjangoModelFactory):
+
+    class Meta:
+        model = Address
+
+    user = factory.SubFactory(UserFactory)
+    city = factory.Sequence(lambda n: 'TestCity{}'.format(n))
+    street = factory.Sequence(lambda n: 'TestStreet{}'.format(n))
+    house_number = factory.Sequence(lambda n: n)

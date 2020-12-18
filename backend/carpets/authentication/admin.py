@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from authentication.models import CustomUser
+from authentication.models import CustomUser, Address
 
 
 class CustomUserAdmin(admin.ModelAdmin):
@@ -9,4 +9,11 @@ class CustomUserAdmin(admin.ModelAdmin):
     ordering = ('email',)
 
 
+class AddressAdmin(admin.ModelAdmin):
+    list_display = ('user', 'city', 'street', 'house_number')
+    list_filter = ('city',)
+    search_fields = ('user__email', 'city', 'street')
+
+
 admin.site.register(CustomUser, CustomUserAdmin)
+admin.site.register(Address, AddressAdmin)
