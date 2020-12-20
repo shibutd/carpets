@@ -1,16 +1,13 @@
-from rest_framework.serializers import (
-    ModelSerializer,
-    CharField,
-)
+from rest_framework import serializers
 
 from authentication.models import CustomUser
 
 
-class CustomUserSerializer(ModelSerializer):
+class CustomUserSerializer(serializers.ModelSerializer):
     """
     Serializer for registration requests and create a new user.
     """
-    password = CharField(
+    password = serializers.CharField(
         min_length=8,
         max_length=128,
         write_only=True

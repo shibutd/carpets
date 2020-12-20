@@ -79,16 +79,13 @@ class ProductImage(models.Model):
 
 
 class Order(PolymorphicModel):
+    """
+    Order model class.
+    """
     user = models.ForeignKey(
         get_user_model(),
         on_delete=models.CASCADE,
     )
-    # payment = models.ForeignKey(
-    #     'Payment',
-    #     on_delete=models.SET_NULL,
-    #     blank=True,
-    #     null=True,
-    # )
     date_updated = models.DateTimeField(auto_now=True)
     date_added = models.DateTimeField(auto_now_add=True)
 
@@ -96,8 +93,17 @@ class Order(PolymorphicModel):
         verbose_name = 'заказ'
         verbose_name_plural = 'заказы'
 
+    def __str__(self):
+        return (
+            self.user.email,
+            self.date_updated.strftime("%Y-%m-%d - %H:%M:%S")
+        )
+
 
 class PickupAddress:
+    """
+    Default pickup addresses.
+    """
     SKL = 0
     ART = 1
     KAM = 2
@@ -109,6 +115,9 @@ class PickupAddress:
 
 
 class PickupOrder(Order):
+    """
+    Model for orders that users will pick up by themselves.
+    """
     pickup_address = models.IntegerField(
         choices=PickupAddress.choices,
         default=PickupAddress.SKL,
@@ -116,6 +125,9 @@ class PickupOrder(Order):
 
 
 class DeliveryOrder(Order):
+    """
+    Model for orders that will be delivered to users.
+    """
     delivery_address = models.ForeignKey(
         Address,
         on_delete=models.SET_NULL,
@@ -125,6 +137,9 @@ class DeliveryOrder(Order):
 
 
 class OrderLine(models.Model):
+    """
+    Order model class.
+    """
     order = models.ForeignKey(
         'Order',
         related_name="lines",
