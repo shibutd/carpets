@@ -14,6 +14,27 @@ from store.models import (
     DeliveryOrder,
 )
 
+class ThumbnailDisplay:
+
+    def render_thumbnail(self, obj):
+        """
+        Return HTML for 'thumbnail_tag'.
+        """
+        if obj.thumbnail:
+            return format_html(
+                '<img src={}/>'.format(obj.thumbnail.url)
+            )
+        return '-'
+
+    render_thumbnail.short_description = 'Thumbnail'
+
+
+class ProductImageInline(ThumbnailDisplay, admin.TabularInline):
+    model = ProductImage
+    extra = 1
+    fields = ('image', 'render_thumbnail')
+    readonly_fields = ('render_thumbnail',)
+
 
 class ProductAdmin(admin.ModelAdmin):
     list_display = (
@@ -28,24 +49,13 @@ class ProductAdmin(admin.ModelAdmin):
     list_editable = ('in_stock',)
     search_fields = ('name',)
     prepopulated_fields = {'slug': ('name',)}
+    inlines = (ProductImageInline,)
 
 
-class ProductImageAdmin(admin.ModelAdmin):
-    list_display = ('thumbnail_tag', 'product_name')
+class ProductImageAdmin(ThumbnailDisplay, admin.ModelAdmin):
+    list_display = ('render_thumbnail', 'product_name')
     readonly_fields = ('thumbnail',)
     search_fields = ('product__name',)
-
-    def thumbnail_tag(self, obj):
-        """
-        Return HTML for 'thumbnail_tag'.
-        """
-        if obj.thumbnail:
-            return format_html(
-                '<img src={}/>'.format(obj.thumbnail.url)
-            )
-        return '-'
-
-    thumbnail_tag.short_description = 'Thumbnail'
 
     def product_name(self, obj):
         return obj.product.name

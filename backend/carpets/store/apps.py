@@ -5,4 +5,4 @@ class StoreConfig(AppConfig):
     name = 'store'
 
     def ready(self):
-        from store import signals
+        from . import signals
