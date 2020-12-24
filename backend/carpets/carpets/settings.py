@@ -41,6 +41,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'polymorphic',
+    'corsheaders',
 
     'django_extensions',
 
@@ -51,6 +52,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -135,6 +137,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 AUTH_USER_MODEL = 'authentication.CustomUser'
 
+
 # REST_FRAMEWORK
 
 REST_FRAMEWORK = {
@@ -144,6 +147,18 @@ REST_FRAMEWORK = {
 }
 
 
+# SIMPLE JWT
+
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'USER_ID_FIELD': 'email',
+    'USER_ID_CLAIM': 'email',
 }
+
+
+# CORS HEADERS
+
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:3000",
+    "http://localhost:3000",
+]
