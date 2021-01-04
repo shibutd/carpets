@@ -18,8 +18,8 @@ export default function Layout({ title, children }) {
       <Header title={title} user={user} />
       <main>
         { children }
+        <Footer />
       </main>
-      <Footer />
     </>
   )
 }

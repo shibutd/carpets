@@ -5,7 +5,7 @@ export default function Footer() {
     <footer>
       <p><i>&copy Аладдин96, 2020</i></p>
       <div>
-        <Link href="/politics">
+        <Link href="/policy">
           <a>Политика обработки персональных данных</a>
         </Link>
       </div>
