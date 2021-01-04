@@ -1,10 +1,12 @@
 import Link from 'next/link'
 
-import Layout from '../components/layout'
+import Layout from '../components/Layout'
 
-export default function Contact() {
+export default function Delivery() {
   return (
-    <Layout>
+    <Layout
+      title="Доставка | Алладин96.ру"
+    >
       <Link href="/">
         <a>Return back</a>
       </Link>

@@ -150,7 +150,7 @@ REST_FRAMEWORK = {
 # SIMPLE JWT
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=1),
     'USER_ID_FIELD': 'email',
     'USER_ID_CLAIM': 'email',
 }

@@ -66,6 +66,7 @@ a {
   font-size: 1.6rem;
   color: var(--a-color);
   transition: color 0.2s ease;
+  font-family: 'PTRootUIWebRegular';
 }
 
 a:hover {
@@ -112,7 +113,7 @@ nav ul {
   justify-content: space-between;
   flex-wrap: wrap;
   list-style: none;
-s}
+}
 
 
 /* TOP NAV SECTION */
@@ -195,12 +196,13 @@ s}
 .search-nav-input a {
   padding-left: 1rem;
   padding-right: 1rem;
+  margin-left: -1.5rem;
   align-self: center;
 }
 
-.search-nav-input img {
+/*.search-nav-input img {
   margin-left: -2rem;
-}
+}*/
 
 
 /* CAROUSEL SECTION */

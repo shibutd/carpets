@@ -1,0 +1,498 @@
+@font-face {
+  font-family: 'PTRootUIWebRegular';
+  src: url('./fonts/PT%20Root%20UI_Regular.eot');
+  src:
+       url('./fonts/PT%20Root%20UI_Regular.eot?#iefix') format('embedded-opentype'),
+       url('./fonts/PT%20Root%20UI_Regular.woff2') format('woff2'),
+       url('./fonts/PT%20Root%20UI_Regular.woff') format('woff'),
+       url('./fonts/PT%20Root%20UI_Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+:root {
+  --bg-gray-color: #F9F9F9;
+  --blue-color: #04619E;
+  --dark-gray-color: #313131;
+  --header1: calc(2rem + 1vw);
+  --header2: calc(3.5rem + 1vw);
+  --header3: calc(2.6rem + 1vw);
+  --header4: calc(2rem + 1vw);
+  --big-text: calc(0.8rem + 1vw);
+  --text: calc(0.5rem + 1vw);
+  --small-text: calc(0.2rem + 1vw);
+  --big: calc(6rem + 1vw);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 62.5%;
+  background: var(--bg-gray-color);
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  margin: auto;
+}
+
+html, body {
+  font-family: 'PTRootUIWebRegular';
+}
+
+li,
+button,
+input,
+label,
+p {
+  font-size: var(--text);
+}
+
+h1 {
+  font-size: var(--header1);
+}
+
+h2 {
+  font-size: var(--header2);
+}
+
+h3 {
+  font-size: var(--header3);
+  /*font-weight: bold;
+  margin-bottom: 2rem;*/
+}
+
+h4, h5 {
+  font-size: var(--header4);
+  font-weight: bold;
+}
+
+a {
+  font-size: var(--text);
+  text-decoration: none;
+  color: var(--dark-gray-color);
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--blue-color);
+}
+
+button {
+  font-size: var(--small-text);
+  background: var(--blue-color);
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 1rem 1.2rem;
+  border-radius: 15px;
+  letter-spacing: 0.1rem;
+}
+
+main {
+  min-height: 70vh
+}
+
+nav {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 1.2rem 0;
+}
+
+nav ul {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  list-style: none;
+}
+
+
+/* TOP NAV SECTION */
+
+.top-nav ul {
+  flex: 1 1 40rem;
+}
+
+.top-nav-address {
+  display: flex;
+  justify-content: center;
+  flex: 1 1 40rem;
+}
+
+.top-nav-address a {
+  align-self: center;
+  padding-left: 2rem;
+}
+
+
+/* SEARCH NAV SECTION */
+
+.search-nav ul {
+  flex: 1 1 30rem;
+}
+
+.search-nav-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.search-nav-input {
+  display: flex;
+  flex: 1 1 60rem;
+  justify-self: stretch;
+  padding: 0 5rem;
+}
+
+.search-nav-input input {
+  flex: 1;
+  margin: 0 1rem;
+  padding: 0.6rem;
+  outline: 0;
+  border-width: 0 0 2px;
+  border-color: #DFDFDF;
+  background: var(--bg-gray-color);
+  color: var(--dark-gray-color);
+}
+
+.search-nav-input input:focus {
+  border-color: var(--blue-color);
+}
+
+.search-nav-input a {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  margin-left: -1rem;
+  align-self: center;
+}
+
+
+/* CAROUSEL SECTION */
+
+.carousel {
+  display: flex;
+  align-items: center;
+  min-height: 40vh;
+  position: relative;
+  margin: 2rem 0 4rem 0;
+}
+
+.slides {
+  box-shadow: 6px 6px 6px 2px rgba(80, 80, 80, .3);
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Hide the images by default */
+.slide {
+  display: none;
+  height: 40vh;
+}
+
+/* Next & previous buttons */
+.carousel-prev, .carousel-next {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  width: auto;
+  margin-top: -22px;
+  padding: 16px;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  border-radius: 0 3px 3px 0;
+  user-select: none;
+  transition: 0.6s ease;
+}
+
+/* Position the "next button" to the right */
+.carousel-next {
+  right: 0;
+  border-radius: 3px 0 0 3px;
+}
+
+/* On hover, add a black background color with a little bit see-through */
+.carousel-prev:hover, .carousel-next:hover {
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+}
+
+.dots {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  padding: 2rem 2rem;
+}
+
+/* The dots/bullets/indicators */
+.dot {
+  cursor: pointer;
+  height: 1.5rem;
+  width: 1.5rem;
+  margin: 0 2px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+  transition: background-color 0.6s ease;
+}
+
+.active, .dot:hover {
+  background-color: var(--blue-color);
+}
+
+
+/* CATEGORIES SECTION */
+
+.categories {
+  display: flex;
+  flex-direction: column;
+}
+
+.categories h4 {
+  margin-top: 1rem;
+}
+
+.categories-cards {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  column-gap: 2rem;
+  row-gap: 2rem;
+  margin: 2rem 0 4rem 0;
+}
+
+.categories-card {
+  flex: 1 1 30rem;
+  min-height: 15rem;
+  max-width: 30vw;
+  text-align: center;
+  border-radius: 10px;
+  box-shadow:
+    3px 3px 3px 2px rgba(119, 136, 153, .2),
+    0 -1px 1px 1px rgba(119, 136, 153, .1);
+  transition: box-shadow 0.4s ease;
+}
+
+.categories-card:hover {
+  box-shadow:
+    3px 3px 3px 2px rgba(119, 136, 153, .2),
+    0 -1px 1px 1px rgba(119, 136, 153, .1),
+    0px 5px 5px rgba(119, 136, 153, .2);
+}
+
+.categories-card a {
+  display: flex;
+  flex-direction: column;
+}
+
+.categories-card-title {
+  font-size: var(--big-text);
+  font-weight: bold;
+  padding: 1rem;
+}
+
+.categories-card img {
+  object-fit: cover;
+  height: 15rem;
+  border-radius: 0 0 10px 10px;
+  opacity: 0.75;
+  transition: opacity 0.6s ease;
+}
+
+.categories-card img:hover {
+  opacity: 1;
+}
+
+
+/* VERTICAL CARDS */
+
+.vertical {
+  display: flex;
+}
+
+.vertical-title {
+  width: 20%;
+  padding-right: 1rem;
+}
+
+.vertical-cards {
+  display: flex;
+  flex: 1;
+  justify-content: stretch;
+  position: relative;
+}
+
+.vertical-card {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1 1 0px;
+  min-height: 30rem;
+  transition: box-shadow 0.3s ease;
+}
+
+.vertical-card:hover {
+  box-shadow:
+    3px 3px 3px 3px rgba(119, 136, 153, .2),
+    0 -3px 3px 3px rgba(119, 136, 153, .2),
+    -3px 0px 3px 3px rgba(119, 136, 153, .2);
+}
+
+.vertical-card-image {
+  padding: 1.2rem;
+}
+
+.vertical-card-title {
+  padding: 1.2rem;
+}
+
+.vertical-card-cost {
+  padding: 1.2rem;
+  font-size: 2.4rem;
+}
+
+.prev-vertical-card,
+.next-vertical-card {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  margin-top: -20px;
+  padding-left: 8px;
+  padding-top: 5px;
+  height: 28px;
+  width: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  color: white;
+  font-size: 1.2rem;
+  background-color: #bbb;
+  user-select: none;
+  transition: 0.6s ease;
+}
+
+.prev-vertical-card {
+  padding-left: 1rem;
+  margin-left: -0.9rem;
+  left: 0;
+}
+
+.next-vertical-card {
+  padding-left: 1.1rem;
+  margin-right: -0.9rem;
+  right: 0;
+}
+
+.prev-vertical-card:hover,
+.next-vertical-card:hover {
+  background: var(--blue-color);
+  color: white;
+}
+
+
+/* FOOTER */
+
+footer {
+  display: flex;
+  align-items: center;
+  color: var(--a-color);
+  min-height: 10vh;
+  padding: 2rem 0;
+  border-top: 1px solid #C8C8C8;
+}
+
+footer div {
+  flex: 1;
+  text-align: right;
+}
+
+
+/* ANIMATIONS */
+
+/* Fading animation */
+.fade {
+  -webkit-animation-name: fade;
+  -webkit-animation-duration: 1.2s;
+  animation-name: fade;
+  animation-duration: 1.2s;
+}
+
+@-webkit-keyframes fade {
+  from {opacity: .3}
+  to {opacity: 1}
+}
+
+@keyframes fade {
+  from {opacity: .3}
+  to {opacity: 1}
+}
+
+
+/* MEDIA QUERIES */
+
+@media screen and (max-width: 1280px) {
+  body {
+    width: 98%;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .top-nav ul {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .top-nav-address {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .top-nav-address a {
+    padding: 1rem 0;
+  }
+
+  .search-nav ul {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 70px;
+    padding-top: 5px;
+    background: #fff;
+    box-shadow: 0 -2px 2px rgba(0,0,0,.12);
+  }
+
+  .search-nav-input {
+    padding: 0 2rem;
+  }
+
+  .categories-card {
+    max-width: 45vw;
+  }
+
+  footer {
+    margin-bottom: 7rem;
+  }
+}
+
+
+@media screen and (max-width: 496px) {
+  .carousel {
+    display: none;
+  }
+
+  .categories-card {
+    max-width: 100vw;
+  }
+}
