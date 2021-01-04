@@ -97,7 +97,7 @@ button {
 }
 
 main {
-  min-height: 90vh
+  min-height: 75vh
 }
 
 nav {
@@ -405,7 +405,7 @@ footer {
   color: var(--a-color);
   min-height: 10vh;
   padding: 2rem 0;
-  margin-top: 2rem;
+  margin-top: 3rem;
   border-top: 1px solid #C8C8C8;
 }
 
@@ -416,10 +416,6 @@ footer div {
 
 
 /* POLICY */
-
-.policy {
-  padding: 2rem 0;
-}
 
 .policy p {
   margin-bottom: 2rem;
@@ -441,6 +437,27 @@ footer div {
 .policy ol > li {
   margin-top: 2rem;
   padding-left: 2rem;
+}
+
+
+/* DELIVERY */
+
+.delivery p {
+  margin-bottom: 1rem;
+}
+
+.delivery ul li {
+  list-style: '*';
+  margin-left: 2rem;
+  padding-left: 1rem;
+}
+
+.delivery a {
+  display: block;
+  padding: 0 0 1.8rem 1.8rem;
+  color: var(--blue-color);
+  font-size: 2rem;
+  text-decoration: underline;
 }
 
 
