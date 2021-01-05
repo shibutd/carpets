@@ -7,7 +7,7 @@ export default function Delivery() {
     <Layout
       title="Доставка | Алладин96.ру"
     >
-      <section class="delivery">
+      <section className="delivery">
         <h1>Доставка</h1>
         <p class="red">Внимание! Доставка осуществляется только после предварительной оплаты!</p>
         <p>Стандартная доставка осуществляется в будние, выходные и праздничные дни.</p>

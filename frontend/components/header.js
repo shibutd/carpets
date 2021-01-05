@@ -16,13 +16,17 @@ export default function Header({ title, user }) {
       </Head>
 
       <nav className="top-nav">
-        <Image
-          src="/icons/aladdin_logo.svg"
-          alt="logo"
-          layout="fixed"
-          width={250}
-          height={80}
-        />
+        <Link href="/">
+          <a>
+            <Image
+              src="/icons/aladdin_logo.svg"
+              alt="logo"
+              layout="fixed"
+              width={250}
+              height={80}
+            />
+          </a>
+        </Link>
         <div className="top-nav-address">
           <button>Адреса магазинов</button>
           <a href="">+7 (343) 237 47 47</a>
@@ -45,36 +49,44 @@ export default function Header({ title, user }) {
         </div>
         <ul>
           <li>
-            <a href="#">
-              <div className="search-nav-icon">
-                <Icon src={"/icons/user-regular.svg"} alt={"user"} />
-                <p>Войти</p>
-              </div>
-            </a>
+            <Link href="/login">
+              <a>
+                <div className="search-nav-icon">
+                  <Icon src={"/icons/user-regular.svg"} alt={"user"} />
+                  <p>Войти</p>
+                </div>
+              </a>
+            </Link>
           </li>
           <li>
-            <a href="#">
-              <div className="search-nav-icon">
-                <Icon src={"/icons/heart-regular.svg"} alt={"heart"} />
-                <p>Избранное</p>
-              </div>
-            </a>
+            <Link href="/favorites">
+              <a>
+                <div className="search-nav-icon">
+                  <Icon src={"/icons/heart-regular.svg"} alt={"heart"} />
+                  <p>Избранное</p>
+                </div>
+              </a>
+            </Link>
           </li>
           <li>
-            <a href="#">
-              <div className="search-nav-icon">
-                <Icon src={"/icons/chart-bar-regular.svg"} alt={"chart"} />
-                <p>Сравнение</p>
-              </div>
-            </a>
+            <Link href="/comparison">
+              <a>
+                <div className="search-nav-icon">
+                  <Icon src={"/icons/chart-bar-regular.svg"} alt={"chart"} />
+                  <p>Сравнение</p>
+                </div>
+              </a>
+            </Link>
           </li>
           <li>
-            <a href="cart.html">
-              <div className="search-nav-icon">
-                <Icon src={"/icons/shopping-cart-solid.svg"} alt={"shopping-cart"} />
-                <p>Корзина</p>
-              </div>
-            </a>
+            <Link href="/shopping-cart">
+              <a>
+                <div className="search-nav-icon">
+                  <Icon src={"/icons/shopping-cart-solid.svg"} alt={"shopping-cart"} />
+                  <p>Корзина</p>
+                </div>
+              </a>
+            </Link>
           </li>
         </ul>
       </nav>

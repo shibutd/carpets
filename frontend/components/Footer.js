@@ -3,7 +3,7 @@ import Link from 'next/link'
 export default function Footer() {
   return (
     <footer>
-      <p><i>&copy Аладдин96, 2020</i></p>
+      <p><i>&copy; Аладдин96, 2020</i></p>
       <div>
         <Link href="/policy">
           <a>Политика обработки персональных данных</a>
