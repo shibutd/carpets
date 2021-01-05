@@ -581,6 +581,154 @@ footer div {
 }
 
 
+/* PRODUCT MAIN SECTION */
+
+.product-main {
+  display: flex;
+  min-height: 50vh;
+}
+
+.product-main-images {
+  width: 40%;
+  padding: 2rem;
+}
+
+.product-main-props {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2rem 4rem;
+}
+
+.product-main-props h2 {
+  font-weight: normal;
+}
+
+.product-main-size,
+.product-main-buttons {
+  display: flex;
+  margin: 3rem 0;
+}
+
+.product-main-size select {
+  padding: 0.5rem 1rem;
+  margin-left: 2rem;
+  font-size: var(--big-text);
+}
+
+/* PRODUCT BUTTONS */
+
+.product-buy {
+  padding: 0 3rem;
+}
+
+.product-favorite,
+.product-compare {
+  border-radius: 50%;
+  margin-left: 2rem;
+}
+
+/* PRODUCT DESCRIPTION */
+
+.property {
+  padding: 2rem 0 4rem;
+}
+
+.product-desc-tab {
+  padding: 1rem 0;
+  border-bottom: 1px solid #C8C8C8;
+}
+
+.product-desc-tab span {
+  cursor: pointer;
+  font-size: var(--big-text);
+  margin-right: 10rem;
+}
+
+.product-desc-tab span:hover {
+  color: var(--blue-color);
+}
+
+.active-tab {
+  padding: 1rem 0;
+  border-bottom: 2px solid var(--blue-color);
+}
+
+.product-desc-desc p {
+  text-align: justify;
+  padding-bottom: 1rem;
+}
+
+.product-desc-props {
+  display: flex;
+  flex-direction: column;
+}
+
+.props {
+  display: flex;
+}
+
+.props div {
+  padding: 1rem 3rem;
+  font-size: var(--big-text);
+}
+
+.props-title {
+  width: 20rem;
+}
+
+.props-value {
+  flex: 1;
+  font-weight: bold;
+}
+
+/* PRODUCT AVAILABILITY SECTION */
+
+.product-desc-available {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.available-place {
+  display: flex;
+  width: 100%;
+  padding: 1rem;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  background: rgb(200, 200, 200);
+  border-radius: 5px;
+}
+
+.available-place-address {
+  width: 30%;
+  padding-left: 2rem;
+}
+
+.available-place-phone {
+  width: 30%;
+  text-align: center;
+}
+
+.available-place-availablity {
+  width: 40%;
+  text-align: right;
+  padding-right: 2rem;
+}
+
+
+.product-desc-question p {
+  margin-bottom: 2rem;
+}
+
+.question-textarea {
+  width: 100%;
+  padding: 1rem;
+  margin-bottom: 2rem;
+  font-size: var(--text);
+}
+
+
 /* ANIMATIONS */
 
 /* Fading animation */
