@@ -7,7 +7,7 @@ import ProductDesc from '../components/ProductDesc'
 import VerticalCards from '../components/VerticalCards'
 import VerticalCard from '../components/VerticalCard'
 
-export default function ShoppingCart() {
+export default function Product() {
   const similarProducts = [
     {title: "Ковер Комфорт 22206-29766o", price: 2000, imageSrc: "hits-img1.jpg"},
     {title: "Ковер Комфорт 22206-29766n", price: 22000, imageSrc: "hits-img2.jpg"},

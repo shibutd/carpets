@@ -729,6 +729,62 @@ footer div {
 }
 
 
+/* LOGIN / REGISTER PAGE */
+
+.register > p {
+  display: inline;
+}
+.register > a {
+  text-decoration: underline;
+  color: var(--blue-color);
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding-top: 4rem;
+}
+
+.register-form-input {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 4rem;
+  width: 35%;
+}
+
+.register-form-input label {
+  margin-bottom: 0.6rem;
+  font-size: var(--header4);
+}
+
+.register-form-input input {
+  font-size: var(--big-text);
+  padding: 4px;
+  outline: 0;
+  border-width: 0 0 2px;
+  border-color: #DFDFDF;
+  background: var(--bg-gray-color);
+  color: var(--dark-gray-color);
+}
+
+.register-form-input input:focus {
+  border-color: var(--blue-color);
+}
+
+.register-form-input p {
+  color: red;
+  font-size: var(--small-text);
+}
+
+.register-form button {
+  width: 30%;
+  margin: 2rem 0;
+  font-size: var(--big-text);
+}
+
+
 /* ANIMATIONS */
 
 /* Fading animation */

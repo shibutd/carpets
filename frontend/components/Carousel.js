@@ -51,9 +51,8 @@ export default function Carousel({ images }) {
     <>
       <div className="slides">
         {images.map((image, i) => (
-          <div className="slide fade">
+          <div key={image.id} className="slide fade">
             <Image
-              key={image.id}
               src={`/images/${image.src}`}
               alt={`carousel-img${i + 1}`}
               layout="fill"
