@@ -2,9 +2,11 @@ import Image from 'next/image'
 import Head from 'next/head'
 import Link from 'next/link'
 
-import Icon from './icon'
+import Icon from './Icon'
+import UserIcon from './UserIcon'
 
 export default function Header({ title, user }) {
+
   return (
     <>
       <Head>
@@ -49,14 +51,7 @@ export default function Header({ title, user }) {
         </div>
         <ul>
           <li>
-            <Link href="/login">
-              <a>
-                <div className="search-nav-icon">
-                  <Icon src={"/icons/user-regular.svg"} alt={"user"} />
-                  <p>Войти</p>
-                </div>
-              </a>
-            </Link>
+            <UserIcon user={user} />
           </li>
           <li>
             <Link href="/favorites">

@@ -1,13 +1,11 @@
 import { useState } from 'react'
+import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from "yup"
-// import Image from 'next/image'
 
 import { login, selectUser } from '../lib/slices/authSlice'
-
-// import { login, logout, selectUser } from '../lib/slices/authSlice'
 // import useAuth from '../lib/hooks/useAuth'
 
 const schema = yup.object().shape({
@@ -21,59 +19,67 @@ const schema = yup.object().shape({
 })
 
 export default function Login() {
+  const router = useRouter()
   const dispatch = useDispatch()
-  // const [email, setEmail] = useState('')
-  // const [password, setPassword] = useState('')
-  // const [user, loading] = useAuth()
+  const [processing, setProcessing] = useState(false)
   const { user, error } = useSelector(selectUser)
   const { register, handleSubmit, errors } = useForm({
-    resolver: yupResolver(schema)
+    resolver: yupResolver(schema),
+    defaultValues: {
+      email: "admin@admin.com",
+      password: "54321qwe",
+    },
   })
 
 
-  const handleLoginFormSubmit = (data) => {
+  const handleLoginFormSubmit = async (data) => {
+    setProcessing(true)
     console.log(data)
+    const dispatchResponse = await dispatch(login(data))
 
-    // const userData = { email, password }
-    // dispatch(login(userData))
+    if (dispatchResponse.meta.requestStatus === "fulfilled") {
+      console.log("login response successful")
+      router.push('/')
+    } else {
+      console.log("login response unsuccessful")
+    }
 
-    // setEmail('')
-    // setPassword('')
+    setProcessing(false)
   }
 
   return (
-      <form
-        className="register-form"
-        onSubmit={handleSubmit(handleLoginFormSubmit)}
-      >
-        {error && <p>&#9888; {error}</p>}
+    <form
+      className="register-form"
+      onSubmit={handleSubmit(handleLoginFormSubmit)}
+    >
+      {error && <p>&#9888; {error}</p>}
 
-        <div className="register-form-input">
-          <label htmlFor="email">
-            Электронная почта
-          </label>
-          <input
-            name="email"
-            id="email"
-            ref={register}
-          />
-          {errors.email && <p>&#9888; {errors.email.message}</p>}
-        </div>
+      <div className="register-form-input">
+        <label htmlFor="email">
+          Электронная почта
+        </label>
+        <input
+          name="email"
+          id="email"
+          ref={register}
+        />
+        {errors.email && <p>&#9888; {errors.email.message}</p>}
+      </div>
 
-        <div className="register-form-input">
-          <label htmlFor="password">
-            Пароль
-          </label>
-          <input
-            type="password"
-            name="password"
-            id="password"
-            ref={register}
-          />
-          {errors.password && <p>&#9888; {errors.password.message}</p>}
-        </div>
+      <div className="register-form-input">
+        <label htmlFor="password">
+          Пароль
+        </label>
+        <input
+          type="password"
+          name="password"
+          id="password"
+          ref={register}
+        />
+        {errors.password && <p>&#9888; {errors.password.message}</p>}
+      </div>
 
-        <button type="submit">Войти</button>
-      </form>
+      <button disabled={processing} type="submit">Войти</button>
+    </form>
   )
 }

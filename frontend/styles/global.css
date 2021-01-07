@@ -773,15 +773,45 @@ footer div {
   border-color: var(--blue-color);
 }
 
-.register-form-input p {
+.register-form p {
   color: red;
   font-size: var(--small-text);
+  padding: 0.3rem 0 1rem;
 }
 
 .register-form button {
   width: 30%;
   margin: 2rem 0;
   font-size: var(--big-text);
+}
+
+.register-form button:disabled {
+  background: #DFDFDF;
+  width: 30%;
+  margin: 2rem 0;
+  font-size: var(--big-text);
+}
+
+#dropdown-button {
+  cursor: pointer;
+}
+
+#dropdown-menu {
+  cursor: pointer;
+  background: white;
+  color: var(--dark-gray-color);
+  padding: 1rem 1.6rem;
+  border-radius: 5px;
+  border: solid 1px #DFDFDF;
+  z-index: 100;
+}
+
+.hidden {
+  display: none;
+}
+
+.visible {
+  display: block;
 }
 
 
@@ -835,7 +865,7 @@ footer div {
     bottom: 0;
     left: 0;
     width: 100%;
-    z-index: 100;
+    z-index: 10;
     display: flex;
     justify-content: space-around;
     align-items: center;
