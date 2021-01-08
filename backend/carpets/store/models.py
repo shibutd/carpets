@@ -78,6 +78,12 @@ class ProductImage(models.Model):
         verbose_name_plural = 'изображения товаров'
 
 
+class OrderStatus(models.IntegerChoices):
+    NEW = 1
+    PAID = 2
+    COMPLETED = 3
+
+
 class Order(PolymorphicModel):
     """
     Order model class.
@@ -85,6 +91,10 @@ class Order(PolymorphicModel):
     user = models.ForeignKey(
         get_user_model(),
         on_delete=models.CASCADE,
+    )
+    status = models.IntegerField(
+        choices=OrderStatus.choices,
+        default=OrderStatus.NEW,
     )
     date_updated = models.DateTimeField(auto_now=True)
     date_added = models.DateTimeField(auto_now_add=True)
@@ -94,7 +104,7 @@ class Order(PolymorphicModel):
         verbose_name_plural = 'заказы'
 
     def __str__(self):
-        return (
+        return '%s - %s' % (
             self.user.email,
             self.date_updated.strftime("%Y-%m-%d - %H:%M:%S")
         )

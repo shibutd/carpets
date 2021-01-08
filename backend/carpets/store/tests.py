@@ -18,7 +18,7 @@ class ProductTests(APITestCase):
         """
         Ensure we can retrive products list with REST API request.
         """
-        url = reverse('store:product-list')
+        url = reverse('store:product-list-in-stock')
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)

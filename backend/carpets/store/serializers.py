@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from store.models import Product, PickupOrder, OrderLine
+from store.models import Product, PickupOrder, Order, OrderStatus, OrderLine
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -27,19 +27,14 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class OrderLineSerializer(serializers.ModelSerializer):
-    product = serializers.CharField(source='product.slug')
+    """
+    Serializer for orderline.
+    """
+    product = ProductSerializer()
 
     class Meta:
         model = OrderLine
         fields = ('product', 'quantity')
-
-    def validate_product(self, value):
-        check_query = Product.objects.filter(slug=value)
-        if not check_query.exists():
-            raise serializers.ValidationError(
-                'Product "{}" does not exist.'.format(value)
-            )
-        return value
 
 
 class PickupOrderSerializer(serializers.ModelSerializer):

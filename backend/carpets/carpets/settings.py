@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import sys
 from datetime import timedelta
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -59,6 +60,10 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+if DEBUG and 'test' not in sys.argv:
+    MIDDLEWARE = ['store.middlewares.QueryCountDebugMiddleware'] + MIDDLEWARE
+
 
 ROOT_URLCONF = 'carpets.urls'
 
@@ -150,7 +155,7 @@ REST_FRAMEWORK = {
 # SIMPLE JWT
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=1),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'USER_ID_FIELD': 'email',
     'USER_ID_CLAIM': 'email',
 }
