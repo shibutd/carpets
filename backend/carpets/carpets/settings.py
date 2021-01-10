@@ -13,19 +13,25 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import os
 import sys
 from datetime import timedelta
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+dotenv_path = os.path.join(BASE_DIR, '.env.dev')
+load_dotenv(dotenv_path)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '(&hcy2!8x7@%3%oc2n_u0yz#b9a#4saq2hxg(xdt2%o=jg8o@y'
+SECRET_KEY = os.environ.get(
+    'SECRET_KEY',
+    '(&hcy2!8x7@%3%oc2n_u0yz#b9a#4saq2hxg(xdt2%o=jg8o@y',
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 0)
 
 ALLOWED_HOSTS = []
 
@@ -91,8 +97,12 @@ WSGI_APPLICATION = 'carpets.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('POSTGRES_DB', 'aladdin_db'),
+        'USER': os.environ.get('POSTGRES_USER', 'postgres'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', ''),
+        'HOST': os.environ.get('POSTGRES_HOST', '127.0.0.1'),
+        'PORT': 5432
     }
 }
 

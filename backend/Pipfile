@@ -11,6 +11,8 @@ pillow = "*"
 django-polymorphic = "*"
 django-cors-headers = "*"
 python-slugify = "*"
+python-dotenv = "*"
+psycopg2 = "*"
 
 [dev-packages]
 django-extensions = "*"

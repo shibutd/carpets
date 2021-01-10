@@ -7,10 +7,13 @@ djangorestframework==3.12.2
 djangorestframework-simplejwt==4.6.0
 factory-boy==3.1.0
 Faker==5.0.1
-Pillow==8.0.1
+Pillow==8.1.0
+psycopg2==2.8.6
 PyJWT==2.0.0
 python-dateutil==2.8.1
-pytz==2020.4
+python-dotenv==0.15.0
+python-slugify==4.0.1
+pytz==2020.5
 six==1.15.0
 sqlparse==0.4.1
 text-unidecode==1.3
