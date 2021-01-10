@@ -10,6 +10,7 @@ djangorestframework-simplejwt = "*"
 pillow = "*"
 django-polymorphic = "*"
 django-cors-headers = "*"
+python-slugify = "*"
 
 [dev-packages]
 django-extensions = "*"

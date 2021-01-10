@@ -1,7 +1,7 @@
 import factory
 from django.contrib.auth import get_user_model
 
-from authentication.models import Address
+from authentication.models import UserAddress
 
 
 class UserFactory(factory.django.DjangoModelFactory):
@@ -23,12 +23,13 @@ class UserFactory(factory.django.DjangoModelFactory):
         return manager.create_user(*args, **kwargs)
 
 
-class AddressFactory(factory.django.DjangoModelFactory):
+class UserAddressFactory(factory.django.DjangoModelFactory):
 
     class Meta:
-        model = Address
+        model = UserAddress
 
     user = factory.SubFactory(UserFactory)
     city = factory.Sequence(lambda n: 'TestCity{}'.format(n))
     street = factory.Sequence(lambda n: 'TestStreet{}'.format(n))
     house_number = factory.Sequence(lambda n: n)
+    appartment_number = factory.Sequence(lambda n: n + 5)

@@ -3,7 +3,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from authentication.factories import AddressFactory
+from authentication.factories import UserAddressFactory
 from store.factories import ProductFactory
 from store.models import Order, PickupOrder, DeliveryOrder
 
@@ -54,15 +54,14 @@ class OrderTests(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        cls.addresses = AddressFactory.create_batch(2)
+        cls.addresses = UserAddressFactory.create_batch(2)
 
     def test_retrieve_polymorphic_orders(self):
         """
         Ensure polymorphic orders models work as expected.
         """
         pickup_order = PickupOrder.objects.create(
-            user=self.addresses[0].user,
-            pickup_address=2,
+            user=self.addresses[0].user
         )
 
         for address in self.addresses:

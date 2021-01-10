@@ -73,7 +73,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         return self.email
 
 
-class Address(models.Model):
+class UserAddress(models.Model):
 
     user = models.ForeignKey(
         'CustomUser',
@@ -82,6 +82,10 @@ class Address(models.Model):
     city = models.CharField(max_length=60)
     street = models.CharField(max_length=60)
     house_number = models.PositiveIntegerField()
+    appartment_number = models.PositiveIntegerField(
+        blank=True,
+        null=True
+    )
 
     class Meta:
         verbose_name = 'адрес'
