@@ -1,18 +1,56 @@
 from rest_framework import serializers
 
-from store.models import Product, PickupOrder, Order, OrderStatus, OrderLine
+from store.models import (
+    Product,
+    ProductCategory,
+    ProductQuantity,
+    PickupOrder,
+    Order,
+    OrderStatus,
+    OrderLine,
+    PickupAddress,
+)
 
 
 class ProductSerializer(serializers.ModelSerializer):
     """
     Serializer for product.
     """
+
+    class Meta:
+        model = Product
+        fields = (
+            'name',
+            'size',
+            'price',
+            'slug',
+        )
+
+
+class ProductQuantitySerializer(serializers.ModelSerializer):
+    """
+    Serializer for product's quantities.
+    """
+    address = serializers.ReadOnlyField(
+        source='address.name'
+    )
+
+    class Meta:
+        model = ProductQuantity
+        fields = ('address', 'amount')
+
+
+class ProductWithQuantitiesSerializer(serializers.ModelSerializer):
+    """
+    Serializer for product with quantities.
+    """
     manufacturer = serializers.ReadOnlyField(
-        source='get_manufacturer_display'
+        source='manufacturer.name'
     )
     material = serializers.ReadOnlyField(
-        source='get_material_display'
+        source='material.name'
     )
+    quantities = ProductQuantitySerializer(many=True)
 
     class Meta:
         model = Product
@@ -23,7 +61,28 @@ class ProductSerializer(serializers.ModelSerializer):
             'material',
             'price',
             'slug',
+            'quantities',
         )
+
+
+class ProductCategorySerializer(serializers.ModelSerializer):
+    """
+    Serializer for orderline.
+    """
+
+    class Meta:
+        model = ProductCategory
+        fields = ('name', 'image')
+
+
+class PickupAddressSerializer(serializers.ModelSerializer):
+    """
+    Serializer for pickup address.
+    """
+
+    class Meta:
+        model = PickupAddress
+        fields = ('name',)
 
 
 class OrderLineSerializer(serializers.ModelSerializer):

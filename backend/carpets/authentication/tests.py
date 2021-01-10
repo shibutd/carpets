@@ -57,7 +57,7 @@ class JWTAuthenicationTests(APITestCase):
         """
         Ensure we can create user with REST API request.
         """
-        url = reverse('authentication:create_user')
+        url = reverse('authentication:user-list')
         email = 'admin@example.com'
         password = 'password123'
 
@@ -76,7 +76,7 @@ class JWTAuthenicationTests(APITestCase):
         """
         Make request for JWT access token.
         """
-        url = reverse('authentication:token_obtain_pair')
+        url = reverse('authentication:user-token-obtain-pair')
         response = self.client.post(
             url,
             {
@@ -104,7 +104,7 @@ class JWTAuthenicationTests(APITestCase):
         obtain_token_response = self.request_for_token(
             self.email, self.password)
 
-        url = reverse('authentication:token_refresh')
+        url = reverse('authentication:user-token-refresh')
         refresh_token_response = self.client.post(
             url,
             {
@@ -122,7 +122,7 @@ class JWTAuthenicationTests(APITestCase):
         """
         Ensure we can not obtain JWT access token for not existing user.
         """
-        url = reverse('authentication:token_obtain_pair')
+        url = reverse('authentication:user-token-obtain-pair')
 
         response = self.client.post(
             url,

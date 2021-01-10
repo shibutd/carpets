@@ -8,13 +8,24 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from store.permissions import IsSuperUser
+from store.pagination import PageSizePagination
 from store.serializers import (
     ProductSerializer,
+    ProductWithQuantitiesSerializer,
+    ProductCategorySerializer,
     PickupOrderSerializer,
-    OrderLineSerializer
+    OrderLineSerializer,
+    PickupAddressSerializer,
 )
-from store.permissions import IsSuperUser
-from store.models import Product, Order, OrderLine, OrderStatus
+from store.models import (
+    Product,
+    Order,
+    OrderLine,
+    OrderStatus,
+    ProductCategory,
+    PickupAddress,
+)
 
 
 class OrderLineList(generics.ListAPIView):
@@ -32,6 +43,24 @@ class OrderLineList(generics.ListAPIView):
         ).select_related('product')
 
 
+class ProductCategoryList(generics.ListAPIView):
+    """
+    Display list of categories.
+    """
+    queryset = ProductCategory.objects.all()
+    permission_classes = (AllowAny,)
+    serializer_class = ProductCategorySerializer
+
+
+class PickupAddressList(generics.ListAPIView):
+    """
+    Display list of pickup addresses.
+    """
+    queryset = PickupAddress.objects.all()
+    permission_classes = (AllowAny,)
+    serializer_class = PickupAddressSerializer
+
+
 # class OrderLineDetail(RetrieveAPIView):
 #     permission_classes = (IsAuthenticated,)
 #     serializer_class = OrderLineSerializer
@@ -43,6 +72,7 @@ class OrderLineList(generics.ListAPIView):
 #             order__user=user,
 #             order__status=OrderStatus.NEW,
 #         ).select_related('product')
+
 
 def is_product_in_cart(func):
     """
@@ -73,9 +103,20 @@ class ProductViewSet(viewsets.ModelViewSet):
     Contain custom action to add products to user's cart and
     remove from cart.
     """
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
+    queryset = Product.objects.order_by('id').all()
+    pagination_class = PageSizePagination
     lookup_field = 'slug'
+
+    def get_serializer_class(self):
+        """
+        Instantiates and returns serializer class
+        depending on request action.
+        """
+        if self.action == 'retrieve':
+            serializer_class = ProductWithQuantitiesSerializer
+        else:
+            serializer_class = ProductSerializer
+        return serializer_class
 
     def get_permissions(self):
         """
@@ -88,7 +129,6 @@ class ProductViewSet(viewsets.ModelViewSet):
             permission_classes = [IsSuperUser]
         else:
             permission_classes = [IsAuthenticated]
-
         return [permission() for permission in permission_classes]
 
     @action(detail=False, url_path='in-stock', url_name='list-in-stock')
@@ -98,7 +138,10 @@ class ProductViewSet(viewsets.ModelViewSet):
         """
         queryset = self.get_queryset()
         in_stock_queryset = queryset.filter(in_stock=True)
-        serializer = self.get_serializer(in_stock_queryset, many=True)
+
+        page = self.paginate_queryset(in_stock_queryset)
+        serializer = self.get_serializer(page, many=True)
+
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(detail=True, methods=['post'], url_path='add-to-cart')
