@@ -2,9 +2,14 @@ import { useState, useEffect, useRef, Children } from 'react'
 
 export default function VerticalCards({ children }) {
   const [startIndex, setStartIndex] = useState(1)
-  const [cardsLength, setCardsLength] = useState(() => {
-    return (document.documentElement.clientWidth <= 1280) ? 3 : 4
-  })
+  // const [cardsLength, setCardsLength] = useState(() => {
+  //   if (document !== undefined) {
+  //     return (document.documentElement.clientWidth <= 1280) ? 3 : 4
+  //   } else {
+  //     return 3
+  //   }
+  // })
+  const [cardsLength, setCardsLength] = useState(3)
   const cardsRef = useRef(null)
   const childrenCount = Children.count(children)
 

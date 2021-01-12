@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react'
+import PropTypes from 'prop-types'
 
-export default function ProductDesc() {
+export default function ProductDesc({ product }) {
+  const { manufacturer, material, quantities } = product
+
   const [currentTab, setCurrentTab] = useState(1)
   const [
     askQuestionTextareaValue,
@@ -64,7 +67,7 @@ export default function ProductDesc() {
             Страна производства
           </div>
           <div className="props-value">
-            Бельгия
+            {manufacturer}
           </div>
         </div>
         <div className="props">
@@ -88,7 +91,7 @@ export default function ProductDesc() {
             Материал
           </div>
           <div className="props-value">
-            вискоза
+            {material}
           </div>
         </div>
         <div className="props">
@@ -122,7 +125,21 @@ export default function ProductDesc() {
   if (currentTab === 3) {
     renderingComponent = (
       <div className="product-desc-available property">
-        <div className="available-place">
+        {quantities.map(qunatity => (
+          <div key={qunatity.address} className="available-place">
+            <div className="available-place-address">
+              {qunatity.address}
+            </div>
+            <div className="available-place-phone">
+              +7 (343) 237 47 47
+            </div>
+            <div className="available-place-availablity">
+              {qunatity.amount > 0 ? "Есть в наличии" : "Нет в наличии"}
+            </div>
+          </div>
+        ))}
+
+       {/* <div className="available-place">
           <div className="available-place-address">
             ул.Донбасская, 2
           </div>
@@ -154,7 +171,7 @@ export default function ProductDesc() {
           <div className="available-place-availablity">
             Нет в наличии
           </div>
-        </div>
+        </div>*/}
       </div>
     )
   }
@@ -181,15 +198,17 @@ export default function ProductDesc() {
 
   return (
     <>
-      <div className="product-desc-tab">
-        <span className="tab" onClick={() => setCurrentTab(1)}>Описание</span>
-        <span className="tab" onClick={() => setCurrentTab(2)}>Характеристики</span>
-        <span className="tab" onClick={() => setCurrentTab(3)}>Наличие в магазинах</span>
-        <span className="tab" onClick={() => setCurrentTab(4)}>Вопрос-ответ</span>
-      </div>
-
-      {renderingComponent}
-
+    <div className="product-desc-tab">
+      <span className="tab" onClick={() => setCurrentTab(1)}>Описание</span>
+      <span className="tab" onClick={() => setCurrentTab(2)}>Характеристики</span>
+      <span className="tab" onClick={() => setCurrentTab(3)}>Наличие в магазинах</span>
+      <span className="tab" onClick={() => setCurrentTab(4)}>Вопрос-ответ</span>
+    </div>
+    { renderingComponent }
     </>
   )
+}
+
+ProductDesc.propTypes = {
+  product: PropTypes.object
 }

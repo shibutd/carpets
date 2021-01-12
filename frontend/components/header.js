@@ -1,3 +1,5 @@
+import { useState, useEffect } from 'react'
+import PropTypes from 'prop-types'
 import Image from 'next/image'
 import Head from 'next/head'
 import Link from 'next/link'
@@ -5,7 +7,16 @@ import Link from 'next/link'
 import Icon from './Icon'
 import UserIcon from './UserIcon'
 
-export default function Header({ title, user }) {
+export default function Header({ title, user, cart }) {
+  const [cartLength, setCartLength] = useState(0)
+
+  useEffect(() => {
+    let length = 0
+    for (let i = 0; i < cart.length; i++) {
+      length += cart[i].quantity
+    }
+    setCartLength(length)
+  }, [cart])
 
   return (
     <>
@@ -76,7 +87,11 @@ export default function Header({ title, user }) {
           <li>
             <Link href="/shopping-cart">
               <a>
-                <div className="search-nav-icon">
+                <div
+                  id={(cartLength > 0) ? "shopping-cart" : ""}
+                  className="search-nav-icon"
+                  value={(cartLength > 0) ? cartLength : ""}
+                >
                   <Icon src={"/icons/shopping-cart-solid.svg"} alt={"shopping-cart"} />
                   <p>Корзина</p>
                 </div>
@@ -87,4 +102,10 @@ export default function Header({ title, user }) {
       </nav>
     </>
   )
+}
+
+Header.propTypes = {
+  title: PropTypes.string,
+  user: PropTypes.oneOf([null, PropTypes.string]),
+  cart: PropTypes.array,
 }

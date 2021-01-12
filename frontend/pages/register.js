@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { login, logout, selectUser } from '../lib/slices/authSlice'
 
 import Layout from '../components/Layout'
 import Register from '../components/Register'

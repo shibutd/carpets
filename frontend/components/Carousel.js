@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import PropTypes from 'prop-types'
 import Image from 'next/image'
 
 export default function Carousel({ images }) {
@@ -62,11 +63,14 @@ export default function Carousel({ images }) {
           </div>
         ))}
       </div>
-      <a className="carousel-prev" onClick={() => plusSlides(-1)}>&#10094;</a>
-      <a className="carousel-next" onClick={() => plusSlides(1)}>&#10095;</a>
-
-      <div className="dots">
-        {images.map((image, i) => (
+      <a className = "carousel-prev" onClick = {() => plusSlides(-1)} >
+        &#10094;
+      </a>
+      <a className= "carousel-next" onClick = {() => plusSlides(1)}>
+        &#10095;
+      </a>
+      <div className= "dots" > {
+        images.map((image, i) => (
           <span
             key={image.id}
             className="dot"
@@ -76,4 +80,8 @@ export default function Carousel({ images }) {
       </div>
     </>
   )
+}
+
+Carousel.propTypes = {
+  images: PropTypes.array,
 }

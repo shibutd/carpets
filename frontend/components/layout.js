@@ -1,13 +1,13 @@
-import { useState, useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import PropTypes from 'prop-types'
 
-import { selectUser } from '../lib/slices/authSlice'
 import useAuth from '../lib/hooks/useAuth'
+import useCart from '../lib/hooks/useCart'
 import Header from './Header'
 import Footer from './Footer'
 
 export default function Layout({ title, children }) {
   const [user, loading] = useAuth()
+  const { cart } = useCart()
 
   if (!loading) {
     return <div></div>
@@ -15,11 +15,19 @@ export default function Layout({ title, children }) {
 
   return (
     <>
-      <Header title={title} user={user} />
+      <Header title={title} user={user} cart={cart} />
       <main>
         { children }
       </main>
       <Footer />
     </>
   )
+}
+
+Layout.propTypes = {
+  title: PropTypes.string,
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node,
+  ]).isRequired,
 }
