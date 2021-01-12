@@ -2,6 +2,7 @@ import sys
 import json
 from pathlib import Path
 from collections import Counter
+from decimal import Decimal
 
 from django.core.files.images import ImageFile
 from django.core.management.base import BaseCommand
@@ -9,11 +10,14 @@ from django.core.management.base import BaseCommand
 from store.models import (
     Product,
     ProductCategory,
+    ProductSize,
     ProductManufacturer,
     ProductMaterial,
+    ProductUnit,
     ProductImage,
-    ProductQuantity,
     PickupAddress,
+    ProductVariation,
+    VariationQuantity,
 )
 
 
@@ -33,13 +37,13 @@ class Command(BaseCommand):
 
     def update_quantities(
         self,
-        product,
+        variation,
         true_quantities,
         all_pickup_addresses_queryset
     ):
         # Get initial quntities of product
-        product_quantities = ProductQuantity.objects.filter(
-            product=product
+        product_quantities = VariationQuantity.objects.filter(
+            variation=variation
         )
         for address, qty in true_quantities.items():
             address_obj = all_pickup_addresses_queryset.get(
@@ -55,13 +59,13 @@ class Command(BaseCommand):
                     single_adress_quantity.save()
 
             elif qty > 0:
-                ProductQuantity.objects.create(
-                    product=product,
+                VariationQuantity.objects.create(
+                    variation=variation,
                     address=address_obj,
                     amount=qty,
                 )
 
-    def get_image_path_if_exists(self, image_filename, image_basedir):
+    def get_imagefile_path_if_exists(self, image_filename, image_basedir):
         image_path = image_basedir / image_filename
         if image_path.is_file():
             return image_path, True
@@ -112,16 +116,23 @@ class Command(BaseCommand):
                 c["categories_created"] += 1
                 # processing category image
                 image_filename = category.name.replace('\"', '') + '.jpg'
-                image_path, exists = self.get_image_path_if_exists(
+                image_path, path_exists = self.get_imagefile_path_if_exists(
                     image_filename, image_basedir
                 )
-                if exists:
+                if path_exists:
                     self.save_image(
                         image_path,
                         image_filename,
                         ProductCategory,
                         name=category.name,
                     )
+
+            # Create size
+            size, created = ProductSize.objects.get_or_create(
+                name=item['size'],
+            )
+            if created:
+                c["sizes_created"] += 1
 
             # Create manufacturer
             manufacturer, created = ProductManufacturer.objects.get_or_create(
@@ -137,32 +148,31 @@ class Command(BaseCommand):
             if created:
                 c["materials_created"] += 1
 
+            # Create unit
+            unit, created = ProductUnit.objects.get_or_create(
+                name=item['unit'],
+            )
+            if created:
+                c["units_created"] += 1
+
             # Create product
             product, created = Product.objects.get_or_create(
                 name=item["name"],
-                price=item["price"],
-                size=item["size"],
                 manufacturer=manufacturer,
                 material=material,
+                unit=unit,
                 category=category,
             )
             c['products'] += 1
             if created:
                 c["products_created"] += 1
 
-            # Update quantities
-            self.update_quantities(
-                product,
-                item['quantities'],
-                all_pickup_addresses_queryset,
-            )
-
             # Processing product image
             image_filename = product.name.replace('\"', '') + '.jpg'
-            image_path, exists = self.get_image_path_if_exists(
+            image_path, path_exists = self.get_imagefile_path_if_exists(
                 image_filename, image_basedir
             )
-            if exists:
+            if path_exists:
                 self.save_image(
                     image_path,
                     image_filename,
@@ -170,6 +180,20 @@ class Command(BaseCommand):
                     product=product,
                 )
                 c["products_images"] += 1
+
+            # Create product variation
+            variation, created = ProductVariation.objects.get_or_create(
+                product=product,
+                size=size,
+                price=Decimal(item['price'].replace(',', '.')),
+            )
+
+            # Update quantities
+            self.update_quantities(
+                variation,
+                item['quantities'],
+                all_pickup_addresses_queryset,
+            )
 
         # Display info about processed products
         self.stdout.write(
@@ -188,7 +212,13 @@ class Command(BaseCommand):
             "Category images processed={}".format(c["categories_images"]))
 
         self.stdout.write(
+            "Sizes created={}".format(c["sizes_created"]))
+
+        self.stdout.write(
             "Manufacturers created={}".format(c["manufacturers_created"]))
 
         self.stdout.write(
             "Materials created={}".format(c["materials_created"]))
+
+        self.stdout.write(
+            "Units created={}".format(c["units_created"]))

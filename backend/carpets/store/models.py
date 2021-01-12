@@ -9,7 +9,7 @@ class Product(models.Model):
     Product model class.
     """
     name = models.CharField(max_length=60)
-    size = models.CharField(max_length=48)
+    # size = models.CharField(max_length=48)
     category = models.ForeignKey(
         'ProductCategory',
         on_delete=models.CASCADE,
@@ -28,11 +28,18 @@ class Product(models.Model):
         blank=True,
         null=True,
     )
-    price = models.DecimalField(
-        max_digits=6,
-        decimal_places=2,
+    unit = models.ForeignKey(
+        'ProductUnit',
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
     )
+    # price = models.DecimalField(
+    #     max_digits=6,
+    #     decimal_places=2,
+    # )
     slug = models.SlugField(max_length=48)
+    description = models.TextField(blank=True, null=True)
     in_stock = models.BooleanField(default=True)
     date_updated = models.DateTimeField(auto_now=True)
 
@@ -49,15 +56,33 @@ class Product(models.Model):
 
 
 class ProductCategory(models.Model):
+    """
+    Product category model class.
+    """
     name = models.CharField(max_length=60)
+    slug = models.SlugField(max_length=48)
     image = models.ImageField(upload_to='category-images')
 
     class Meta:
         verbose_name = 'производитель'
         verbose_name_plural = 'производители'
 
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.name
+
+
+class ProductSize(models.Model):
+    """
+    Product size model class.
+    """
+    value = models.CharField(max_length=48)
+
+    def __str__(self):
+        return self.value
 
 
 class ProductManufacturer(models.Model):
@@ -88,6 +113,20 @@ class ProductMaterial(models.Model):
         return self.name
 
 
+class ProductUnit(models.Model):
+    """
+    Product material model class.
+    """
+    name = models.CharField(max_length=30)
+
+    class Meta:
+        verbose_name = 'единица'
+        verbose_name_plural = 'единицы'
+
+    def __str__(self):
+        return self.name
+
+
 class ProductImage(models.Model):
     """
     Product image model class.
@@ -108,13 +147,32 @@ class ProductImage(models.Model):
         verbose_name_plural = 'изображения товаров'
 
 
+class ProductVariation(models.Model):
+    """
+    Model for product's variations.
+    """
+    product = models.ForeignKey(
+        'Product',
+        related_name='variations',
+        on_delete=models.CASCADE,
+    )
+    size = models.ForeignKey(
+        'ProductSize',
+        related_name='variations',
+        on_delete=models.CASCADE,
+    )
+    price = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+    )
+
+
 class ProductQuantity(models.Model):
     """
     Model for product's quantities in specific pickup address.
     """
-
-    product = models.ForeignKey(
-        'Product',
+    variation = models.ForeignKey(
+        'ProductVariation',
         related_name='quantities',
         on_delete=models.CASCADE,
     )
