@@ -6,6 +6,7 @@ from store.views import (
     ProductCategoryList,
     PickupOrderCreate,
     ProductViewSet,
+    ProductVariationViewSet,
     PickupAddressList,
 )
 
@@ -13,6 +14,7 @@ app_name = 'store'
 
 router = routers.SimpleRouter()
 router.register('products', ProductViewSet)
+router.register('product-variations', ProductVariationViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

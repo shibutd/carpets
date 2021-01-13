@@ -1,5 +1,6 @@
 import sys
 import json
+import random
 from pathlib import Path
 from collections import Counter
 from decimal import Decimal
@@ -16,6 +17,7 @@ from store.models import (
     ProductUnit,
     ProductImage,
     PickupAddress,
+    ProductTag,
     ProductVariation,
     VariationQuantity,
 )
@@ -42,14 +44,14 @@ class Command(BaseCommand):
         all_pickup_addresses_queryset
     ):
         # Get initial quntities of product
-        product_quantities = VariationQuantity.objects.filter(
+        variation_quantities = VariationQuantity.objects.filter(
             variation=variation
         )
         for address, qty in true_quantities.items():
             address_obj = all_pickup_addresses_queryset.get(
                 name=address
             )
-            single_adress_quantity_queryset = product_quantities.filter(
+            single_adress_quantity_queryset = variation_quantities.filter(
                 address=address_obj
             )
             if single_adress_quantity_queryset.exists():
@@ -77,6 +79,14 @@ class Command(BaseCommand):
             instance, created = model.objects.get_or_create(**params)
             instance.image = image
             instance.save()
+
+    def create_tags(self, tag_name):
+        tag, created = ProductTag.objects.get_or_create(name=tag_name)
+        if created:
+            products = Product.objects.all()
+            products_count = products.count()
+            for idx in random.sample(range(products_count), k=5):
+                products[idx].tags.add(tag)
 
     def handle(self, *args, **options):
         self.stdout.write("Importing products")
@@ -129,7 +139,7 @@ class Command(BaseCommand):
 
             # Create size
             size, created = ProductSize.objects.get_or_create(
-                name=item['size'],
+                value=item['size'],
             )
             if created:
                 c["sizes_created"] += 1
@@ -185,8 +195,12 @@ class Command(BaseCommand):
             variation, created = ProductVariation.objects.get_or_create(
                 product=product,
                 size=size,
-                price=Decimal(item['price'].replace(',', '.')),
             )
+            c['variations'] += 1
+            if created:
+                c["variations_created"] += 1
+            variation.price = Decimal(item['price'].replace(',', '.'))
+            variation.save()
 
             # Update quantities
             self.update_quantities(
@@ -194,6 +208,9 @@ class Command(BaseCommand):
                 item['quantities'],
                 all_pickup_addresses_queryset,
             )
+
+        self.create_tags('Хиты')
+        self.create_tags('Новинки')
 
         # Display info about processed products
         self.stdout.write(
@@ -203,6 +220,10 @@ class Command(BaseCommand):
         self.stdout.write(
             "Categories processed={0} (created={1})".format(
                 c["categories"], c["categories_created"])
+        )
+        self.stdout.write(
+            "Variations processed={0} (created={1})".format(
+                c["variations"], c["variations_created"])
         )
 
         self.stdout.write(

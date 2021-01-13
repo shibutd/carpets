@@ -1,7 +1,15 @@
+import uuid
+
 from django.db import models
 from django.contrib.auth import get_user_model
 from polymorphic.models import PolymorphicModel
 from slugify import slugify
+
+
+class ProducInStockManager(models.Manager):
+
+    def in_stock(self):
+        return self.filter(in_stock=True)
 
 
 class Product(models.Model):
@@ -9,7 +17,6 @@ class Product(models.Model):
     Product model class.
     """
     name = models.CharField(max_length=60)
-    # size = models.CharField(max_length=48)
     category = models.ForeignKey(
         'ProductCategory',
         on_delete=models.CASCADE,
@@ -34,14 +41,13 @@ class Product(models.Model):
         blank=True,
         null=True,
     )
-    # price = models.DecimalField(
-    #     max_digits=6,
-    #     decimal_places=2,
-    # )
-    slug = models.SlugField(max_length=48)
+    slug = models.SlugField(max_length=48, unique=True)
     description = models.TextField(blank=True, null=True)
     in_stock = models.BooleanField(default=True)
     date_updated = models.DateTimeField(auto_now=True)
+    tags = models.ManyToManyField('ProductTag', blank=True)
+
+    objects = ProducInStockManager()
 
     class Meta:
         verbose_name = 'товар'
@@ -60,7 +66,7 @@ class ProductCategory(models.Model):
     Product category model class.
     """
     name = models.CharField(max_length=60)
-    slug = models.SlugField(max_length=48)
+    slug = models.SlugField(max_length=48, unique=True)
     image = models.ImageField(upload_to='category-images')
 
     class Meta:
@@ -147,10 +153,31 @@ class ProductImage(models.Model):
         verbose_name_plural = 'изображения товаров'
 
 
+class ProductTag(models.Model):
+    name = models.CharField(max_length=20)
+    slug = models.SlugField(max_length=20, unique=True)
+
+    class Meta:
+        verbose_name = 'тег'
+        verbose_name_plural = 'теги'
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
+
+
 class ProductVariation(models.Model):
     """
     Model for product's variations.
     """
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False
+    )
     product = models.ForeignKey(
         'Product',
         related_name='variations',
@@ -162,12 +189,13 @@ class ProductVariation(models.Model):
         on_delete=models.CASCADE,
     )
     price = models.DecimalField(
-        max_digits=5,
+        max_digits=12,
         decimal_places=2,
+        default=1000.00
     )
 
 
-class ProductQuantity(models.Model):
+class VariationQuantity(models.Model):
     """
     Model for product's quantities in specific pickup address.
     """
@@ -260,8 +288,8 @@ class OrderLine(models.Model):
         related_name="lines",
         on_delete=models.CASCADE,
     )
-    product = models.ForeignKey(
-        'Product',
+    variation = models.ForeignKey(
+        'ProductVariation',
         on_delete=models.CASCADE,
     )
     quantity = models.PositiveIntegerField(default=1)

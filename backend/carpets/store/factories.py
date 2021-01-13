@@ -13,6 +13,7 @@ class ProductCategoryFactory(factory.django.DjangoModelFactory):
         model = ProductCategory
 
     name = factory.Sequence(lambda n: 'Category {}'.format(n))
+    slug = factory.Sequence(lambda n: 'category-{}'.format(n))
 
 
 class ProductFactory(factory.django.DjangoModelFactory):
@@ -24,6 +25,6 @@ class ProductFactory(factory.django.DjangoModelFactory):
         model = Product
 
     name = factory.Sequence(lambda n: 'Product {}'.format(n))
-    # slug = factory.Sequence(lambda n: 'product-{}'.format(n))
-    price = factory.fuzzy.FuzzyDecimal(10.0, 100.0, 2)
+    slug = factory.Sequence(lambda n: 'product-{}'.format(n))
+    # price = factory.fuzzy.FuzzyDecimal(10.0, 100.0, 2)
     category = factory.SubFactory(ProductCategoryFactory)

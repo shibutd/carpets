@@ -43,7 +43,6 @@ class ProductAdmin(admin.ModelAdmin):
         'manufacturer',
         'material',
         'in_stock',
-        'price',
     )
     list_filter = ('in_stock', 'date_updated')
     list_editable = ('in_stock',)

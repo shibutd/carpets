@@ -3,46 +3,93 @@ from rest_framework import serializers
 from store.models import (
     Product,
     ProductCategory,
-    ProductQuantity,
+    ProductImage,
+    ProductTag,
     PickupOrder,
     Order,
     OrderStatus,
     OrderLine,
     PickupAddress,
+    ProductVariation,
+    VariationQuantity,
 )
+
+
+class ProductImageSerializer(serializers.ModelSerializer):
+    """
+    Serializer for product's image.
+    """
+    class Meta:
+        model = ProductImage
+        fields = ('image', 'thumbnail')
 
 
 class ProductSerializer(serializers.ModelSerializer):
     """
     Serializer for product.
     """
+    images = ProductImageSerializer(many=True)
+    minimum_price = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
         fields = (
             'name',
-            'size',
-            'price',
             'slug',
+            'images',
+            'minimum_price',
         )
 
+    def get_minimum_price(self, obj):
+        all_variations = obj.variations.all()
+        if all_variations.count() > 0:
+            minimum_price = min([
+                variation.price for variation in obj.variations.all()
+            ])
+        else:
+            minimum_price = None
+        return minimum_price
 
-class ProductQuantitySerializer(serializers.ModelSerializer):
+
+class VariationQuantitySerializer(serializers.ModelSerializer):
     """
-    Serializer for product's quantities.
+    Serializer for variation's quantities.
     """
     address = serializers.ReadOnlyField(
         source='address.name'
     )
 
     class Meta:
-        model = ProductQuantity
+        model = VariationQuantity
         fields = ('address', 'amount')
 
 
-class ProductWithQuantitiesSerializer(serializers.ModelSerializer):
+class ProductVariationSerializer(serializers.ModelSerializer):
     """
-    Serializer for product with quantities.
+    Serializer for variation with quantities.
+    """
+    size = serializers.ReadOnlyField(
+        source='size.value'
+    )
+    quantities = VariationQuantitySerializer(many=True)
+
+    class Meta:
+        model = ProductVariation
+        fields = ('id', 'size', 'price', 'quantities')
+
+
+class ProductTagSerializer(serializers.ModelSerializer):
+    """
+    Serializer for product's tag.
+    """
+    class Meta:
+        model = ProductTag
+        fields = ('name', 'slug')
+
+
+class ProductWithVariationsSerializer(serializers.ModelSerializer):
+    """
+    Serializer for product with variations.
     """
     manufacturer = serializers.ReadOnlyField(
         source='manufacturer.name'
@@ -50,18 +97,23 @@ class ProductWithQuantitiesSerializer(serializers.ModelSerializer):
     material = serializers.ReadOnlyField(
         source='material.name'
     )
-    quantities = ProductQuantitySerializer(many=True)
+    unit = serializers.ReadOnlyField(
+        source='unit.name'
+    )
+    variations = ProductVariationSerializer(many=True)
+    tags = ProductTagSerializer(many=True)
 
     class Meta:
         model = Product
         fields = (
             'name',
-            'size',
             'manufacturer',
             'material',
-            'price',
+            'unit',
+            'description',
             'slug',
-            'quantities',
+            'variations',
+            'tags',
         )
 
 
@@ -72,7 +124,7 @@ class ProductCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProductCategory
-        fields = ('name', 'image')
+        fields = ('name', 'slug', 'image')
 
 
 class PickupAddressSerializer(serializers.ModelSerializer):
@@ -89,11 +141,23 @@ class OrderLineSerializer(serializers.ModelSerializer):
     """
     Serializer for orderline.
     """
-    product = ProductSerializer()
+    product = serializers.SerializerMethodField()
 
     class Meta:
         model = OrderLine
         fields = ('product', 'quantity')
+
+    def get_product(self, obj):
+        obj = OrderLine.objects.filter(id=obj.id).select_related(
+            'variation__size', 'variation__product')
+        variation = obj[0].variation
+        return {
+            'name': variation.product.name,
+            'slug': variation.product.slug,
+            'size': variation.size.value,
+            'price': variation.price,
+            'variationId': variation.id,
+        }
 
 
 class PickupOrderSerializer(serializers.ModelSerializer):
