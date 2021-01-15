@@ -537,9 +537,15 @@ footer div {
   font-size: var(--big-text);
 }
 
+.cart-products-item-name p {
+  padding-top: 0.8rem;
+  font-size: var(--small-text);
+}
+
 .cart-products-item-price {
   font-size: var(--big-text);
   padding-left: 1rem;
+  width: 12rem;
 }
 
 .cart-products-item-plusminus {
@@ -679,7 +685,7 @@ footer div {
 
 .product-desc-desc p {
   text-align: justify;
-  padding-bottom: 1rem;
+  padding: 1rem;
 }
 
 .product-desc-props {
@@ -742,6 +748,7 @@ footer div {
 
 .product-desc-question p {
   margin-bottom: 2rem;
+  padding: 1rem;
 }
 
 .question-textarea {

@@ -156,7 +156,7 @@ class OrderLineSerializer(serializers.ModelSerializer):
             'slug': variation.product.slug,
             'size': variation.size.value,
             'price': variation.price,
-            'variationId': variation.id,
+            'id': variation.id,
         }
 
 

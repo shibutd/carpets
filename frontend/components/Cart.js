@@ -2,60 +2,48 @@ import { useState, useEffect } from 'react'
 
 import CartItem from './CartItem'
 import CartSidebar from './CartSidebar'
+import useCart from '../lib/hooks/useCart'
 
-export default function Cart({ items }) {
-  const [itemsState, setItemsState] = useState(items || [])
+
+export default function Cart() {
+  const {
+    cart,
+    handleAddToCart,
+    handleRemoveSingleFromCart,
+    handleRemoveFromCart
+  } = useCart()
 
   const [totalQuantity, setTotalQuantity] = useState(0)
   const [totalPrice, setTotalPrice] = useState(0)
 
-  const changeItemQuantity = (id, n) => {
-    const itemsCopy = [...itemsState]
-
-    const foundIndex = itemsCopy.findIndex(item => item.id === id)
-    const item = itemsCopy[foundIndex]
-
-    const resultQuantity = item.quantity + n
-
-    if (resultQuantity > 0 && resultQuantity <= 99) {
-      item.quantity += n
-      itemsCopy[foundIndex] = item
-      setItemsState([...itemsCopy])
-    }
-  }
-
-  const removeFromCart = (id) => {
-    const filteredItems = itemsState.filter(item => item.id !== id)
-    setItemsState([...filteredItems])
-  }
-
   useEffect(() => {
+    console.log(cart.length)
     let newQuantity = 0
     let newPrice = 0
 
-    itemsState.forEach(item => {
+    cart.forEach(item => {
       newQuantity += item.quantity
-      newPrice += item.quantity * item.price
+      newPrice += item.quantity * item.product.price
     })
 
     setTotalQuantity(newQuantity)
     setTotalPrice(newPrice)
-  }, [itemsState])
+  }, [cart])
 
   return (
     <div className="cart-wrapper">
       <div className="cart-products">
-        {(itemsState.length === 0)
+        {(cart.length === 0)
           ? (<h5 id="empty-cart">В корзине нет товаров</h5>)
-          : (itemsState.map(item => (
+          : (cart.map(item => (
             <CartItem
-              key={item.id}
+              key={item.product.id}
               item={item}
-              changeItemQuantity={changeItemQuantity}
-              removeFromCart={removeFromCart}
+              addToCart={handleAddToCart}
+              removeSingleFromCart={handleRemoveSingleFromCart}
+              removeFromCart={handleRemoveFromCart}
             />
-          )))
-        }
+        )))}
       </div>
       <div className="cart-props">
         <CartSidebar

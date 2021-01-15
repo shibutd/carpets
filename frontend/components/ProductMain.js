@@ -1,30 +1,42 @@
 import PropTypes from 'prop-types'
-import { useDispatch, useSelector } from 'react-redux'
 import Image from 'next/image'
 
-import { addToCart, selectCart } from '../lib/slices/cartSlice'
-// import useAuth from '../lib/hooks/useAuth'
+import { useState, useEffect } from 'react'
 import useCart from '../lib/hooks/useCart'
+import { convertPrice, convertSize } from '../lib/utils/converters'
 
-export default function ProductMain({ product }) {
-  const isInCart = true
+
+export default function ProductMain({
+  product,
+  variations,
+  option,
+  onOptionChange,
+}) {
+  const { name, slug } = product
+  let { image } = product
+
   const {
     cart,
     handleAddToCart,
-    handleRemoveSingleFromCart,
     handleRemoveFromCart,
-    updateCartOnLogin,
   } = useCart()
-  // const dispatch = useDispatch()
-  // const { userCart } = useSelector(selectCart)
-  // const user = useAuth()[0]
-  const { name, size, price, slug } = product
-  let { image } = product
+  const [isInCart, setIsInCart] = useState(() => checkIsInCart())
 
-  let priceToString = price.toString().split('.')[0]
-  priceToString = (priceToString.length > 3)
-    ? (priceToString.slice(0, -3).concat(' ', priceToString.slice(-3)))
-    : priceToString
+  function checkIsInCart() {
+    const product = cart.find(x => x.product.id === option.id)
+    if (product) {
+      return true
+    }
+    return false
+  }
+
+  useEffect(() => {
+    if (checkIsInCart()) {
+      setIsInCart(true)
+    } else {
+      setIsInCart(false)
+    }
+  }, [cart])
 
   // if (image !== undefined && image.startsWith('http')) {
   image = `/media/product-images/${name.replace(' ', '_')}.jpg`
@@ -45,23 +57,31 @@ export default function ProductMain({ product }) {
         <h2>{name}</h2>
         <div className="product-main-size">
           <h5>Выбрать размер:</h5>
-          <select name="select" defaultValue="67x105">
-            <option value="67x105">67 x 105 см</option>
-            <option value="67x210">67 x 210 см</option>
-            <option value="95x140">95 x 140 см</option>
+          <select
+            name="select"
+            value={option.id}
+            onChange={onOptionChange}
+          >
+            {variations.map(variation => (
+              <option key={variation.id} value={variation.id}>
+                {convertSize(variation.size)}
+              </option>
+            ))}
           </select>
         </div>
-        <h3>{priceToString} ₽</h3>
+        <h3>{convertPrice(option.price)} ₽</h3>
         <div className="product-main-buttons">
           <button
             className="product-buy"
-            onClick={() => handleAddToCart(product)}
+            onClick={() => handleAddToCart({
+              name, slug, id: option.id, size: option.size, price: option.price
+            })}
           >
             В корзину
           </button>
           {isInCart && (<button
             className="product-buy"
-            onClick={() => handleRemoveFromCart(product)}
+            onClick={() => handleRemoveFromCart({ id: option.id })}
           >
             Убрать из корзины
           </button>)}
@@ -88,5 +108,8 @@ export default function ProductMain({ product }) {
 }
 
 ProductMain.propTypes = {
-  product: PropTypes.object
+  product: PropTypes.object,
+  variations: PropTypes.array,
+  option: PropTypes.object,
+  onOptionChange: PropTypes.func,
 }

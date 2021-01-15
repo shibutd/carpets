@@ -1,7 +1,9 @@
+import PropTypes from 'prop-types'
 import Link from 'next/link'
 
+import { convertPrice } from '../lib/utils/converters'
+
 export default function CartSidebar({ totalQuantity, totalPrice }) {
-  const priceToString = totalPrice.toString()
   const quantityToString = totalQuantity.toString()
   let goods = ''
 
@@ -18,10 +20,7 @@ export default function CartSidebar({ totalQuantity, totalPrice }) {
       <h5>В корзине</h5>
       <p>{totalQuantity} {goods}</p>
       <h5>
-        {(priceToString.length > 3)
-          ? (priceToString.slice(0, -3).concat(' ', priceToString.slice(-3)))
-          : (priceToString)
-        } ₽
+        {convertPrice(totalPrice)} ₽
       </h5>
 
       <div className="cart-props-buttons">
@@ -36,4 +35,9 @@ export default function CartSidebar({ totalQuantity, totalPrice }) {
       </div>
     </>
   )
+}
+
+CartSidebar.propTypes = {
+  totalQuantity: PropTypes.number,
+  totalPrice: PropTypes.number,
 }

@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 
-export default function ProductDesc({ product }) {
-  const { manufacturer, material, quantities } = product
+
+export default function ProductDesc({ product, quantities }) {
+  const { manufacturer, material, description } = product
 
   const [currentTab, setCurrentTab] = useState(1)
   const [
@@ -30,7 +31,8 @@ export default function ProductDesc({ product }) {
   if (currentTab === 1) {
     renderingComponent = (
       <div className="product-desc-desc property">
-        <p>Сверхтонкие воздушные ковры из мягкой вискозы и хлопка Grazia от фабрики Ragolle выполнены в классических, неоклассических и современных дизайнах. Здесь можно встретить как стилизацию под восточные ковры, так и оригинальные будто состаренные ковры в стиле пэчворк. <br />Благодаря содержащейся в бельгийских коврах вискозе они невероятно тонкие. На ощупь такие же мягкие и красиво переливаются и блестят на солнце, как натуральные шёлковые. Ковры не будут терять яркости цветов при попадании солнечных лучей и надолго сохранят насыщенные оттенки.</p>
+        {description ? <p>description</p> : <p>Здесь пока ничего нет :(</p>}
+        {/*<p>Сверхтонкие воздушные ковры из мягкой вискозы и хлопка Grazia от фабрики Ragolle выполнены в классических, неоклассических и современных дизайнах. Здесь можно встретить как стилизацию под восточные ковры, так и оригинальные будто состаренные ковры в стиле пэчворк. <br />Благодаря содержащейся в бельгийских коврах вискозе они невероятно тонкие. На ощупь такие же мягкие и красиво переливаются и блестят на солнце, как натуральные шёлковые. Ковры не будут терять яркости цветов при попадании солнечных лучей и надолго сохранят насыщенные оттенки.</p>*/}
       </div>
     )
   }
@@ -125,7 +127,7 @@ export default function ProductDesc({ product }) {
   if (currentTab === 3) {
     renderingComponent = (
       <div className="product-desc-available property">
-        {quantities.map(qunatity => (
+        {quantities?.map(qunatity => (
           <div key={qunatity.address} className="available-place">
             <div className="available-place-address">
               {qunatity.address}
@@ -138,40 +140,6 @@ export default function ProductDesc({ product }) {
             </div>
           </div>
         ))}
-
-       {/* <div className="available-place">
-          <div className="available-place-address">
-            ул.Донбасская, 2
-          </div>
-          <div className="available-place-phone">
-            +7 (343) 237 47 47
-          </div>
-          <div className="available-place-availablity">
-            Нет в наличии
-          </div>
-        </div>
-        <div className="available-place">
-          <div className="available-place-address">
-            ул.Татищева, 25
-          </div>
-          <div className="available-place-phone">
-            +7 (343) 237 47 55
-          </div>
-          <div className="available-place-availablity">
-            В наличии 2 шт.
-          </div>
-        </div>
-        <div className="available-place">
-          <div className="available-place-address">
-            ул.Московский тракт, 2б
-          </div>
-          <div className="available-place-phone">
-            +7 (343) 237 47 22
-          </div>
-          <div className="available-place-availablity">
-            Нет в наличии
-          </div>
-        </div>*/}
       </div>
     )
   }
@@ -210,5 +178,6 @@ export default function ProductDesc({ product }) {
 }
 
 ProductDesc.propTypes = {
-  product: PropTypes.object
+  product: PropTypes.object,
+  quantities: PropTypes.array,
 }

@@ -1,21 +1,19 @@
 import { useState, useEffect, useRef, Children } from 'react'
+import PropTypes from 'prop-types'
 
 export default function VerticalCards({ children }) {
   const [startIndex, setStartIndex] = useState(1)
-  // const [cardsLength, setCardsLength] = useState(() => {
-  //   if (document !== undefined) {
-  //     return (document.documentElement.clientWidth <= 1280) ? 3 : 4
-  //   } else {
-  //     return 3
-  //   }
-  // })
   const [cardsLength, setCardsLength] = useState(3)
   const cardsRef = useRef(null)
-  const childrenCount = Children.count(children)
+  const [childrenCount, setChildrenCount] = useState(Children.count(children))
 
-  const moveContent = (n) => {
-    let index = startIndex + n
-    setStartIndex(index)
+  function computeIndex(index) {
+    if (index < 1) {
+      index = 1
+    } else if (index > (childrenCount - cardsLength + 1)) {
+      index = childrenCount - cardsLength + 1
+    }
+    return index
   }
 
   function changeCardsLength() {
@@ -30,14 +28,36 @@ export default function VerticalCards({ children }) {
     const prevArrow = cardsRef.current.querySelector(".prev-vertical-card")
     const nextArrow = cardsRef.current.querySelector(".next-vertical-card")
 
-    if (startIndex === 1) {
-      prevArrow.style.display = "none"
-    } else if (startIndex === (childrenCount - cardsLength + 1)) {
-      nextArrow.style.display = "none"
-    } else {
-      prevArrow.style.display = ""
-      nextArrow.style.display = ""
+    switch (startIndex) {
+      case 1:
+        prevArrow.style.display = "none"
+        break
+      case (childrenCount - cardsLength + 1):
+        nextArrow.style.display = "none"
+        break
+      default:
+        prevArrow.style.display = ""
+        nextArrow.style.display = ""
     }
+  }
+
+  function showContent(index) {
+    const cards = Array.from(
+      cardsRef.current.querySelectorAll(".vertical-card")
+    )
+
+    cards.map((card, i) => {
+      if ((i < index - 1) || (i >= (index + cardsLength - 1))) {
+        card.style.display = "none"
+      } else {
+        card.style.display = "flex"
+      }
+    })
+  }
+
+  const moveContent = (n) => {
+    let index = computeIndex(startIndex + n)
+    setStartIndex(index)
   }
 
   useEffect(() => {
@@ -48,28 +68,18 @@ export default function VerticalCards({ children }) {
   }, [])
 
   useEffect(() => {
-    const cards = Array.from(cardsRef.current.querySelectorAll(".vertical-card"))
+    setChildrenCount(Children.count(children))
+  }, [children])
 
-    let index = startIndex
-
-    if (index < 1) {
-      index = 1
-    } else if (index > (childrenCount - cardsLength + 1)) {
-      index = childrenCount - cardsLength + 1
-    }
-
+  useEffect(() => {
+    const index = computeIndex(startIndex)
     setStartIndex(index)
+  }, [cardsLength, childrenCount])
 
-    cards.map((card, i) => {
-      if ((i < index - 1) || (i >= (index + cardsLength - 1))) {
-        card.style.display = "none"
-      } else {
-        card.style.display = "flex"
-      }
-    })
-
+  useEffect(() => {
+    showContent(startIndex)
     showArrows()
-  }, [startIndex, cardsLength])
+  }, [startIndex, cardsLength, childrenCount])
 
   return (
     <>
@@ -90,4 +100,11 @@ export default function VerticalCards({ children }) {
       </div>
     </>
   )
+}
+
+VerticalCards.propTypes = {
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node,
+  ])
 }

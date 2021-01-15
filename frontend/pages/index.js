@@ -6,11 +6,18 @@ import Carousel from '../components/Carousel'
 import CategoryCard from '../components/CategoryCard'
 import VerticalCards from '../components/VerticalCards'
 import VerticalCard from '../components/VerticalCard'
-import { categoryUrl, productUrl } from '../constants'
+import { categoryUrl, hitsUrl, noveltiesUrl } from '../constants'
+
+const carouselImages = [
+  { id: 1, src: "carousel-img1.jpg" },
+  { id: 2, src: "carousel-img2.jpg" },
+  { id: 3, src: "carousel-img3.jpg" },
+]
 
 export async function getStaticProps() {
   const res = await fetch(categoryUrl)
   let categories = await res.json()
+
   if (!categories) {
     categories = []
   }
@@ -24,32 +31,6 @@ export default function Home({ categories }) {
   const [hits, setHits] = useState([])
   const [novelties, setNovelties] = useState([])
 
-  const carouselImages = [
-    { id: 1, src: "carousel-img1.jpg" },
-    { id: 2, src: "carousel-img2.jpg" },
-    { id: 3, src: "carousel-img3.jpg" },
-  ]
-  // const categories = [
-  //   { title: "Российские ковры", href: "#", imageSrc: "ros-kovry.jpg" },
-  //   { title: "Белорусские ковры", href: "#", imageSrc: "belorys-kovry.jpg" },
-  //   { title: "Турецкие ковры", href: "#", imageSrc: "tur-kovry.jpg" },
-  //   { title: "Детские ковры", href: "#", imageSrc: "detskie-kovry.jpg" },
-  // ]
-  // const hits = [
-  //   { title: "Ковер Домо 27005-29545n", price: 1000, imageSrc: "hits-img2.jpg" },
-  //   { title: "Ковер Домо 27005-29545n", price: 2000, imageSrc: "hits-img3.jpg" },
-  //   { title: "Ковер Домо 27005-29545n", price: 5000, imageSrc: "hits-img1.jpg" },
-  //   { title: "Ковер Домо 27005-29545n", price: 9000, imageSrc: "hits-img4.jpg" },
-  //   { title: "Ковер Домо 27005-29545n", price: 4000, imageSrc: "hits-img5.jpg" },
-  // ]
-  // const novelties = [
-  //   { title: "Ковер Комфорт 22206-29766o", price: 2000, imageSrc: "hits-img1.jpg" },
-  //   { title: "Ковер Комфорт 22206-29766n", price: 22000, imageSrc: "hits-img2.jpg" },
-  //   { title: "Ковер Комфорт 22206-29766n", price: 5000, imageSrc: "hits-img3.jpg" },
-  //   { title: "Ковер Домо 27005-29545n", price: 15000, imageSrc: "hits-img4.jpg" },
-  //   { title: "Ковер Домо 27005-29545n", price: 1000, imageSrc: "hits-img5.jpg" },
-  // ]
-
   useEffect(() => {
     async function fetchData(url) {
       const res = await fetch(url)
@@ -62,13 +43,8 @@ export default function Home({ categories }) {
       return data.results
     }
 
-    fetchData(productUrl)
-      .then(data => setHits(data))
-    fetchData(productUrl)
-      .then(data => setNovelties(data))
-
-    // setHits(hits)
-    // setNovelties(novelties)
+    fetchData(hitsUrl).then(data => setHits(data))
+    fetchData(noveltiesUrl).then(data => setNovelties(data))
   }, [])
 
   return (
@@ -96,13 +72,13 @@ export default function Home({ categories }) {
       <section className="vertical">
         <h4 className="vertical-title">Хиты продаж</h4>
         <VerticalCards>
-          {hits.map((hit, i) => (
+          {hits.map((hit) => (
             <VerticalCard
-              key={i}
+              key={hit.slug}
               title={hit.name}
               slug={hit.slug}
-              price={hit.price}
-              imageSrc={hit.image}
+              price={hit.minimum_price}
+              images={hit.images}
             />
           ))}
         </VerticalCards>
@@ -111,13 +87,13 @@ export default function Home({ categories }) {
       <section className="vertical">
         <h4 className="vertical-title">Новинки</h4>
         <VerticalCards>
-          {novelties.map((novelty, i) => (
+          {novelties.map((novelty) => (
             <VerticalCard
-              key={i}
-              title={novelty.title}
+              key={novelty.slug}
+              title={novelty.name}
               slug={novelty.slug}
-              price={novelty.price}
-              imageSrc={novelty.image}
+              price={novelty.minimum_price}
+              images={novelty.images}
             />
           ))}
         </VerticalCards>

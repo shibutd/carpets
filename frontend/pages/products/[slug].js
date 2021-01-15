@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import PropTypes from 'prop-types'
 
 import Layout from '../../components/Layout'
@@ -6,6 +7,8 @@ import ProductDesc from '../../components/ProductDesc'
 import VerticalCards from '../../components/VerticalCards'
 import VerticalCard from '../../components/VerticalCard'
 import { productUrl } from '../../constants'
+
+const similarProducts = []
 
 export async function getServerSideProps({ query }) {
   const { slug } = query
@@ -24,24 +27,42 @@ export async function getServerSideProps({ query }) {
 }
 
 export default function Product({ data }) {
-  const similarProducts = [
-    { title: "Ковер Комфорт 22206-29766o", price: "2000", imageSrc: "hits-img1.jpg" },
-    { title: "Ковер Комфорт 22206-29766n", price: "22000", imageSrc: "hits-img2.jpg" },
-    { title: "Ковер Комфорт 22206-29766n", price: "5000", imageSrc: "hits-img3.jpg" },
-    { title: "Ковер Домо 27005-29545n", price: "15000", imageSrc: "hits-img4.jpg" },
-    { title: "Ковер Домо 27005-29545n", price: "1000", imageSrc: "hits-img5.jpg" },
-  ]
+  const { variations } = data
+  const [selectedVariation, setSelectedVariation] = useState(
+    variations ? variations[0] : {}
+  )
+
+  const handleOptionChange = (e) => {
+    const targetValue = e.target.value
+
+    const variation = variations.find(
+      v => (v.id === targetValue)
+    )
+
+    if (variation) {
+      setSelectedVariation(variation)
+    }
+  }
 
   return (
     <Layout
       title={`${data.name} | Алладин96.ру`}
     >
       <section className="product-main">
-        <ProductMain product={data} />
+        <ProductMain
+          product={data}
+          variations={variations}
+          option={selectedVariation}
+          onOptionChange={handleOptionChange}
+        />
       </section>
 
       <section className="product-desc">
-        <ProductDesc product={data} />
+        <ProductDesc
+          product={data}
+          quantities={selectedVariation.quantities}
+          option={selectedVariation}
+        />
       </section>
 
       <section className="vertical">
@@ -49,15 +70,15 @@ export default function Product({ data }) {
         <VerticalCards>
           {similarProducts.map(product => (
             <VerticalCard
-              key={product.imageSrc}
-              title={product.title}
-              price={product.price}
-              imageSrc={product.imageSrc}
+              key={product.slug}
+              title={product.name}
+              slug={product.slug}
+              price={product.minimum_price}
+              imageSrc={product.images[0].image}
             />
           ))}
         </VerticalCards>
       </section>
-
     </Layout>
   )
 }

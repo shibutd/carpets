@@ -7,6 +7,7 @@ import * as yup from "yup"
 
 import { login, selectUser } from '../lib/slices/authSlice'
 // import useAuth from '../lib/hooks/useAuth'
+import useCart from '../lib/hooks/useCart'
 
 const schema = yup.object().shape({
   email: yup.string()
@@ -22,6 +23,7 @@ export default function Login() {
   const router = useRouter()
   const dispatch = useDispatch()
   const [processing, setProcessing] = useState(false)
+  const { updateCart } = useCart()
   const { user, error } = useSelector(selectUser)
   const { register, handleSubmit, errors } = useForm({
     resolver: yupResolver(schema),
@@ -32,17 +34,22 @@ export default function Login() {
   })
 
 
-  const handleLoginFormSubmit = async (data) => {
+  const handleLoginFormSubmit = (data) => {
     setProcessing(true)
     console.log(data)
-    const dispatchResponse = await dispatch(login(data))
+    // const dispatchResponse = await dispatch(login(data))
 
-    if (dispatchResponse.meta.requestStatus === "fulfilled") {
-      console.log("login response successful")
-      router.push('/')
-    } else {
-      console.log("login response unsuccessful")
-    }
+    // if (dispatchResponse.meta.requestStatus === "fulfilled") {
+    //   console.log("login response successful")
+    //   router.push('/')
+    // } else {
+    //   console.log("login response unsuccessful")
+    // }
+    dispatch(login(data))
+      .then(() => {
+        updateCart()
+        router.push('/')
+      })
 
     setProcessing(false)
   }

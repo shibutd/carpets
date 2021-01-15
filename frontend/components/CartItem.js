@@ -1,27 +1,32 @@
+import PropTypes from 'prop-types'
 import Image from 'next/image'
 
-export default function CartItem(
-  {
-    item,
-    changeItemQuantity,
-    removeFromCart
-  }
-) {
-  const totalItemPrice = item.price * item.quantity
-  const priceToString = totalItemPrice.toString()
+import { convertPrice, convertSize } from '../lib/utils/converters'
+
+export default function CartItem({
+  item,
+  addToCart,
+  removeSingleFromCart,
+  removeFromCart
+}) {
+  const { product, quantity } = item
+  let totalItemPrice = product.price * quantity
+
+  let image = `/media/product-images/${name.replace(' ', '_')}.jpg`
 
   return (
     <div className="cart-products-item">
       <div className="cart-products-item-img">
         <Image
-          src={`/images/${item.imageSrc}`}
+          src={image}
           alt=""
           height={120}
           width={120}
         />
       </div>
       <div className="cart-products-item-name">
-        {item.title}
+        {product.name}
+        <p>Размер: {convertSize(product.size)}</p>
       </div>
       <div className="cart-products-item-plusminus">
         <Image
@@ -30,10 +35,10 @@ export default function CartItem(
           layout="fixed"
           height={14}
           width={14}
-          onClick={() => changeItemQuantity(item.id, -1)}
+          onClick={() => removeSingleFromCart(product)}
         />
         <div className="cart-products-item-plusminus-val">
-          {item.quantity}
+          {quantity}
         </div>
         <Image
           src="/icons/plus-solid.svg"
@@ -41,14 +46,11 @@ export default function CartItem(
           layout="fixed"
           height={14}
           width={14}
-          onClick={() => changeItemQuantity(item.id, 1)}
+          onClick={() => addToCart(product)}
         />
       </div>
       <div className="cart-products-item-price">
-        {(priceToString.length > 3)
-          ? (priceToString.slice(0, -3).concat(' ', priceToString.slice(-3)))
-          : (priceToString)
-        } ₽
+        {convertPrice(totalItemPrice)} ₽
       </div>
       <div className="cart-products-item-likedelete">
         <Image
@@ -62,9 +64,16 @@ export default function CartItem(
           alt=""
           height={14}
           width={14}
-          onClick={() => removeFromCart(item.id)}
+          onClick={() => removeFromCart({ id: product.id })}
         />
       </div>
     </div>
   )
+}
+
+CartItem.propTypes = {
+  item: PropTypes.object,
+  addToCart: PropTypes.func,
+  removeSingleFromCart: PropTypes.func,
+  removeFromCart: PropTypes.func,
 }

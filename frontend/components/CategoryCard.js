@@ -4,17 +4,14 @@ import Image from 'next/image'
 
 export default function CategoryCard({ title, slug, imageSrc }) {
 
-  if (slug === undefined) {
-    slug = 'unknown'
-  }
-
+  const imageName = title.replace(' ', '_').replace('"', '')
   if (imageSrc !== undefined && imageSrc.startsWith('http')) {
-    imageSrc = `/media/category-images/${title.replace(' ', '_')}.jpg`
+    imageSrc = `/media/category-images/${imageName}.jpg`
   }
 
   return (
     <div className="categories-card">
-      <Link href={`categories/${slug}`}>
+      <Link href={`/categories/${slug}`}>
         <a>
           <p className="categories-card-title">{title}</p>
           <Image

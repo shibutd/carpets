@@ -2,18 +2,24 @@ import PropTypes from 'prop-types'
 import Link from 'next/link'
 import Image from 'next/image'
 
-export default function VerticalCard({ title, slug, price, imageSrc }) {
-  let priceToString = price.toString().split('.')[0]
+import { convertPrice } from '../lib/utils/converters'
 
-  if (imageSrc !== undefined && imageSrc.startsWith('http')) {
-    imageSrc = `media/product-images/${title.replace(' ', '_')}.jpg`
-  }
+
+export default function VerticalCard({ title, slug, price, images }) {
+
+  const mainImage = images.length > 0 ? images[0].image : null
+
+  const imageName = title.replace(/ /g, '_').replace(/\"/g, '')
+
+  const imageSrc = mainImage
+    ? `/media/product-images/${imageName}.jpg`
+    : `/media/product-images/No_Image.jpg`
 
   return (
     <div className="vertical-card">
       <div className="vertical-card-image">
         <Image
-          src={`/images/${imageSrc}`}
+          src={imageSrc}
           alt={slug}
           height={150}
           width={150}
@@ -24,10 +30,7 @@ export default function VerticalCard({ title, slug, price, imageSrc }) {
         <Link href={`/products/${slug}`}><a>{title}</a></Link>
       </div>
       <div className="vertical-card-cost">
-        {(priceToString.length > 3)
-          ? (priceToString.slice(0, -3).concat(' ', priceToString.slice(-3)))
-          : (priceToString)
-        } ₽
+        от {convertPrice(price)} ₽
       </div>
     </div>
   )
@@ -36,6 +39,6 @@ export default function VerticalCard({ title, slug, price, imageSrc }) {
 VerticalCard.propTypes = {
   title: PropTypes.string,
   slug: PropTypes.string,
-  price: PropTypes.string,
-  imageSrc: PropTypes.string,
+  price: PropTypes.number,
+  images: PropTypes.arrayOf(PropTypes.object),
 }

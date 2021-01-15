@@ -7,6 +7,7 @@ import Link from 'next/link'
 import Icon from './Icon'
 import UserIcon from './UserIcon'
 
+
 export default function Header({ title, user, cart }) {
   const [cartLength, setCartLength] = useState(0)
 
@@ -106,6 +107,6 @@ export default function Header({ title, user, cart }) {
 
 Header.propTypes = {
   title: PropTypes.string,
-  user: PropTypes.oneOf([null, PropTypes.string]),
+  user: PropTypes.string,
   cart: PropTypes.array,
 }

@@ -4,11 +4,12 @@ const targetUrl = 'http://127.0.0.1:8000'
 
 const authenticationUrl = `${targetUrl}/auth/users`
 
-export const userCreateUrl = `${authenticationUrl}/create/`
+export const userCreateUrl = `${authenticationUrl}/`
 
 export const tokenObtainUrl = `${authenticationUrl}/token_obtain_pair/`
 
 export const tokenRefreshUrl = `${authenticationUrl}/token_refresh/`
+
 
 // Interaction with store
 
@@ -18,20 +19,34 @@ export const storeUrl = `${targetUrl}/store`
 
 export const productUrl = `${storeUrl}/products`
 
-// Interaction with cart
+// Specific tag urls
 
-export const addToCartUrl = (productSlug) => {
-  return `${productUrl}/${productSlug}/add-to-cart/`
-}
+export const hitsUrl = `${productUrl}/?tag=khity` // Hits
 
-export const removeFromCartSingleUrl = (productSlug) => {
-  return `${productUrl}/${productSlug}/remove-single-from-cart/`
-}
-
-export const removeFromCartUrl = (productSlug) => {
-  return `${productUrl}/${productSlug}/remove-from-cart/`
-}
+export const noveltiesUrl = `${productUrl}/?tag=novinki` // Novelties
 
 // Categories url
 
-export const categoryUrl = `${storeUrl}/categories/`
+export const categoryUrl = `${storeUrl}/categories`
+
+// Products variations url
+
+export const productVariationUrl = `${storeUrl}/product-variations`
+
+// Interaction with cart
+
+export const addToCartUrl = (variationId) => {
+  return `${productVariationUrl}/${variationId}/add_to_cart/`
+}
+
+export const removeFromCartSingleUrl = (variationId) => {
+  return `${productVariationUrl}/${variationId}/remove_single_from_cart/`
+}
+
+export const removeFromCartUrl = (variationId) => {
+  return `${productVariationUrl}/${variationId}/remove_from_cart/`
+}
+
+// Orderlines url
+
+export const orderLineUrl = `${storeUrl}/orderlines`
