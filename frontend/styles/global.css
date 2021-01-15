@@ -844,6 +844,29 @@ footer div {
   display: block;
 }
 
+/* PROMOTIONS PAGE */
+
+.promotion {
+  padding: 1rem 0 3rem;
+  margin: 4rem 0 4rem;
+  text-align: justify;
+  border-bottom: 1px solid var(--dark-gray-color);
+}
+
+.promotion:last-child {
+  margin-bottom: 2rem;
+  border-bottom: none;
+}
+
+.promotion h5 {
+  color: var(--blue-color);
+}
+
+.promotion p {
+  padding: 0.6rem;
+  margin: 1.2rem 0;
+}
+
 
 /* ANIMATIONS */
 
