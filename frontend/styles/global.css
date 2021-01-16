@@ -2,10 +2,10 @@
   font-family: 'PTRootUIWebRegular';
   src: url('./fonts/PT%20Root%20UI_Regular.eot');
   src:
-       url('./fonts/PT%20Root%20UI_Regular.eot?#iefix') format('embedded-opentype'),
-       url('./fonts/PT%20Root%20UI_Regular.woff2') format('woff2'),
-       url('./fonts/PT%20Root%20UI_Regular.woff') format('woff'),
-       url('./fonts/PT%20Root%20UI_Regular.ttf') format('truetype');
+    url('./fonts/PT%20Root%20UI_Regular.eot?#iefix') format('embedded-opentype'),
+    url('./fonts/PT%20Root%20UI_Regular.woff2') format('woff2'),
+    url('./fonts/PT%20Root%20UI_Regular.woff') format('woff'),
+    url('./fonts/PT%20Root%20UI_Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
@@ -42,7 +42,8 @@ body {
   margin: auto;
 }
 
-html, body {
+html,
+body {
   font-family: 'PTRootUIWebRegular';
 }
 
@@ -223,7 +224,8 @@ nav ul {
 }
 
 /* Next & previous buttons */
-.carousel-prev, .carousel-next {
+.carousel-prev,
+.carousel-next {
   cursor: pointer;
   position: absolute;
   top: 50%;
@@ -245,7 +247,8 @@ nav ul {
 }
 
 /* On hover, add a black background color with a little bit see-through */
-.carousel-prev:hover, .carousel-next:hover {
+.carousel-prev:hover,
+.carousel-next:hover {
   background-color: rgba(0, 0, 0, 0.6);
   color: white;
 }
@@ -269,7 +272,8 @@ nav ul {
   transition: background-color 0.6s ease;
 }
 
-.active, .dot:hover {
+.active,
+.dot:hover {
   background-color: var(--blue-color);
 }
 
@@ -454,12 +458,12 @@ footer div {
   display: block;
 }
 
-.policy ol > li:before {
+.policy ol>li:before {
   content: counters(item, ".") " ";
   counter-increment: item
 }
 
-.policy ol > li {
+.policy ol>li {
   margin-top: 2rem;
   padding-left: 2rem;
 }
@@ -761,10 +765,11 @@ footer div {
 
 /* LOGIN / REGISTER PAGE */
 
-.register > p {
+.register>p {
   display: inline;
 }
-.register > a {
+
+.register>a {
   text-decoration: underline;
   color: var(--blue-color);
 }
@@ -868,6 +873,34 @@ footer div {
 }
 
 
+/* CONTACT US PAGE */
+
+.contact-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  width: 70%;
+  padding: 3rem;
+}
+
+.contact-form textarea,
+input {
+  width: 100%;
+  font-size: var(--small-text);
+  padding: 0.8rem;
+  margin: 1rem 0 5rem;
+}
+
+.contact-form button {
+  align-self: center;
+  width: 50%;
+}
+
+
 /* ANIMATIONS */
 
 /* Fading animation */
@@ -879,13 +912,23 @@ footer div {
 }
 
 @-webkit-keyframes fade {
-  from {opacity: .3}
-  to {opacity: 1}
+  from {
+    opacity: .3
+  }
+
+  to {
+    opacity: 1
+  }
 }
 
 @keyframes fade {
-  from {opacity: .3}
-  to {opacity: 1}
+  from {
+    opacity: .3
+  }
+
+  to {
+    opacity: 1
+  }
 }
 
 @keyframes appear {
@@ -894,6 +937,7 @@ footer div {
     height: 0px;
     opacity: 0;
   }
+
   to {
     width: 15px;
     height: 15px;
@@ -940,7 +984,7 @@ footer div {
     height: 70px;
     padding-top: 5px;
     background: #fff;
-    box-shadow: 0 -2px 2px rgba(0,0,0,.12);
+    box-shadow: 0 -2px 2px rgba(0, 0, 0, .12);
   }
 
   .search-nav-input {
