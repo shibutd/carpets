@@ -13,6 +13,7 @@ django-cors-headers = "*"
 python-slugify = "*"
 python-dotenv = "*"
 psycopg2 = "*"
+djangorestframework-camel-case = "*"
 
 [dev-packages]
 django-extensions = "*"
