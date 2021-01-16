@@ -15,6 +15,7 @@
   --blue-color: #04619E;
   --dark-gray-color: #313131;
   --medium-gray-color: #C8C8C8;
+  --light-gray-color: #F0F0F0;
   --header1: calc(2rem + 1vw);
   --header2: calc(3.5rem + 1vw);
   --header3: calc(2.6rem + 1vw);
@@ -365,11 +366,12 @@ nav ul {
 
 .vertical-card {
   display: none;
-  flex-direction: column;
-  justify-content: space-between;
-  flex: 1 1 0px;
+  overflow: hidden;
+  flex: 1 1 25%;
   min-height: 30rem;
   transition: box-shadow 0.3s ease;
+  transition: transform .5s, opacity .5s, z-index .5s;
+
 }
 
 .vertical-card:hover {
@@ -379,17 +381,53 @@ nav ul {
     -3px 0px 3px 3px rgba(119, 136, 153, .2);
 }
 
-.vertical-card-image {
-  padding: 1.2rem;
+.vertical-card > * {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
-.vertical-card-title {
+.vertical-card-left {
+  flex: 1 1 0px;
+}
+
+.vertical-card-right {
+  padding: 2rem 2rem 2rem 0;
+}
+
+.vertical-card-image,
+.vertical-card-title,
+.vertical-card-cost {
   padding: 1.2rem;
 }
 
 .vertical-card-cost {
-  padding: 1.2rem;
   font-size: 2.4rem;
+}
+
+.vertical-cart-icon,
+.vertical-cart-button {
+  color: var(--medium-gray-color);
+  transition: color 0.4s ease;
+}
+
+.vertical-cart-icon {
+  background: none;
+}
+
+.vertical-cart-icon:hover {
+  color: var(--blue-color);
+}
+
+.vertical-cart-button {
+  background: var(--light-gray-color);
+  border-radius: 50%;
+  transition: background 0.4s ease;
+}
+
+.vertical-cart-button:hover {
+  color: white;
+  background: var(--blue-color);
 }
 
 .prev-vertical-card,
@@ -954,6 +992,37 @@ input {
 
 .favorites-item-price p {
   font-size: var(--big-text);
+}
+
+
+/* SPECIFIC CATEGORY PAGE */
+
+.category-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  flex-basis: 100%;
+  justify-content: stretch;
+}
+
+.category-card {
+  display: flex;
+  flex: 0 1 25%;
+  min-width: 28rem;
+  min-height: 30rem;
+  transition: box-shadow 0.3s ease;
+}
+
+.category-card:hover {
+  box-shadow:
+    3px 3px 3px 3px rgba(119, 136, 153, .2),
+    0 -3px 3px 3px rgba(119, 136, 153, .2),
+    -3px 0px 3px 3px rgba(119, 136, 153, .2);
+}
+
+.category-card > * {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 

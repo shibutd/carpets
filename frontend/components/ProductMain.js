@@ -87,7 +87,7 @@ export default function ProductMain({
             Убрать из корзины
           </button>)}
           <button className="product-favorite">
-            <HearthRegular height={15} width={15} color={"white"} />
+            <HearthRegular height={17} width={17} color={"white"} />
           </button>
         </div>
       </div>
