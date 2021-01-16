@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { useState, useEffect } from 'react'
 import useCart from '../lib/hooks/useCart'
 import { convertPrice, convertSize } from '../lib/utils/converters'
+import HearthRegular from './icons/HearthRegular'
 
 
 export default function ProductMain({
@@ -86,20 +87,7 @@ export default function ProductMain({
             Убрать из корзины
           </button>)}
           <button className="product-favorite">
-            <Image
-              src="/icons/heart-regular.svg"
-              alt="heart"
-              height={15}
-              width={15}
-            />
-          </button>
-          <button className="product-compare">
-            <Image
-              src="/icons/chart-bar-regular.svg"
-              alt="chart"
-              height={15}
-              width={15}
-            />
+            <HearthRegular height={15} width={15} color={"white"} />
           </button>
         </div>
       </div>

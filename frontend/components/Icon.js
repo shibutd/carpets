@@ -8,6 +8,7 @@ export default function Icon({ src, alt }) {
       layout="fixed"
       width={18}
       height={18}
+      fill="currentColor"
     />
   )
 }

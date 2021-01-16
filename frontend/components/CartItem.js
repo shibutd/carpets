@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
 import Image from 'next/image'
+import Link from 'next/link'
 
 import { convertPrice, convertSize } from '../lib/utils/converters'
 
@@ -25,7 +26,11 @@ export default function CartItem({
         />
       </div>
       <div className="cart-products-item-name">
-        {product.name}
+        <Link href={`/products/${product.slug}`}>
+          <a>
+            {product.name}
+          </a>
+        </Link>
         <p>Размер: {convertSize(product.size)}</p>
       </div>
       <div className="cart-products-item-plusminus">
@@ -50,7 +55,7 @@ export default function CartItem({
         />
       </div>
       <div className="cart-products-item-price">
-        {convertPrice(totalItemPrice)} ₽
+        {`${convertPrice(totalItemPrice)} ₽`}
       </div>
       <div className="cart-products-item-likedelete">
         <Image

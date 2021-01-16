@@ -1,11 +1,13 @@
 import { useState } from 'react'
-import { usePopper } from 'react-popper';
+import PropTypes from 'prop-types'
 import Link from 'next/link'
-import Image from 'next/image'
+import { usePopper } from 'react-popper';
+import { useDispatch } from 'react-redux'
 
-import { useDispatch, useSelector } from 'react-redux'
-import { logout, selectUser } from '../lib/slices/authSlice'
-import Icon from './Icon'
+import { logout } from '../lib/slices/authSlice'
+import SvgUserRegular from './icons/SvgUserRegular'
+import SvgUserSolid from './icons/SvgUserSolid'
+
 
 export default function UserIcon({ user }) {
   const dispatch = useDispatch()
@@ -32,7 +34,7 @@ export default function UserIcon({ user }) {
               className="search-nav-icon"
               onClick={() => setDropdownShow(!dropdownShow)}
             >
-              <Icon src={"/icons/user-solid.svg"} alt={"user"} />
+              <SvgUserSolid width={18} height={18} />
               <p>{userDisplayed(user)}</p>
             </div>
 
@@ -52,7 +54,7 @@ export default function UserIcon({ user }) {
           <Link href="/login">
             <a>
               <div className="search-nav-icon">
-                <Icon src={"/icons/user-regular.svg"} alt={"user"} />
+                <SvgUserRegular width={18} height={18} />
                 <p>Войти</p>
               </div>
             </a>
@@ -61,4 +63,8 @@ export default function UserIcon({ user }) {
       }
     </>
   )
+}
+
+UserIcon.propTypes = {
+  user: PropTypes.string
 }

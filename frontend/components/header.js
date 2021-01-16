@@ -4,8 +4,10 @@ import Image from 'next/image'
 import Head from 'next/head'
 import Link from 'next/link'
 
-import Icon from './Icon'
 import UserIcon from './UserIcon'
+import ShoppingCartSolid from './icons/ShoppingCartSolid'
+import HearthRegular from './icons/HearthRegular'
+import SearchSolid from './icons/SearchSolid'
 
 
 export default function Header({ title, user, cart }) {
@@ -36,8 +38,8 @@ export default function Header({ title, user, cart }) {
               src="/icons/aladdin_logo.svg"
               alt="logo"
               layout="fixed"
-              width={250}
-              height={80}
+              width={260}
+              height={90}
             />
           </a>
         </Link>
@@ -58,33 +60,24 @@ export default function Header({ title, user, cart }) {
         <div className="search-nav-input">
           <input type="text" placeholder="Поиск по товарам" />
           <a href="#">
-            <Icon src={"/icons/search-solid.svg"} alt={"search"} />
+            <SearchSolid width={18} height={18} />
           </a>
         </div>
         <ul>
           <li>
             <UserIcon user={user} />
           </li>
-          <li>
+          {user &&
+          (<li>
             <Link href="/favorites">
               <a>
                 <div className="search-nav-icon">
-                  <Icon src={"/icons/heart-regular.svg"} alt={"heart"} />
+                  <HearthRegular width={18} height={18} />
                   <p>Избранное</p>
                 </div>
               </a>
             </Link>
-          </li>
-          <li>
-            <Link href="/comparison">
-              <a>
-                <div className="search-nav-icon">
-                  <Icon src={"/icons/chart-bar-regular.svg"} alt={"chart"} />
-                  <p>Сравнение</p>
-                </div>
-              </a>
-            </Link>
-          </li>
+          </li>)}
           <li>
             <Link href="/shopping-cart">
               <a>
@@ -93,7 +86,7 @@ export default function Header({ title, user, cart }) {
                   className="search-nav-icon"
                   value={(cartLength > 0) ? cartLength : ""}
                 >
-                  <Icon src={"/icons/shopping-cart-solid.svg"} alt={"shopping-cart"} />
+                  <ShoppingCartSolid width={18} height={18} />
                   <p>Корзина</p>
                 </div>
               </a>
