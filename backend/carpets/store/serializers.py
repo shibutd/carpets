@@ -100,6 +100,7 @@ class ProductWithVariationsSerializer(serializers.ModelSerializer):
     unit = serializers.ReadOnlyField(
         source='unit.name'
     )
+    images = ProductImageSerializer(many=True)
     variations = ProductVariationSerializer(many=True)
     tags = ProductTagSerializer(many=True)
 
@@ -110,6 +111,7 @@ class ProductWithVariationsSerializer(serializers.ModelSerializer):
             'manufacturer',
             'material',
             'unit',
+            'images',
             'description',
             'slug',
             'variations',

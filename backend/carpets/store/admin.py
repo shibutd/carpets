@@ -42,10 +42,8 @@ class ProductAdmin(admin.ModelAdmin):
         'slug',
         'manufacturer',
         'material',
-        'in_stock',
     )
-    list_filter = ('in_stock', 'date_updated')
-    list_editable = ('in_stock',)
+    list_filter = ('date_updated',)
     search_fields = ('name',)
     prepopulated_fields = {'slug': ('name',)}
     inlines = (ProductImageInline,)

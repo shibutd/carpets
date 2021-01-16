@@ -6,10 +6,7 @@ from polymorphic.models import PolymorphicModel
 from slugify import slugify
 
 
-class ProducInStockManager(models.Manager):
 
-    def in_stock(self):
-        return self.filter(in_stock=True)
 
 
 class Product(models.Model):
@@ -43,11 +40,8 @@ class Product(models.Model):
     )
     slug = models.SlugField(max_length=48, unique=True)
     description = models.TextField(blank=True, null=True)
-    in_stock = models.BooleanField(default=True)
     date_updated = models.DateTimeField(auto_now=True)
     tags = models.ManyToManyField('ProductTag', blank=True)
-
-    objects = ProducInStockManager()
 
     class Meta:
         verbose_name = 'товар'
@@ -169,6 +163,12 @@ class ProductTag(models.Model):
         return self.name
 
 
+class VariationInStockManager(models.Manager):
+
+    def in_stock(self):
+        return self.filter(in_stock=True)
+
+
 class ProductVariation(models.Model):
     """
     Model for product's variations.
@@ -193,6 +193,10 @@ class ProductVariation(models.Model):
         decimal_places=2,
         default=1000.00
     )
+    in_stock = models.BooleanField(default=True)
+    date_updated = models.DateTimeField(auto_now=True)
+
+    objects = VariationInStockManager()
 
 
 class VariationQuantity(models.Model):

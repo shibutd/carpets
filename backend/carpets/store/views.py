@@ -1,5 +1,7 @@
 from functools import wraps
 
+from django.db.models import Prefetch
+
 from rest_framework import status
 from rest_framework import generics
 from rest_framework import mixins
@@ -19,6 +21,7 @@ from store.serializers import (
     PickupOrderSerializer,
     OrderLineSerializer,
     PickupAddressSerializer,
+    VariationQuantity,
 )
 from store.models import (
     Product,
@@ -49,13 +52,14 @@ class OrderLineList(generics.ListAPIView):
         )
 
 
-class ProductCategoryList(generics.ListAPIView):
+class ProductCategoryViewSet(viewsets.ReadOnlyModelViewSet):
     """
     Display list of categories.
     """
     queryset = ProductCategory.objects.all()
     permission_classes = (AllowAny,)
     serializer_class = ProductCategorySerializer
+    lookup_field = 'slug'
 
 
 class PickupAddressList(generics.ListAPIView):
@@ -84,7 +88,7 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
     """
     Viewset for retrieving and manupulation products.
     """
-    queryset = Product.objects.in_stock().order_by('id')
+    queryset = Product.objects.order_by('id')
     pagination_class = PageSizePagination
     lookup_field = 'slug'
 
@@ -125,7 +129,18 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
         if tag is not None:
             queryset = queryset.filter(tags__slug=tag)
 
-        return queryset
+        return queryset.select_related(
+            'manufacturer',
+            'material',
+            'unit'
+        ).prefetch_related(
+            'images',
+            'variations__size',
+            Prefetch(
+                'variations__quantities',
+                queryset=VariationQuantity.objects.select_related('address')
+            )
+        )
 
 
 def is_product_in_cart(func):
