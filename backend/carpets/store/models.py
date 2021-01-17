@@ -2,11 +2,9 @@ import uuid
 
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.contrib.postgres.indexes import GinIndex
 from polymorphic.models import PolymorphicModel
 from slugify import slugify
-
-
-
 
 
 class Product(models.Model):
@@ -46,6 +44,9 @@ class Product(models.Model):
     class Meta:
         verbose_name = 'товар'
         verbose_name_plural = 'товары'
+        indexes = [
+            GinIndex(fields=('name', 'description'), name='search_idx')
+        ]
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)

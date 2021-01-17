@@ -14,23 +14,23 @@ class ProductTests(APITestCase):
     def setUpTestData(cls):
         cls.products = ProductFactory.create_batch(2)
 
-    def test_retrieve_product_list_in_stock(self):
-        """
-        Ensure we can retrive products list with REST API request.
-        """
-        url = reverse('store:product-list')
-        response = self.client.get(url)
+    # def test_retrieve_product_list_in_stock(self):
+    #     """
+    #     Ensure we can retrive products list with REST API request.
+    #     """
+    #     url = reverse('store:product-list')
+    #     response = self.client.get(url)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data['results']), 2)
+    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
+    #     self.assertEqual(len(response.data['results']), 2)
 
-        self.products[0].in_stock = False
-        self.products[0].save()
+    #     self.products[0].in_stock = False
+    #     self.products[0].save()
 
-        response = self.client.get(url)
+    #     response = self.client.get(url)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data['results']), 1)
+    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
+    #     self.assertEqual(len(response.data['results']), 1)
 
     def test_retrieve_single_product(self):
         """

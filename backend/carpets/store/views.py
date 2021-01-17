@@ -1,7 +1,13 @@
 from functools import wraps
 
 from django.db.models import Prefetch
-
+from django.db.models.functions import Greatest
+from django.contrib.postgres.search import (
+    SearchVector,
+    SearchQuery,
+    SearchRank,
+    TrigramSimilarity,
+)
 from rest_framework import status
 from rest_framework import generics
 from rest_framework import mixins
@@ -10,8 +16,8 @@ from rest_framework import viewsets
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from django_filters import rest_framework as filters
 
-# from store.permissions import IsSuperUser
 from store.pagination import PageSizePagination
 from store.serializers import (
     ProductSerializer,
@@ -21,12 +27,12 @@ from store.serializers import (
     PickupOrderSerializer,
     OrderLineSerializer,
     PickupAddressSerializer,
-    VariationQuantity,
 )
 from store.models import (
     Product,
     ProductCategory,
     ProductVariation,
+    VariationQuantity,
     Order,
     OrderLine,
     OrderStatus,
@@ -84,12 +90,62 @@ class PickupAddressList(generics.ListAPIView):
 #         ).select_related('product')
 
 
+class ProductFilter(filters.FilterSet):
+    """
+    Filter class from filtering and searching products.
+    """
+    category = filters.AllValuesFilter(field_name='category__slug')
+    manufacturer = filters.AllValuesFilter(field_name='manufacturer__name')
+    material = filters.AllValuesFilter(field_name='material__name')
+    tag = filters.AllValuesFilter(field_name='tags__slug')
+    search = filters.CharFilter(method='filter_search')
+
+    class Meta:
+        model = Product
+        fields = (
+            'category',
+            'manufacturer',
+            'material',
+            'search',
+            'tag',
+        )
+
+    def filter_search(self, queryset, name, value):
+        """
+        Search products. Full-text search using PostgreSQL's
+        full text search engine.
+        """
+        search_vector = (SearchVector('name', 'description')
+            + SearchVector('manufacturer__name')
+            + SearchVector('material__name'))
+        search_query = SearchQuery(value)
+
+        results = queryset.annotate(
+            search=search_vector,
+            rank=SearchRank(search_vector, search_query),
+        ).filter(search=search_query).order_by('-rank')
+        # If search return no results, use trigram similarity
+        if results.count() == 0:
+            search_similarity = Greatest(
+                TrigramSimilarity('name', value),
+                TrigramSimilarity('description', value),
+                TrigramSimilarity('manufacturer__name', value),
+                TrigramSimilarity('material__name', value),
+            )
+            results = queryset.annotate(
+                similarity=search_similarity
+            ).filter(similarity__gt=0.2).order_by('-similarity')
+
+        return results
+
+
 class ProductViewSet(viewsets.ReadOnlyModelViewSet):
     """
     Viewset for retrieving and manupulation products.
     """
     queryset = Product.objects.order_by('id')
     pagination_class = PageSizePagination
+    filterset_class = ProductFilter
     lookup_field = 'slug'
 
     def get_serializer_class(self):
@@ -108,7 +164,6 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
         Return the list of permissions required by this view
         depending on request's action.
         """
-        # if self.action in ('list', 'retrieve', 'with_variations'):
         if self.action in ('list', 'retrieve'):
             permission_classes = [AllowAny]
         else:
@@ -117,29 +172,28 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         """
-        Return queryset depending on query paramerters.
+        Return queryset prefetching required fields.
         """
         queryset = self.queryset
 
-        category = self.request.query_params.get('category', None)
-        if category is not None:
-            queryset = queryset.filter(category__slug=category)
-
-        tag = self.request.query_params.get('tag', None)
-        if tag is not None:
-            queryset = queryset.filter(tags__slug=tag)
-
-        return queryset.select_related(
+        select_related_fields = (
             'manufacturer',
             'material',
-            'unit'
-        ).prefetch_related(
+            'unit',
+        )
+        prefetch_related_fields = (
             'images',
             'variations__size',
             Prefetch(
                 'variations__quantities',
                 queryset=VariationQuantity.objects.select_related('address')
             )
+        )
+
+        return queryset.select_related(
+            *select_related_fields
+        ).prefetch_related(
+            *prefetch_related_fields
         )
 
 

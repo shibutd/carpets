@@ -26,5 +26,4 @@ class ProductFactory(factory.django.DjangoModelFactory):
 
     name = factory.Sequence(lambda n: 'Product {}'.format(n))
     slug = factory.Sequence(lambda n: 'product-{}'.format(n))
-    # price = factory.fuzzy.FuzzyDecimal(10.0, 100.0, 2)
     category = factory.SubFactory(ProductCategoryFactory)
