@@ -12,6 +12,7 @@ from store.models import (
     PickupAddress,
     ProductVariation,
     VariationQuantity,
+    Promotion,
 )
 
 
@@ -195,3 +196,13 @@ class PickupOrderSerializer(serializers.ModelSerializer):
             )
 
         return pickup_order
+
+
+class PromotionSerializer(serializers.ModelSerializer):
+    """
+    Serializer for promotion.
+    """
+
+    class Meta:
+        model = Promotion
+        fields = ('title', 'description')

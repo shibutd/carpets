@@ -298,3 +298,11 @@ class OrderLine(models.Model):
         on_delete=models.CASCADE,
     )
     quantity = models.PositiveIntegerField(default=1)
+
+
+class Promotion(models.Model):
+    """
+    Order model class.
+    """
+    title = models.CharField(max_length=120)
+    description = models.TextField()

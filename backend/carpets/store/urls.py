@@ -8,6 +8,7 @@ from store.views import (
     ProductVariationViewSet,
     PickupAddressList,
     ProductCategoryViewSet,
+    PromotionListView,
 )
 
 app_name = 'store'
@@ -26,5 +27,5 @@ urlpatterns = [
         PickupAddressList.as_view(),
         name='pickup-address-list'
     ),
-    # path('orderlines/<str:slug>', OrderLineDetail.as_view(), name='orderlines-detail'),
+    path('promotions/', PromotionListView.as_view(), name='promotion-list'),
 ]

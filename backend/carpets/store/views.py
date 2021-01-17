@@ -27,6 +27,7 @@ from store.serializers import (
     PickupOrderSerializer,
     OrderLineSerializer,
     PickupAddressSerializer,
+    PromotionSerializer,
 )
 from store.models import (
     Product,
@@ -37,6 +38,7 @@ from store.models import (
     OrderLine,
     OrderStatus,
     PickupAddress,
+    Promotion,
 )
 
 
@@ -73,8 +75,8 @@ class PickupAddressList(generics.ListAPIView):
     Display list of pickup addresses.
     """
     queryset = PickupAddress.objects.all()
-    permission_classes = (AllowAny,)
     serializer_class = PickupAddressSerializer
+    permission_classes = (AllowAny,)
 
 
 # class OrderLineDetail(RetrieveAPIView):
@@ -296,3 +298,9 @@ class PickupOrderCreate(views.APIView):
     #     serializer.save()
 
     #     return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class PromotionListView(generics.ListAPIView):
+    queryset = Promotion.objects.all()
+    serializer_class = PromotionSerializer
+    permission_classes = (AllowAny,)
