@@ -1,13 +1,6 @@
 from functools import wraps
 
 from django.db.models import Prefetch
-from django.db.models.functions import Greatest
-from django.contrib.postgres.search import (
-    SearchVector,
-    SearchQuery,
-    SearchRank,
-    TrigramSimilarity,
-)
 from rest_framework import status
 from rest_framework import generics
 from rest_framework import mixins
@@ -16,18 +9,20 @@ from rest_framework import viewsets
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from django_filters import rest_framework as filters
 
 from store.pagination import PageSizePagination
+from store.filters import ProductFilter
 from store.serializers import (
     ProductSerializer,
     ProductCategorySerializer,
+    ProductCategoryWithPropertiesSerializer,
     ProductVariationSerializer,
     ProductWithVariationsSerializer,
     PickupOrderSerializer,
     OrderLineSerializer,
     PickupAddressSerializer,
     PromotionSerializer,
+    ProductSizeSerializer,
 )
 from store.models import (
     Product,
@@ -39,12 +34,13 @@ from store.models import (
     OrderStatus,
     PickupAddress,
     Promotion,
+    ProductSize,
 )
 
 
 class OrderLineList(generics.ListAPIView):
     """
-    Create order line.
+    Display list of order lines.
     """
     permission_classes = (IsAuthenticated,)
     serializer_class = OrderLineSerializer
@@ -62,12 +58,21 @@ class OrderLineList(generics.ListAPIView):
 
 class ProductCategoryViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    Display list of categories.
+    Display list or instance of categories.
     """
     queryset = ProductCategory.objects.all()
     permission_classes = (AllowAny,)
-    serializer_class = ProductCategorySerializer
     lookup_field = 'slug'
+
+    def get_serializer_class(self):
+        """
+        Return serializer class depending on request's action.
+        """
+        if self.action == 'retrieve':
+            serializer_class = ProductCategoryWithPropertiesSerializer
+        else:
+            serializer_class = ProductCategorySerializer
+        return serializer_class
 
 
 class PickupAddressList(generics.ListAPIView):
@@ -90,55 +95,6 @@ class PickupAddressList(generics.ListAPIView):
 #             order__user=user,
 #             order__status=OrderStatus.NEW,
 #         ).select_related('product')
-
-
-class ProductFilter(filters.FilterSet):
-    """
-    Filter class from filtering and searching products.
-    """
-    category = filters.AllValuesFilter(field_name='category__slug')
-    manufacturer = filters.AllValuesFilter(field_name='manufacturer__name')
-    material = filters.AllValuesFilter(field_name='material__name')
-    tag = filters.AllValuesFilter(field_name='tags__slug')
-    search = filters.CharFilter(method='filter_search')
-
-    class Meta:
-        model = Product
-        fields = (
-            'category',
-            'manufacturer',
-            'material',
-            'search',
-            'tag',
-        )
-
-    def filter_search(self, queryset, name, value):
-        """
-        Search products. Full-text search using PostgreSQL's
-        full text search engine.
-        """
-        search_vector = (SearchVector('name', 'description')
-            + SearchVector('manufacturer__name')
-            + SearchVector('material__name'))
-        search_query = SearchQuery(value)
-
-        results = queryset.annotate(
-            search=search_vector,
-            rank=SearchRank(search_vector, search_query),
-        ).filter(search=search_query).order_by('-rank')
-        # If search return no results, use trigram similarity
-        if results.count() == 0:
-            search_similarity = Greatest(
-                TrigramSimilarity('name', value),
-                TrigramSimilarity('description', value),
-                TrigramSimilarity('manufacturer__name', value),
-                TrigramSimilarity('material__name', value),
-            )
-            results = queryset.annotate(
-                similarity=search_similarity
-            ).filter(similarity__gt=0.2).order_by('-similarity')
-
-        return results
 
 
 class ProductViewSet(viewsets.ReadOnlyModelViewSet):
@@ -300,7 +256,44 @@ class PickupOrderCreate(views.APIView):
     #     return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-class PromotionListView(generics.ListAPIView):
+class PromotionList(generics.ListAPIView):
+    """
+    Display list of promotions.
+    """
     queryset = Promotion.objects.all()
     serializer_class = PromotionSerializer
     permission_classes = (AllowAny,)
+
+
+class ProductSizeList(generics.ListAPIView):
+    """
+    Display list of product variations' sizes.
+    """
+    queryset = ProductSize.objects.all()
+    serializer_class = ProductSizeSerializer
+    permission_classes = (AllowAny,)
+
+    def get_queryset(self):
+        queryset = self.queryset
+
+        category = self.request.query_params.get('category')
+
+        if category is not None:
+            queryset = queryset.filter(
+                variations__product__category__slug=category
+            ).prefetch_related(
+                'variations__product__category'
+            ).distinct()
+
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        category = self.request.query_params.get('category')
+
+        if category is None:
+            return Response(
+                {'category': 'Required field not found.'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        return super().list(request, *args, **kwargs)

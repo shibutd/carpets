@@ -13,6 +13,7 @@ from store.models import (
     ProductVariation,
     VariationQuantity,
     Promotion,
+    ProductSize,
 )
 
 
@@ -122,12 +123,44 @@ class ProductWithVariationsSerializer(serializers.ModelSerializer):
 
 class ProductCategorySerializer(serializers.ModelSerializer):
     """
-    Serializer for orderline.
+    Serializer for product category.
     """
 
     class Meta:
         model = ProductCategory
         fields = ('name', 'slug', 'image')
+
+
+class ProductCategoryWithPropertiesSerializer(serializers.ModelSerializer):
+    """
+    Serializer for product category with properties:
+    manufacturers, materials, sizes.
+    """
+    properties = serializers.SerializerMethodField()
+
+    class Meta:
+        model = ProductCategory
+        fields = ('name', 'slug', 'properties')
+
+    def get_properties(self, obj):
+        category_query = ProductCategory.objects.filter(slug=obj.slug)
+        manufacturers = category_query.values_list(
+            'product__manufacturer__name', flat=True
+        ).distinct()
+
+        materials = category_query.values_list(
+            'product__material__name', flat=True
+        ).distinct()
+
+        sizes = category_query.values_list(
+            'product__variations__size__value', flat=True
+        ).distinct()
+
+        return {
+            'manufacturers': list(manufacturers),
+            'materials': list(materials),
+            'sizes': list(sizes)
+        }
 
 
 class PickupAddressSerializer(serializers.ModelSerializer):
@@ -206,3 +239,13 @@ class PromotionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Promotion
         fields = ('title', 'description')
+
+
+class ProductSizeSerializer(serializers.ModelSerializer):
+    """
+    Serializer for promotion.
+    """
+
+    class Meta:
+        model = ProductSize
+        fields = ('value',)
