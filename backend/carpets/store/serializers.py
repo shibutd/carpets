@@ -17,6 +17,25 @@ from store.models import (
 )
 
 
+class DynamicFieldsModelSerializer(serializers.ModelSerializer):
+    """
+    A ModelSerializer that takes an additional `exclude_fields` argument that
+    exclude fields from being displayed.
+    """
+
+    def __init__(self, *args, **kwargs):
+        exclude_fields = kwargs.pop('exclude_fields', None)
+
+        super().__init__(*args, **kwargs)
+
+        if exclude_fields is not None:
+            # Drop any fields that are not specified in the `fields` argument.
+            not_allowed = set(exclude_fields)
+            existing = set(self.fields)
+            for field_name in existing.intersection(not_allowed):
+                self.fields.pop(field_name)
+
+
 class ProductImageSerializer(serializers.ModelSerializer):
     """
     Serializer for product's image.
@@ -26,7 +45,7 @@ class ProductImageSerializer(serializers.ModelSerializer):
         fields = ('image', 'thumbnail')
 
 
-class ProductSerializer(serializers.ModelSerializer):
+class ProductSerializer(DynamicFieldsModelSerializer):
     """
     Serializer for product.
     """
@@ -66,24 +85,51 @@ class VariationQuantitySerializer(serializers.ModelSerializer):
         fields = ('address', 'amount')
 
 
-class ProductVariationSerializer(serializers.ModelSerializer):
-    """
-    Serializer for variation with quantities.
-    """
+class ProductVariationSerializer(DynamicFieldsModelSerializer):
     size = serializers.ReadOnlyField(
         source='size.value'
     )
     quantities = VariationQuantitySerializer(many=True)
+    product = ProductSerializer(exclude_fields=('minimum_price',))
 
     class Meta:
         model = ProductVariation
-        fields = ('id', 'size', 'price', 'quantities')
+        fields = ('id', 'size', 'price', 'quantities', 'product')
+
+
+# class ProductVariationWithProductsSerializer(serializers.ModelSerializer):
+#     """
+#     Serializer for variation with quantities.
+#     """
+#     size = serializers.ReadOnlyField(
+#         source='size.value'
+#     )
+#     quantities = VariationQuantitySerializer(many=True)
+
+#     class Meta:
+#         model = ProductVariation
+#         fields = ('id', 'size', 'price', 'quantities')
+
+
+# class ProductVariationWithQuantitiesSerializer(serializers.ModelSerializer):
+#     """
+#     Serializer for variation with quantities.
+#     """
+#     size = serializers.ReadOnlyField(
+#         source='size.value'
+#     )
+#     quantities = VariationQuantitySerializer(many=True)
+
+#     class Meta:
+#         model = ProductVariation
+#         fields = ('id', 'size', 'price', 'quantities')
 
 
 class ProductTagSerializer(serializers.ModelSerializer):
     """
     Serializer for product's tag.
     """
+
     class Meta:
         model = ProductTag
         fields = ('name', 'slug')
@@ -103,7 +149,10 @@ class ProductWithVariationsSerializer(serializers.ModelSerializer):
         source='unit.name'
     )
     images = ProductImageSerializer(many=True)
-    variations = ProductVariationSerializer(many=True)
+    variations = ProductVariationSerializer(
+        many=True,
+        exclude_fields=('product',)
+    )
     tags = ProductTagSerializer(many=True)
 
     class Meta:

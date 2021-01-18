@@ -1,5 +1,7 @@
 from django.contrib.auth.models import (
-    AbstractBaseUser, BaseUserManager, PermissionsMixin
+    AbstractBaseUser,
+    BaseUserManager,
+    PermissionsMixin,
 )
 from django.db import models
 
@@ -46,7 +48,7 @@ class CustomUserManager(BaseUserManager):
         return self._create_user(email, password, **extra_fields)
 
 
-class CustomUser(AbstractBaseUser, PermissionsMixin):
+class CustomUser(PermissionsMixin, AbstractBaseUser):
     """
     Custom User model class with email field instead of username.
     """
@@ -70,11 +72,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         verbose_name_plural = 'пользователи'
 
     def __str__(self):
-        return self.email
+        return 'User: {}'.format(self.email)
 
 
 class UserAddress(models.Model):
-
     user = models.ForeignKey(
         'CustomUser',
         on_delete=models.CASCADE,
@@ -90,3 +91,19 @@ class UserAddress(models.Model):
     class Meta:
         verbose_name = 'адрес'
         verbose_name_plural = 'адреса'
+
+
+class UserFavorite(models.Model):
+    user = models.OneToOneField(
+        'CustomUser',
+        on_delete=models.CASCADE,
+        primary_key=True,
+    )
+    variations = models.ManyToManyField(
+        'store.ProductVariation',
+        blank=True,
+    )
+
+    class Meta:
+        verbose_name = 'избранное'
+        verbose_name_plural = 'избранное'

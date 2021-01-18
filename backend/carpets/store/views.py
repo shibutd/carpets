@@ -24,6 +24,7 @@ from store.serializers import (
     PromotionSerializer,
     ProductSizeSerializer,
 )
+from authentication.models import UserFavorite
 from store.models import (
     Product,
     ProductCategory,
@@ -193,7 +194,8 @@ class ProductVariationViewSet(mixins.RetrieveModelMixin,
     @action(detail=True, methods=['post'])
     def add_to_cart(self, request, *args, **kwargs):
         """
-        Add product to cart or icrease quantity if it's already in cart.
+        Add product's variation to cart
+        or icrease quantity if it's already in cart.
         """
         variation = self.get_object()
         order, created = Order.objects.get_or_create(
@@ -217,7 +219,7 @@ class ProductVariationViewSet(mixins.RetrieveModelMixin,
     @is_product_in_cart
     def remove_single_from_cart(self, request, *args, **kwargs):
         """
-        Remove one instance of product out of cart.
+        Remove one instance of product's variation out of cart.
         """
         orderline = kwargs.get('orderline')
         if orderline.quantity > 1:
@@ -231,10 +233,83 @@ class ProductVariationViewSet(mixins.RetrieveModelMixin,
     @is_product_in_cart
     def remove_from_cart(self, request, *args, **kwargs):
         """
-        Remove product out of cart.
+        Remove product's variation out of cart.
         """
         orderline = kwargs.get('orderline')
         orderline.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(detail=False)
+    def favorites(self, request, *args, **kwargs):
+        """
+        Display list of user's favories variations.
+        """
+        user = request.user
+        if not hasattr(user, 'userfavorite'):
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        favorite = user.userfavorite
+        serializer_class = self.get_serializer_class()
+
+        serializer = serializer_class(
+            favorite.variations.select_related(
+                'size', 'product',
+            ).prefetch_related(
+                Prefetch('product__images'),
+                Prefetch('quantities__address'),
+            ),
+            many=True,
+        )
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=['post'])
+    def add_to_favorites(self, request, *args, **kwargs):
+        """
+        Add product's variation user's list of favories.
+        """
+        variation = self.get_object()
+        favorite, created = UserFavorite.objects.get_or_create(
+            user=request.user
+        )
+        if not created:
+            if favorite.variations.count() >= 5:
+                return Response(
+                    {'error': 'В избранное можно добавить не больше 5 товаров.'},
+                    status=status.HTTP_403_FORBIDDEN,
+                )
+
+            variations = favorite.variations.filter(id=variation.id)
+            if variations.exists():
+                return Response(
+                    {'error': 'Этот товар уже у Вас в избранном.'},
+                    status=status.HTTP_403_FORBIDDEN,
+                )
+
+        favorite.variations.add(variation)
+        favorite.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(detail=True, methods=['post'])
+    def remove_from_favorites(self, request, *args, **kwargs):
+        """
+        Remove product's variation out of favorites.
+        """
+        user = request.user
+        if not hasattr(user, 'userfavorite'):
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        favorite = user.userfavorite
+        variation = self.get_object()
+
+        variations = favorite.variations.filter(id=variation.id)
+        print(variations)
+        if not variations.exists():
+            return Response(
+                {'error': 'Этого товара нет у Вас в избранном.'},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        favorite.variations.remove(variation)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
