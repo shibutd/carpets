@@ -29,6 +29,10 @@ export const noveltiesUrl = `${productUrl}/?tag=novinki` // Novelties
 
 export const categoryUrl = `${storeUrl}/categories`
 
+// Promotions url
+
+export const promotionUrl = `${storeUrl}/promotions`
+
 // Products variations url
 
 export const productVariationUrl = `${storeUrl}/product-variations`
@@ -45,6 +49,18 @@ export const removeFromCartSingleUrl = (variationId) => {
 
 export const removeFromCartUrl = (variationId) => {
   return `${productVariationUrl}/${variationId}/remove_from_cart/`
+}
+
+// Interaction with favorites
+
+export const favoritesUrl = `${productVariationUrl}/favorites/`
+
+export const addToFavoritesUrl = (variationId) => {
+  return `${productVariationUrl}/${variationId}/add_to_favorites/`
+}
+
+export const removeFromFavoritesUrl = (variationId) => {
+  return `${productVariationUrl}/${variationId}/remove_from_favorites/`
 }
 
 // Orderlines url

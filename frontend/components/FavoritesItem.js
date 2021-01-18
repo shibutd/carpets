@@ -7,23 +7,31 @@ import { convertPrice, convertSize } from '../lib/utils/converters'
 
 export default function FavoritesItem(props) {
   const {
-    name,
-    slug,
     size,
     price,
+    name,
+    slug,
     images,
-    manufacturer,
-    material,
-    inStock,
+    // manufacturer,
+    // material,
+    quantities,
   } = props
 
   const mainImage = images.length > 0 ? images[0].image : null
-
   const imageName = name.replace(/ /g, '_').replace(/\"/g, '')
 
   const imageSrc = mainImage
     ? `/media/product-images/${imageName}.jpg`
     : `/media/product-images/No_Image.jpg`
+
+  const inStock = () => {
+    for (let i=0; i < quantities.length; i++) {
+      if (quantities[i].amount > 0)  {
+        return true
+      }
+    }
+    return false
+  }
 
   return (
     <div className="favorites-item">
@@ -39,13 +47,13 @@ export default function FavoritesItem(props) {
         <Link href={`/products/${slug}`} replace>
           <a><h5>{name}</h5></a>
         </Link>
-        <p>{`Производитель: ${manufacturer}`}</p>
-        <p>{`Материал: ${material}`}</p>
+        {/*<p>{`Производитель: ${manufacturer}`}</p>*/}
+        {/*<p>{`Материал: ${material}`}</p>*/}
         <p>{`Размер: ${convertSize(size)}`}</p>
       </div>
       <div className="favorites-item-price">
         <h5>{`${convertPrice(price)} ₽`}</h5>
-        <p>{inStock}</p>
+        <p>{inStock() ? 'Есть в наличии' : 'Нет в наличии'}</p>
       </div>
     </div>
   )
@@ -57,7 +65,7 @@ FavoritesItem.propTypes = {
   size: PropTypes.string,
   price: PropTypes.string,
   images: PropTypes.array,
-  manufacturer: PropTypes.string,
-  material: PropTypes.string,
-  inStock: PropTypes.string,
+  // manufacturer: PropTypes.string,
+  // material: PropTypes.string,
+  quantities: PropTypes.array,
 }

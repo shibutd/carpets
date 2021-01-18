@@ -287,7 +287,7 @@ class PromotionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Promotion
-        fields = ('title', 'description')
+        fields = ('id', 'title', 'description')
 
 
 class ProductSizeSerializer(serializers.ModelSerializer):

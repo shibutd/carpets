@@ -11,7 +11,6 @@ export default function VerticalCard(props) {
   const { title, slug, price, images, className } = props
 
   const mainImage = images.length > 0 ? images[0].image : null
-
   const imageName = title.replace(/ /g, '_').replace(/\"/g, '')
 
   const imageSrc = mainImage

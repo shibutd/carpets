@@ -77,7 +77,7 @@ export default function Home({ categories }) {
               key={hit.slug}
               title={hit.name}
               slug={hit.slug}
-              price={hit.minimum_price}
+              price={hit.minimumPrice}
               images={hit.images}
             />
           ))}
@@ -92,7 +92,7 @@ export default function Home({ categories }) {
               key={novelty.slug}
               title={novelty.name}
               slug={novelty.slug}
-              price={novelty.minimum_price}
+              price={novelty.minimumPrice}
               images={novelty.images}
             />
           ))}

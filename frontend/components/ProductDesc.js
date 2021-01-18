@@ -2,8 +2,12 @@ import { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 
 
-export default function ProductDesc({ product, quantities }) {
-  const { manufacturer, material, description } = product
+export default function ProductDesc({
+  manufacturer,
+  material,
+  description,
+  quantities,
+}) {
 
   const [currentTab, setCurrentTab] = useState(1)
   const [
@@ -178,6 +182,8 @@ export default function ProductDesc({ product, quantities }) {
 }
 
 ProductDesc.propTypes = {
-  product: PropTypes.object,
+  manufacturer: PropTypes.string,
+  material: PropTypes.string,
+  description: PropTypes.string,
   quantities: PropTypes.array,
 }

@@ -370,8 +370,6 @@ nav ul {
   flex: 1 1 25%;
   min-height: 30rem;
   transition: box-shadow 0.3s ease;
-  transition: transform .5s, opacity .5s, z-index .5s;
-
 }
 
 .vertical-card:hover {

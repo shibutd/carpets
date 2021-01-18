@@ -27,20 +27,26 @@ export async function getServerSideProps({ query }) {
 }
 
 export default function Product({ data }) {
-  const { variations } = data
-  const [selectedVariation, setSelectedVariation] = useState(
-    variations ? variations[0] : {}
-  )
+  const {
+    name,
+    slug,
+    images,
+    description,
+    manufacturer,
+    material,
+    variations
+  } = data
+  const [selectedVariationIdx, setSelectedVariationIdx] = useState(0)
 
   const handleOptionChange = (e) => {
     const targetValue = e.target.value
 
-    const variation = variations.find(
+    const variationIdx = variations.findIndex(
       v => (v.id === targetValue)
     )
 
-    if (variation) {
-      setSelectedVariation(variation)
+    if (variationIdx !== -1) {
+      setSelectedVariationIdx(variationIdx)
     }
   }
 
@@ -50,18 +56,24 @@ export default function Product({ data }) {
     >
       <section className="product-main">
         <ProductMain
-          product={data}
+          name={name}
+          slug={slug}
+          images={images}
           variations={variations}
-          option={selectedVariation}
+          index={selectedVariationIdx}
           onOptionChange={handleOptionChange}
         />
       </section>
 
       <section className="product-desc">
         <ProductDesc
-          product={data}
-          quantities={selectedVariation.quantities}
-          option={selectedVariation}
+          manufacturer={manufacturer}
+          material={material}
+          description={description}
+          quantities={variations
+            ? variations[selectedVariationIdx].quantities
+            : []}
+          index={selectedVariationIdx}
         />
       </section>
 

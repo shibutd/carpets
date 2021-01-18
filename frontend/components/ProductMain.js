@@ -1,26 +1,30 @@
+import { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import Image from 'next/image'
 
-import { useState, useEffect } from 'react'
+import HearthRegular from './icons/HearthRegular'
 import useCart from '../lib/hooks/useCart'
 import { convertPrice, convertSize } from '../lib/utils/converters'
-import HearthRegular from './icons/HearthRegular'
 
 
 export default function ProductMain({
-  product,
+  name,
+  slug,
+  images,
   variations,
-  option,
+  index,
   onOptionChange,
 }) {
-  const { name, slug } = product
-  let { image } = product
+  const [option, setOption] = useState(
+    () => variations.length > index ? variations[index] : {}
+  )
 
   const {
     cart,
     handleAddToCart,
     handleRemoveFromCart,
   } = useCart()
+
   const [isInCart, setIsInCart] = useState(() => checkIsInCart())
 
   function checkIsInCart() {
@@ -32,6 +36,10 @@ export default function ProductMain({
   }
 
   useEffect(() => {
+    setOption(variations[index])
+  }, [index])
+
+  useEffect(() => {
     if (checkIsInCart()) {
       setIsInCart(true)
     } else {
@@ -40,7 +48,7 @@ export default function ProductMain({
   }, [cart])
 
   // if (image !== undefined && image.startsWith('http')) {
-  image = `/media/product-images/${name.replace(' ', '_')}.jpg`
+  let image = `/media/product-images/${name.replace(/ /g, '_')}.jpg`
   // }
 
   return (
@@ -70,7 +78,7 @@ export default function ProductMain({
             ))}
           </select>
         </div>
-        <h3>{convertPrice(option.price)} ₽</h3>
+        <h3>{`${convertPrice(option.price)} ₽`}</h3>
         <div className="product-main-buttons">
           <button
             className="product-buy"
@@ -96,8 +104,10 @@ export default function ProductMain({
 }
 
 ProductMain.propTypes = {
-  product: PropTypes.object,
+  name: PropTypes.string,
+  slug: PropTypes.string,
+  images: PropTypes.array,
+  index: PropTypes.number,
   variations: PropTypes.array,
-  option: PropTypes.object,
   onOptionChange: PropTypes.func,
 }

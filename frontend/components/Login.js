@@ -48,7 +48,16 @@ export default function Login() {
     dispatch(login(data))
       .then(() => {
         updateCart()
-        router.push('/')
+        // console.log(router)
+        // if (router.pathname === '/login') {
+        //   router.push('/')
+        // } else {
+        //   const redirect = router.pathname.split('=')[1]
+        //   router.push(`${redirect}`)
+        // }
+        router.query.redirect
+          ? router.push(`${router.query.redirect}`)
+          : router.push('/')
       })
 
     setProcessing(false)
