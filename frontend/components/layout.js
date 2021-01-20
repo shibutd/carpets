@@ -8,6 +8,7 @@ import Footer from './Footer'
 export default function Layout({ title, children }) {
   const [user, loading] = useAuth()
   const { cart } = useCart()
+  console.log(user, loading)
 
   if (!loading) {
     return <div></div>

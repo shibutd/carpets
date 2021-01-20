@@ -206,9 +206,9 @@ class ProductCategoryWithPropertiesSerializer(serializers.ModelSerializer):
         ).distinct()
 
         return {
-            'manufacturers': list(manufacturers),
-            'materials': list(materials),
-            'sizes': list(sizes)
+            'manufacturer': list(manufacturers),
+            'material': list(materials),
+            'size': list(sizes)
         }
 
 
