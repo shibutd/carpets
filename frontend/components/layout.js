@@ -6,11 +6,10 @@ import Header from './Header'
 import Footer from './Footer'
 
 export default function Layout({ title, children }) {
-  const [user, loading] = useAuth()
+  const [user, loaded] = useAuth()
   const { cart } = useCart()
-  console.log(user, loading)
 
-  if (!loading) {
+  if (!loaded) {
     return <div></div>
   }
 

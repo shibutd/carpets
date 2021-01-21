@@ -157,11 +157,10 @@ nav ul {
   color: var(--blue-color);
 }
 
-
 #shopping-cart::before {
   content: attr(value);
   position: absolute;
-  left: 55%;
+  left: 65%;
   top: -15%;
   width: 18px;
   height: 18px;
@@ -353,23 +352,33 @@ nav ul {
 }
 
 .vertical-title {
-  width: 20%;
+  width: 20rem;
   padding-right: 1rem;
+}
+
+.vertical-wrapper {
+  position: relative;
+  overflow-x: hidden;
 }
 
 .vertical-cards {
   display: flex;
   flex: 1;
+  padding: 1rem 0;
   justify-content: stretch;
-  position: relative;
+  transition: transform 0.6s ease-in-out
 }
 
 .vertical-card {
-  display: none;
-  overflow: hidden;
-  flex: 1 1 25%;
+  /*display: none;*/
+  display: flex;
+  flex: 1 0 33%;
   min-height: 30rem;
   transition: box-shadow 0.3s ease;
+}
+
+.vertical-card:first-of-type {
+  margin-left: 1rem;
 }
 
 .vertical-card:hover {
@@ -404,7 +413,8 @@ nav ul {
 }
 
 .vertical-cart-icon,
-.vertical-cart-button {
+.vertical-cart-button,
+.vertical-cart-button a {
   color: var(--medium-gray-color);
   transition: color 0.4s ease;
 }
@@ -417,13 +427,15 @@ nav ul {
   color: var(--blue-color);
 }
 
-.vertical-cart-button {
+.vertical-cart-button,
+.vertical-cart-button a {
   background: var(--light-gray-color);
   border-radius: 50%;
   transition: background 0.4s ease;
 }
 
-.vertical-cart-button:hover {
+.vertical-cart-button:hover,
+.vertical-cart-button:hover a {
   color: white;
   background: var(--blue-color);
 }
@@ -433,7 +445,6 @@ nav ul {
   position: absolute;
   top: 50%;
   right: 0;
-  margin-top: -20px;
   padding-left: 8px;
   padding-top: 5px;
   height: 28px;
@@ -443,20 +454,22 @@ nav ul {
   color: white;
   font-size: 1.2rem;
   background-color: #bbb;
+  overflow: hidden;
   user-select: none;
   transition: 0.6s ease;
+  transform: translateY(-50%);
 }
 
 .prev-vertical-card {
   padding-left: 1rem;
   margin-left: -0.9rem;
-  left: 0;
+  left: 2%;
 }
 
 .next-vertical-card {
   padding-left: 1.1rem;
   margin-right: -0.9rem;
-  right: 0;
+  right: 2%;
 }
 
 .prev-vertical-card:hover,

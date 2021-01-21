@@ -2,19 +2,10 @@ import { useState, useEffect, useRef, Children } from 'react'
 import PropTypes from 'prop-types'
 
 export default function VerticalCards({ children }) {
-  const [startIndex, setStartIndex] = useState(1)
+  const [moveCounter, setMoveCounter] = useState(0)
   const [cardsLength, setCardsLength] = useState(3)
   const cardsRef = useRef(null)
   const [childrenCount, setChildrenCount] = useState(Children.count(children))
-
-  function computeIndex(index) {
-    if (index < 1) {
-      index = 1
-    } else if (index > (childrenCount - cardsLength + 1)) {
-      index = childrenCount - cardsLength + 1
-    }
-    return index
-  }
 
   function changeCardsLength() {
     if (document.documentElement.clientWidth <= 1280) {
@@ -28,36 +19,41 @@ export default function VerticalCards({ children }) {
     const prevArrow = cardsRef.current.querySelector(".prev-vertical-card")
     const nextArrow = cardsRef.current.querySelector(".next-vertical-card")
 
-    switch (startIndex) {
-      case 1:
+    switch (moveCounter) {
+      case 0:
         prevArrow.style.display = "none"
+        nextArrow.style.display = ""
         break
-      case (childrenCount - cardsLength + 1):
+      case (childrenCount - cardsLength):
+        prevArrow.style.display = ""
         nextArrow.style.display = "none"
         break
       default:
         prevArrow.style.display = ""
         nextArrow.style.display = ""
     }
+
+    if (childrenCount === 0) {
+        prevArrow.style.display = "none"
+        nextArrow.style.display = "none"
+    }
   }
 
-  function showContent(index) {
+  function updateCounter(value) {
+    const newValue = moveCounter + value
+    if (newValue >= 0 && newValue < (childrenCount - cardsLength + 1)) {
+      setMoveCounter(newValue)
+    }
+  }
+
+  function updateContent() {
+    const cardsSlide = cardsRef.current.querySelector(".vertical-cards")
     const cards = Array.from(
       cardsRef.current.querySelectorAll(".vertical-card")
     )
+    const size = cards.length > 0 ? cards[0].clientWidth : 0
 
-    cards.map((card, i) => {
-      if ((i < index - 1) || (i >= (index + cardsLength - 1))) {
-        card.style.display = "none"
-      } else {
-        card.style.display = "flex"
-      }
-    })
-  }
-
-  const moveContent = (n) => {
-    let index = computeIndex(startIndex + n)
-    setStartIndex(index)
+    cardsSlide.style.transform = `translateX(-${size * moveCounter}px)`
   }
 
   useEffect(() => {
@@ -72,33 +68,29 @@ export default function VerticalCards({ children }) {
   }, [children])
 
   useEffect(() => {
-    const index = computeIndex(startIndex)
-    setStartIndex(index)
-  }, [cardsLength, childrenCount])
-
-  useEffect(() => {
-    showContent(startIndex)
+    updateContent()
     showArrows()
-  }, [startIndex, cardsLength, childrenCount])
+  }, [moveCounter, cardsLength, childrenCount])
 
   return (
-    <>
-      <div ref={cardsRef} className="vertical-cards">
+    <div ref={cardsRef} className="vertical-wrapper">
+      <div className="vertical-cards">
         {children}
-        <a
-          className="prev-vertical-card"
-          onClick={() => moveContent(-1)}
-        >
-          &#10094;
-        </a>
-        <a
-          className="next-vertical-card"
-          onClick={() => moveContent(1)}
-        >
-          &#10095;
-        </a>
+
       </div>
-    </>
+      <a
+        className="prev-vertical-card"
+        onClick={() => updateCounter(-1)}
+      >
+        &#10094;
+      </a>
+      <a
+        className="next-vertical-card"
+        onClick={() => updateCounter(1)}
+      >
+        &#10095;
+      </a>
+    </div>
   )
 }
 

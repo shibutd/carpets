@@ -45,7 +45,11 @@ export default function VerticalCard(props) {
           <HearthRegular height={20} width={20} />
         </button>
         <button className="vertical-cart-button">
-          <ShoppingCartSolid height={20} width={20} />
+          <Link href={`/products/${slug}`}>
+            <a>
+              <ShoppingCartSolid height={20} width={20} />
+            </a>
+          </Link>
         </button>
       </div>
     </div>

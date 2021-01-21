@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import PropTypes from 'prop-types'
 
-export function useSlide({ value, ...config}) {
+export function useSlide({ value, ...config }) {
   const [sliderVal, setSliderVal] = useState(value)
   const [configuration, setConfiguration] = useState(config)
 
@@ -41,7 +41,9 @@ function Slider({ classes, label, onChange, value, ...sliderProps }) {
   return (
     <div className="slider">
       <div className="slider-text">
-        <div>от</div><div className="slider-value">{sliderVal}</div><div>метров</div>
+        <div>от</div>
+        <div className="slider-value">{sliderVal}</div>
+        <div>метров</div>
       </div>
       <input
         type="range"
