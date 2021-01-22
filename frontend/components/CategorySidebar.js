@@ -12,11 +12,15 @@ export default function CategorySidebar({ properties, onChange }) {
   // Checkboxes
   const [checkboxes, setCheckboxes] = useState(() => {
     const propertiesCopy = { ...properties }
-    if (useCheckboxForSize) { delete propertiesCopy.size }
+    if (useCheckboxForSize) {
+      delete propertiesCopy.size
+    }
     let checkboxArray = []
+
     Object.entries(properties).forEach(([k, v]) => {
       v.forEach((x) => checkboxArray.push({ type: k, name: x, value: false }))
     })
+
     return checkboxArray
   })
 

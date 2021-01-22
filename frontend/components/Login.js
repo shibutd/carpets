@@ -33,28 +33,12 @@ export default function Login() {
     },
   })
 
-
   const handleLoginFormSubmit = (data) => {
     setProcessing(true)
-    console.log(data)
-    // const dispatchResponse = await dispatch(login(data))
 
-    // if (dispatchResponse.meta.requestStatus === "fulfilled") {
-    //   console.log("login response successful")
-    //   router.push('/')
-    // } else {
-    //   console.log("login response unsuccessful")
-    // }
     dispatch(login(data))
       .then(() => {
         updateCart()
-        // console.log(router)
-        // if (router.pathname === '/login') {
-        //   router.push('/')
-        // } else {
-        //   const redirect = router.pathname.split('=')[1]
-        //   router.push(`${redirect}`)
-        // }
         router.query.redirect
           ? router.push(`${router.query.redirect}`)
           : router.push('/')

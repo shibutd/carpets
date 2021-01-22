@@ -180,6 +180,7 @@ nav ul {
   flex: 3 1 auto;
   justify-self: stretch;
   padding: 0 2rem 0 5rem;
+  position: relative;
 }
 
 .search-nav-input input {
@@ -197,11 +198,51 @@ nav ul {
   border-color: var(--blue-color);
 }
 
-.search-nav-input a {
+.search-nav-input button {
   padding-left: 1rem;
   padding-right: 1rem;
   margin-left: -1rem;
   align-self: center;
+  color: var(--dark-gray-color);
+  background: none;
+}
+
+.search-nav-input button:hover {
+  color: var(--blue-color);
+}
+
+#search-close-button {
+  display: flex;
+  position: absolute;
+  right: 7%;
+  color: var(--dark-gray-color);
+}
+
+#search-close-button:hover {
+  color: var(--blue-color);
+}
+
+#search-close-button p {
+  transform: translateX(-60px);
+}
+
+.search-nav-result {
+  position: absolute;
+  top: 100%;
+  width: 89%;
+  background: var(--blue-color);
+  color: white;
+
+  z-index: 100;
+}
+
+.search-nav-result div,
+.search-nav-result p {
+  overflow: hidden;
+  font-size: var(--text);
+  margin: 2rem 2rem;
+  height: 100%;
+  color: white;
 }
 
 
@@ -218,7 +259,7 @@ nav ul {
 .slides {
   box-shadow: 6px 6px 6px 2px rgba(80, 80, 80, .3);
   width: 100%;
-  overflow: hidden;
+  z-index: -1;
 }
 
 /* Hide the images by default */

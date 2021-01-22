@@ -7,8 +7,8 @@ import Link from 'next/link'
 import UserIcon from './UserIcon'
 import ShoppingCartSolid from './icons/ShoppingCartSolid'
 import HearthRegular from './icons/HearthRegular'
-import SearchSolid from './icons/SearchSolid'
-
+// import SearchSolid from './icons/SearchSolid'
+import Search from './Search'
 
 export default function Header({ title, user, cart }) {
   const [cartLength, setCartLength] = useState(0)
@@ -57,12 +57,15 @@ export default function Header({ title, user, cart }) {
 
       <nav className="search-nav">
         <button>Каталог товаров</button>
-        <div className="search-nav-input">
+
+        {/*<div className="search-nav-input">
           <input type="text" placeholder="Поиск по товарам" />
           <a href="#">
             <SearchSolid width={18} height={18} />
           </a>
-        </div>
+        </div>*/}
+        <Search />
+
         <ul>
           <li>
             <UserIcon user={user} />
