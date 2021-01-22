@@ -9,7 +9,6 @@ from store.views import (
     PickupAddressList,
     ProductCategoryViewSet,
     PromotionList,
-    ProductSizeList,
 )
 
 app_name = 'store'
@@ -29,5 +28,4 @@ urlpatterns = [
         name='pickup-address-list'
     ),
     path('promotions/', PromotionList.as_view(), name='promotion-list'),
-    path('product-sizes/', ProductSizeList.as_view(), name='productsize-list'),
 ]

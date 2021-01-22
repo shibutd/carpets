@@ -12,8 +12,9 @@ from store.models import (
     ProductCategory,
     ProductManufacturer,
     ProductMaterial,
-    ProductSize,
-    ProductTag,
+    ProductVariation,
+    VariationSize,
+    VariationTag,
 )
 
 
@@ -36,18 +37,13 @@ class ProductFilter(filters.FilterSet):
         field_name='material__name',
         to_field_name='name',
     )
-    tag = filters.ModelMultipleChoiceFilter(
-        queryset=ProductTag.objects.all(),
-        field_name='tags__slug',
-        to_field_name='slug',
-    )
     size = filters.ModelMultipleChoiceFilter(
-        queryset=ProductSize.objects.all(),
+        queryset=VariationSize.objects.all(),
         field_name='variations__size__value',
         to_field_name='value',
     )
-    from_size = filters.CharFilter(method='filter_size')
-    to_size = filters.CharFilter(method='filter_size')
+    width = filters.CharFilter(method='filter_size')
+    length = filters.CharFilter(method='filter_size')
     search = filters.CharFilter(method='filter_search')
 
     class Meta:
@@ -56,36 +52,39 @@ class ProductFilter(filters.FilterSet):
             'category',
             'manufacturer',
             'material',
-            'tag',
             'size',
-            'from_size',
-            'to_size',
+            'width',
+            'length',
             'search',
         )
 
     def filter_size(self, queryset, name, value):
         """
         Allow filter product sizes string with range:
-        'from_size', 'to_size'.
+        'width', 'length'.
         """
+        print(value)
         category = self.request.query_params.get('category')
         if category is None:
             return queryset
 
         sizes = list(
-            ProductSize.objects.filter(
+            VariationSize.objects.filter(
                 variations__product__category__slug=category
             ).values_list(
                 'value',
                 flat=True,
             ).distinct()
         )
-        if name == 'from_size':
-            sizes = filter(lambda x: x.split('*')[0] >= value, sizes)
-        elif name == 'to_size':
-            sizes = filter(lambda x: x.split('*')[1] <= value, sizes)
-
+        minimum, maximum = value.split('%')
+        index = 0 if name == 'width' else 1
+        print(sizes)
+        sizes = filter(
+            lambda x: minimum <= x.split('*')[index] <= maximum,
+            sizes,
+        )
         sizes = set(sizes)
+        print(sizes)
 
         queryset = queryset.filter(variations__size__value__in=sizes)
         return queryset
@@ -118,3 +117,15 @@ class ProductFilter(filters.FilterSet):
             ).filter(similarity__gt=0.2).order_by('-similarity')
 
         return results
+
+
+class ProductVariationFilter(filters.FilterSet):
+    tag = filters.ModelMultipleChoiceFilter(
+        queryset=VariationTag.objects.all(),
+        field_name='tags__slug',
+        to_field_name='slug',
+    )
+
+    class Meta:
+        model = ProductVariation
+        fields = ('tag',)

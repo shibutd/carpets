@@ -39,7 +39,6 @@ class Product(models.Model):
     slug = models.SlugField(max_length=48, unique=True)
     description = models.TextField(blank=True, null=True)
     date_updated = models.DateTimeField(auto_now=True)
-    tags = models.ManyToManyField('ProductTag', blank=True)
 
     class Meta:
         verbose_name = 'товар'
@@ -76,14 +75,7 @@ class ProductCategory(models.Model):
         return self.name
 
 
-class ProductSize(models.Model):
-    """
-    Product size model class.
-    """
-    value = models.CharField(max_length=48)
 
-    def __str__(self):
-        return self.value
 
 
 class ProductManufacturer(models.Model):
@@ -148,22 +140,6 @@ class ProductImage(models.Model):
         verbose_name_plural = 'изображения товаров'
 
 
-class ProductTag(models.Model):
-    name = models.CharField(max_length=20)
-    slug = models.SlugField(max_length=20, unique=True)
-
-    class Meta:
-        verbose_name = 'тег'
-        verbose_name_plural = 'теги'
-
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
-        super().save(*args, **kwargs)
-
-    def __str__(self):
-        return self.name
-
-
 class VariationInStockManager(models.Manager):
 
     def in_stock(self):
@@ -185,7 +161,7 @@ class ProductVariation(models.Model):
         on_delete=models.CASCADE,
     )
     size = models.ForeignKey(
-        'ProductSize',
+        'VariationSize',
         related_name='variations',
         on_delete=models.CASCADE,
     )
@@ -194,6 +170,7 @@ class ProductVariation(models.Model):
         decimal_places=2,
         default=1000.00
     )
+    tags = models.ManyToManyField('VariationTag', blank=True)
     in_stock = models.BooleanField(default=True)
     date_updated = models.DateTimeField(auto_now=True)
 
@@ -215,6 +192,32 @@ class VariationQuantity(models.Model):
         on_delete=models.CASCADE,
     )
     amount = models.PositiveIntegerField(default=0)
+
+
+class VariationTag(models.Model):
+    name = models.CharField(max_length=20)
+    slug = models.SlugField(max_length=20, unique=True)
+
+    class Meta:
+        verbose_name = 'тег'
+        verbose_name_plural = 'теги'
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
+
+
+class VariationSize(models.Model):
+    """
+    Product size model class.
+    """
+    value = models.CharField(max_length=48)
+
+    def __str__(self):
+        return self.value
 
 
 class OrderStatus(models.IntegerChoices):

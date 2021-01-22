@@ -31,7 +31,7 @@ export default function Favorites() {
 
   useEffect(() => {
     getFavorites().then((res) => {
-      setFavoriteItems(res.data)
+      setFavoriteItems(res ? res.data : [])
       setFavoritesLoading(false)
     })
   }, [])

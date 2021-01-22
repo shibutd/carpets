@@ -3,7 +3,6 @@ from functools import wraps
 from django.db.models import Prefetch
 from rest_framework import status
 from rest_framework import generics
-from rest_framework import mixins
 from rest_framework import views
 from rest_framework import viewsets
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -11,18 +10,18 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from store.pagination import PageSizePagination
-from store.filters import ProductFilter
+from store.filters import ProductFilter, ProductVariationFilter
 from store.serializers import (
     ProductSerializer,
     ProductCategorySerializer,
     ProductCategoryWithPropertiesSerializer,
     ProductVariationSerializer,
+    ProductVariationWithoutQuntitiesSerializer,
     ProductWithVariationsSerializer,
     PickupOrderSerializer,
     OrderLineSerializer,
     PickupAddressSerializer,
     PromotionSerializer,
-    ProductSizeSerializer,
 )
 from authentication.models import UserFavorite
 from store.models import (
@@ -35,7 +34,6 @@ from store.models import (
     OrderStatus,
     PickupAddress,
     Promotion,
-    ProductSize,
 )
 
 
@@ -179,17 +177,63 @@ def is_product_in_cart(func):
     return wrapper
 
 
-class ProductVariationViewSet(mixins.RetrieveModelMixin,
-                              viewsets.GenericViewSet):
+class ProductVariationViewSet(viewsets.ReadOnlyModelViewSet):
     """
     Viewset for retrieving and manupulation products variations.
     Contain custom action to add products to user's cart and
     remove from cart.
     """
     queryset = ProductVariation.objects.all()
-    serializer_class = ProductVariationSerializer
-    permission_classes = [IsAuthenticated]
+    filterset_class = ProductVariationFilter
     lookup_field = 'id'
+
+    def get_serializer_class(self):
+        """
+        Return serializer class depending on request's action.
+        """
+        if self.action == 'list':
+            serializer_class = ProductVariationWithoutQuntitiesSerializer
+        else:
+            serializer_class = ProductVariationSerializer
+        return serializer_class
+
+    def get_permissions(self):
+        """
+        Return the list of permissions required by this view
+        depending on request's action.
+        """
+        if self.action == 'list':
+            permission_classes = [AllowAny]
+        else:
+            permission_classes = [IsAuthenticated]
+        return [permission() for permission in permission_classes]
+
+    def get_queryset(self):
+        """
+        Return queryset prefetching required fields.
+        """
+        queryset = self.queryset
+
+        queryset = queryset.select_related(
+            'size'
+        ).prefetch_related(
+            'product__images'
+        )
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        """
+        Ensure request contain tag filter query parameters.
+        """
+        tag = self.request.query_params.get('tag')
+
+        if tag is None:
+            return Response(
+                {'tag': 'Required field not found.'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        return super().list(request, *args, **kwargs)
 
     @action(detail=True, methods=['post'])
     def add_to_cart(self, request, *args, **kwargs):
@@ -338,37 +382,3 @@ class PromotionList(generics.ListAPIView):
     queryset = Promotion.objects.all()
     serializer_class = PromotionSerializer
     permission_classes = (AllowAny,)
-
-
-class ProductSizeList(generics.ListAPIView):
-    """
-    Display list of product variations' sizes.
-    """
-    queryset = ProductSize.objects.all()
-    serializer_class = ProductSizeSerializer
-    permission_classes = (AllowAny,)
-
-    def get_queryset(self):
-        queryset = self.queryset
-
-        category = self.request.query_params.get('category')
-
-        if category is not None:
-            queryset = queryset.filter(
-                variations__product__category__slug=category
-            ).prefetch_related(
-                'variations__product__category'
-            ).distinct()
-
-        return queryset
-
-    def list(self, request, *args, **kwargs):
-        category = self.request.query_params.get('category')
-
-        if category is None:
-            return Response(
-                {'category': 'Required field not found.'},
-                status=status.HTTP_403_FORBIDDEN
-            )
-
-        return super().list(request, *args, **kwargs)

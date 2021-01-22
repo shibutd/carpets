@@ -83,7 +83,7 @@ class Command(BaseCommand):
     def create_tags(self, tag_name):
         tag, created = ProductTag.objects.get_or_create(name=tag_name)
         if created:
-            products = Product.objects.all()
+            products = ProductVariation.objects.all()
             products_count = products.count()
             for idx in random.sample(range(products_count), k=5):
                 products[idx].tags.add(tag)
