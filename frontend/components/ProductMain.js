@@ -1,13 +1,14 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, memo } from 'react'
 import PropTypes from 'prop-types'
 import Image from 'next/image'
 
 import HearthRegular from './icons/HearthRegular'
 import useCart from '../lib/hooks/useCart'
+import useFavorites from '../lib/hooks/useFavorites'
 import { convertPrice, convertSize } from '../lib/utils/converters'
 
 
-export default function ProductMain({
+function ProductMain({
   name,
   slug,
   images,
@@ -18,7 +19,7 @@ export default function ProductMain({
   const [option, setOption] = useState(
     () => variations.length > index ? variations[index] : {}
   )
-
+  const { addToFavorites } = useFavorites()
   const {
     cart,
     handleAddToCart,
@@ -94,7 +95,11 @@ export default function ProductMain({
           >
             Убрать из корзины
           </button>)}
-          <button className="product-favorite">
+          <button
+            className="product-favorite tooltip"
+            value="Добавить в избранное"
+            onClick={() => addToFavorites(option.id)}
+          >
             <HearthRegular height={17} width={17} color={"white"} />
           </button>
         </div>
@@ -111,3 +116,5 @@ ProductMain.propTypes = {
   variations: PropTypes.array,
   onOptionChange: PropTypes.func,
 }
+
+export default memo(ProductMain)

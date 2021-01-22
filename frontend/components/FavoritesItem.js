@@ -7,6 +7,7 @@ import { convertPrice, convertSize } from '../lib/utils/converters'
 
 export default function FavoritesItem(props) {
   const {
+    id,
     size,
     price,
     name,
@@ -15,6 +16,7 @@ export default function FavoritesItem(props) {
     // manufacturer,
     // material,
     quantities,
+    onDelete,
   } = props
 
   const mainImage = images.length > 0 ? images[0].image : null
@@ -54,6 +56,7 @@ export default function FavoritesItem(props) {
       <div className="favorites-item-price">
         <h5>{`${convertPrice(price)} ₽`}</h5>
         <p>{inStock() ? 'Есть в наличии' : 'Нет в наличии'}</p>
+        <button onClick={() => onDelete(id)}>Удалить из избранного</button>
       </div>
     </div>
   )
@@ -68,4 +71,5 @@ FavoritesItem.propTypes = {
   // manufacturer: PropTypes.string,
   // material: PropTypes.string,
   quantities: PropTypes.array,
+  onDelete: PropTypes.func,
 }

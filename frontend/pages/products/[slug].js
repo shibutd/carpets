@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import PropTypes from 'prop-types'
 
 import Layout from '../../components/Layout'
@@ -6,6 +6,7 @@ import ProductMain from '../../components/ProductMain'
 import ProductDesc from '../../components/ProductDesc'
 import VerticalCards from '../../components/VerticalCards'
 import VerticalCard from '../../components/VerticalCard'
+import useFavorites from '../../lib/hooks/useFavorites'
 import { productUrl } from '../../constants'
 
 const similarProducts = []
@@ -38,7 +39,7 @@ export default function Product({ data }) {
   } = data
   const [selectedVariationIdx, setSelectedVariationIdx] = useState(0)
 
-  const handleOptionChange = (e) => {
+  const handleOptionChange = useCallback((e) => {
     const targetValue = e.target.value
 
     const variationIdx = variations.findIndex(
@@ -48,7 +49,7 @@ export default function Product({ data }) {
     if (variationIdx !== -1) {
       setSelectedVariationIdx(variationIdx)
     }
-  }
+  }, [])
 
   return (
     <Layout

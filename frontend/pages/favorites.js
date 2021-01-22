@@ -1,39 +1,40 @@
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/router'
+// import { useRouter } from 'next/router'
 
 import Layout from '../components/Layout'
 import FavoritesItem from '../components/FavoritesItem'
-import useAuth from '../lib/hooks/useAuth'
-import { authAxios } from '../lib/utils/authAxios'
-import { favoritesUrl } from '../constants'
+// import useAuth from '../lib/hooks/useAuth'
+// import { authAxios } from '../lib/utils/authAxios'
+// import { favoritesUrl } from '../constants'
+import useFavorites from '../lib/hooks/useFavorites'
 
 
 export default function Favorites() {
   // const router = useRouter()
-  const [favorites, setFavorites] = useState([])
+  const [favoriteItems, setFavoriteItems] = useState([])
   const [favoritesLoading, setFavoritesLoading] = useState(true)
   // const [user, loading] = useAuth()
+  const {
+    getFavorites,
+    removeFromFavorites,
+  } = useFavorites()
+
+  async function handleRemoveFavorite(id) {
+    const res = await removeFromFavorites(id)
+    if (res.status === 204) {
+      const newFavorites = favoriteItems.filter(
+        (item) => (item.id !== id)
+      )
+      setFavoriteItems(newFavorites)
+    }
+  }
 
   useEffect(() => {
-    async function fetchData(url) {
-      const data = await authAxios().get(url)
-
-      if (!data) {
-        return []
-      }
-
-      return data.data
-    }
-
-    fetchData(favoritesUrl).then(data => {
-      setFavorites(data)
+    getFavorites().then((res) => {
+      setFavoriteItems(res.data)
       setFavoritesLoading(false)
     })
   }, [])
-
-  // if (loading) {
-  //   return <div></div>
-  // }
 
   return (
     <Layout
@@ -42,16 +43,18 @@ export default function Favorites() {
       <section className="favorites">
         <h1>Избранное</h1>
         <div className="favorites-wrapper">
-          {favorites?.length > 0 ? (
-            favorites.map((favorite) => (
+          {favoriteItems?.length > 0 ? (
+            favoriteItems.map((item) => (
               <FavoritesItem
-                key={favorite.id}
-                size={favorite.size}
-                price={favorite.price}
-                name={favorite.product.name}
-                slug={favorite.product.slug}
-                images={favorite.product.images}
-                quantities={favorite.quantities}
+                key={item.id}
+                id={item.id}
+                size={item.size}
+                price={item.price}
+                name={item.product.name}
+                slug={item.product.slug}
+                images={item.product.images}
+                quantities={item.quantities}
+                onDelete={handleRemoveFavorite}
               />
             ))) : (
               favoritesLoading ? (
