@@ -132,11 +132,31 @@ nav ul {
   display: flex;
   justify-content: center;
   flex: 1 1 40rem;
+  position: relative;
 }
 
 .top-nav-address a {
   align-self: center;
   padding-left: 2rem;
+}
+
+.top-nav-address-list {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 77%;
+  left: 12%;
+  width: 50vw;
+  background: var(--blue-color);
+  color: black;
+  z-index: 100;
+}
+
+.top-nav-address-item {
+  color: var(--bg-gray-color);
+  font-size: var(--text);
+  padding: 1.6rem;
+  cursor: pointer;
 }
 
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import Image from 'next/image'
 import Head from 'next/head'
@@ -7,11 +7,17 @@ import Link from 'next/link'
 import UserIcon from './UserIcon'
 import ShoppingCartSolid from './icons/ShoppingCartSolid'
 import HearthRegular from './icons/HearthRegular'
-// import SearchSolid from './icons/SearchSolid'
 import Search from './Search'
+import ShopAddresses from './ShopAddresses'
 
 export default function Header({ title, user, cart }) {
   const [cartLength, setCartLength] = useState(0)
+  const [openedAddresses, setOpenedAddresses] = useState(false)
+  // const [openCatalog, setOpenCatalog] = useState(false)
+
+  const handleOpenAddresses = useCallback(() => {
+    setOpenedAddresses(prev => !prev)
+  }, [])
 
   useEffect(() => {
     let length = 0
@@ -43,10 +49,10 @@ export default function Header({ title, user, cart }) {
             />
           </a>
         </Link>
-        <div className="top-nav-address">
-          <button>Адреса магазинов</button>
-          <a href="">+7 (343) 237 47 47</a>
-        </div>
+        <ShopAddresses
+          opened={openedAddresses}
+          handleClick={handleOpenAddresses}
+        />
         <ul>
           <li><Link href="/promotions"><a>Акции</a></Link></li>
           <li><Link href="/delivery"><a>Доставка и оплата</a></Link></li>
@@ -57,15 +63,7 @@ export default function Header({ title, user, cart }) {
 
       <nav className="search-nav">
         <button>Каталог товаров</button>
-
-        {/*<div className="search-nav-input">
-          <input type="text" placeholder="Поиск по товарам" />
-          <a href="#">
-            <SearchSolid width={18} height={18} />
-          </a>
-        </div>*/}
         <Search />
-
         <ul>
           <li>
             <UserIcon user={user} />

@@ -67,3 +67,8 @@ export const removeFromFavoritesUrl = (variationId) => {
 // Orderlines url
 
 export const orderLineUrl = `${storeUrl}/orderlines`
+
+
+// Pickup addresses
+
+export const pickupAddressUrl = `${storeUrl}/pickup-addresses/`
