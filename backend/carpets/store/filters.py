@@ -76,9 +76,9 @@ class ProductFilter(filters.FilterSet):
                 flat=True,
             ).distinct()
         )
+        print(sizes)
         minimum, maximum = value.split('%')
         index = 0 if name == 'width' else 1
-        print(sizes)
         sizes = filter(
             lambda x: minimum <= x.split('*')[index] <= maximum,
             sizes,

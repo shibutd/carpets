@@ -19,12 +19,6 @@ export const storeUrl = `${targetUrl}/store`
 
 export const productUrl = `${storeUrl}/products`
 
-// Specific tag urls
-
-export const hitsUrl = `${productUrl}/?tag=khity` // Hits
-
-export const noveltiesUrl = `${productUrl}/?tag=novinki` // Novelties
-
 // Categories url
 
 export const categoryUrl = `${storeUrl}/categories`
@@ -36,6 +30,13 @@ export const promotionUrl = `${storeUrl}/promotions`
 // Products variations url
 
 export const productVariationUrl = `${storeUrl}/product-variations`
+
+// Specific tag urls
+
+export const hitsUrl = `${productVariationUrl}/?tag=khity` // Hits
+
+export const noveltiesUrl = `${productVariationUrl}/?tag=novinki` // Novelties
+
 
 // Interaction with cart
 

@@ -6,13 +6,17 @@ import Image from 'next/image'
 import HearthRegular from './icons/HearthRegular'
 import ShoppingCartSolid from './icons/ShoppingCartSolid'
 import useFavorites from '../lib/hooks/useFavorites'
+import useAuth from '../lib/hooks/useAuth'
+import useCart from '../lib/hooks/useCart'
 import { convertPrice } from '../lib/utils/converters'
 
 
-export default function VerticalCard(props) {
-  const { title, slug, price, images, className } = props
+export default function VerticalVariationCard(props) {
+  const { id, title, slug, size, price, images, className } = props
   const cardRef = useRef(null)
   const { addToFavorites } = useFavorites()
+  const { user } = useAuth()
+  const { handleAddToCart } = useCart()
 
   const mainImage = images.length > 0 ? images[0].image : null
   const imageName = title.replace(/ /g, '_').replace(/\"/g, '')
@@ -23,13 +27,25 @@ export default function VerticalCard(props) {
 
   const handleClickFavorite = useCallback(() => {
     const favoriteIcon = cardRef.current.querySelector('.vertical-cart-icon')
+
+    if (!user) {
+      favoriteIcon.value = "Войдите в аккаунт"
+      setTimeout(() => {
+        favoriteIcon.classList.remove('vertical-cart-icon-pushed')
+        favoriteIcon.value = "Добавить в избранное"
+      }, 2000)
+      return
+    }
+
     favoriteIcon.classList.add('vertical-cart-icon-pushed')
-    favoriteIcon.classList.remove('tooltip')
+    favoriteIcon.value = "Добавлено!"
+
     setTimeout(() => {
       favoriteIcon.classList.remove('vertical-cart-icon-pushed')
-      favoriteIcon.classList.add('tooltip')
+      favoriteIcon.value = "Добавить в избранное"
     }, 2000)
-    // addToFavorites(slug)
+
+    addToFavorites(id)
   }, [])
 
   return (
@@ -55,7 +71,7 @@ export default function VerticalCard(props) {
           <Link href={`/products/${slug}`}><a>{title}</a></Link>
         </div>
         <div className="vertical-card-cost">
-          {`от ${convertPrice(price)} ₽`}
+          {`${convertPrice(price)} ₽`}
         </div>
       </div>
       <div className="vertical-card-right">
@@ -68,22 +84,23 @@ export default function VerticalCard(props) {
         </button>
         <button
           className="vertical-cart-button"
+          onClick={() => handleAddToCart({
+            name, slug, id, size, price
+          })}
         >
-          <Link href={`/products/${slug}`}>
-            <a>
-              <ShoppingCartSolid height={20} width={20} />
-            </a>
-          </Link>
+          <ShoppingCartSolid height={20} width={20} />
         </button>
       </div>
     </div>
   )
 }
 
-VerticalCard.propTypes = {
+VerticalVariationCard.propTypes = {
+  id: PropTypes.string,
   title: PropTypes.string,
   slug: PropTypes.string,
-  price: PropTypes.number,
+  size: PropTypes.string,
+  price: PropTypes.string,
   images: PropTypes.arrayOf(PropTypes.object),
   className: PropTypes.string,
 }

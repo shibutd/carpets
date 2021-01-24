@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { useQuery } from 'react-query'
 
 import Layout from '../../components/Layout'
-import VerticalCard from '../../components/VerticalCard'
+import VerticalProductCard from '../../components/VerticalProductCard'
 import CategorySidebar from '../../components/CategorySidebar'
 import { fetchProducts } from '../../lib/utils/fetchProducts'
 import { categoryUrl } from '../../constants'
@@ -27,21 +27,14 @@ export async function getServerSideProps({ query }) {
 
 export default function Category({ category }) {
   const { name, slug, properties } = category
-  // const { manufacturers, materials, sizes } = properties
   const [filterConditions, setFilterConditions] = useState([])
-  // const [filterConditions, setFilterConditions] = useState(() => {
-  //   const initialConditions = properties.reduce(
-  //     (properties, property) => ({ ...properties, [property]: [] })
-  //   )
-  //   return { ...initialConditions, from_size: '', to_size: '' }
-  // })
+
   const [page, setPage] = useState(1)
   const {
     isLoading,
     isError,
-    error,
     data,
-    isFetching,
+    // isFetching,
     isPreviousData,
   } = useQuery(
     ['products', slug, page, filterConditions],
@@ -54,74 +47,80 @@ export default function Category({ category }) {
     }
   )
 
-  const handleChangeFilterConditions = (checkboxes) => {
-    const conditions = checkboxes.filter((item) => item.value)
-    console.log(conditions)
-    setFilterConditions(conditions)
-    // const newConditions = properties.map(
-    //   (properties, property) => ({ ...properties, [property]: [] })
-    // )
-    // return { ...initialConditions, from_size: '', to_size: '' }
-  }
+  const handleChangeFilterConditions = useCallback(
+    (checkboxes, ranges) => {
+      let conditions = checkboxes.filter(item => item.value)
+      setFilterConditions([ ...conditions, ...ranges])
+    }, [])
 
+  const handlePrevPage = useCallback(() => {
+    setPage(old => Math.max(old - 1, 0))
+  }, [])
 
-  // const [products, setProducts] = useState([])
-
-  // useEffect(() => {
-  //   async function fetchData(url) {
-  //     const res = await fetch(url)
-  //     let data = await res.json()
-
-  //     if (!data) {
-  //       return []
-  //     }
-
-  //     return data.results
-  //   }
-
-  //   const url = `${productUrl}?category=${slug}`
-  //   fetchData(url).then(data => setProducts(data))
-  // }, [])
-
-  if (isLoading) {
-    return (<div></div>)
-  }
+  const handleNextPage = useCallback(() => {
+    if (!isPreviousData && data.next) {
+      setPage(old => old + 1)
+    }
+  }, [])
 
   return (
     <Layout
       title={`${name} | Алладин96.ру`}
     >
-
       <section className="category-main">
         <h1>{name}</h1>
-
         <div className="category-wrapper">
-
           <div className="category-product-list">
-            {data.results.map((product) => (
-              <VerticalCard
-                key={product.slug}
-                title={product.name}
-                slug={product.slug}
-                price={product.minimumPrice}
-                images={product.images}
-                className="category-card"
-              />
-            ))}
+            {isLoading ? (
+              <div
+                style={{ fontSize: "var(--text)", textAlign: "center" }}
+              >
+                Загрузка...
+              </div>
+            ) : isError ? (
+              <div
+                style={{ fontSize: "var(--text)", textAlign: "center" }}
+              >
+                Ошибка при получении данных
+              </div>
+            ) : (
+              <>
+                <div className="category-products-grid">
+                  {(data.results.map((product) => (
+                    <VerticalProductCard
+                      key={product.slug}
+                      title={product.name}
+                      slug={product.slug}
+                      price={product.minimumPrice}
+                      images={product.images}
+                    />)))}
+                </div>
+                <div className="page-section">
+                  <button
+                    onClick={handlePrevPage}
+                    disabled={page === 1}
+                  >
+                    &#x276E;
+                  </button>
+                    <div className="page-section-number">{page}</div>
+                  <button
+                    onClick={handleNextPage}
+                   disabled={isPreviousData || !data.next}
+                  >
+                   &#x276F;
+                  </button>
+                </div>
+              </>
+            )}
           </div>
-
           <div className="category-sidebar">
-
             <CategorySidebar
               properties={properties}
               onChange={handleChangeFilterConditions}
             />
-
           </div>
-
         </div>
       </section>
-
     </Layout>
   )
 }

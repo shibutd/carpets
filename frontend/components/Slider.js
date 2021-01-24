@@ -1,60 +1,127 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import PropTypes from 'prop-types'
 
-export function useSlide({ value, ...config }) {
-  const [sliderVal, setSliderVal] = useState(value)
+export function useSlide({ minValue, maxValue, ...config }) {
+  const {max, min} = config
+  const [sliderMinVal, setSliderMinVal] = useState(minValue || min)
+  const [sliderMaxVal, setSliderMaxVal] = useState(maxValue || max)
+
   const [configuration, setConfiguration] = useState(config)
 
-  const onChange = useCallback((val) => {
-    setSliderVal(val)
+  const onChange = useCallback((minVal, maxVal) => {
+    setSliderMinVal(minVal)
+    setSliderMaxVal(maxVal)
   }, [])
 
   useEffect(() => {
     setConfiguration({
       ...config,
       onChange,
-      value: sliderVal
+      minValue: sliderMinVal,
+      maxValue: sliderMaxVal,
     })
-  }, [sliderVal])
+  }, [sliderMinVal, sliderMaxVal])
 
-  return [sliderVal, configuration]
+  return [sliderMinVal, sliderMaxVal, configuration]
 }
 
-function Slider({ classes, label, onChange, value, ...sliderProps }) {
-  const [sliderVal, setSliderVal] = useState(value)
+function Slider({ classes, label, onChange, minValue, maxValue, ...sliderProps }) {
+  const { max, min } = sliderProps
+  const [sliderMinVal, setSliderMinVal] = useState(minValue)
+  const [sliderMaxVal, setSliderMaxVal] = useState(maxValue)
   const [mouseState, setMouseState] = useState(null)
+  const sliderRef = useRef(null)
+  var range, thumbMin, thumbMax
 
-  useEffect(() => {
-    setSliderVal(value)
-  }, [value])
+  const changeMinCallback = (e) => {
+    const val = parseFloat(e.target.value)
+    if (val < maxValue) {
+      setSliderMinVal(val)
+      changeMinPercentage(val)
+    }
+  }
 
-  const changeCallback = e => {
-    setSliderVal(e.target.value)
+  const changeMaxCallback = (e) => {
+    const val = parseFloat(e.target.value)
+    if (val > minValue) {
+      setSliderMaxVal(val)
+      changeMaxPercentage(val)
+    }
+  }
+
+  const changeMinPercentage = (value) => {
+    const percent = (value - min) / (max - min) * 100
+
+    range = sliderRef.current.querySelector(".slider-input-range")
+    thumbMin = sliderRef.current.querySelector(".thumb-left")
+
+    thumbMin.style.left = `${percent}%`
+    range.style.left = `${percent}%`
+  }
+
+  const changeMaxPercentage = (value) => {
+    const percent = (max - value) / (max - min) * 100
+
+    range = sliderRef.current.querySelector(".slider-input-range")
+    thumbMax = sliderRef.current.querySelector(".thumb-right")
+
+    thumbMax.style.right = `${percent}%`
+    range.style.right = `${percent}%`
   }
 
   useEffect(() => {
+    setSliderMinVal(minValue)
+    changeMinPercentage(minValue)
+    setSliderMaxVal(maxValue)
+    changeMaxPercentage(maxValue)
+  }, [minValue, maxValue])
+
+  useEffect(() => {
     if (mouseState === 'up') {
-      onChange(sliderVal)
+      onChange(sliderMinVal, sliderMaxVal)
     }
   }, [mouseState])
 
   return (
-    <div className="slider">
+    <div ref={sliderRef} className="slider">
       <div className="slider-text">
-        <div>от</div>
-        <div className="slider-value">{sliderVal}</div>
-        <div>метров</div>
+        <div className="slider-value">{sliderMinVal}</div>
+        <div>&mdash;</div>
+        <div className="slider-value">{sliderMaxVal}</div>
       </div>
+
       <input
         type="range"
-        value={sliderVal ? sliderVal : 0}
+        value={sliderMinVal ? sliderMinVal : min}
         {...sliderProps}
-        className={`slider ${classes}`}
-        id={label}
-        onChange={changeCallback}
+        className={`slider-min ${classes}`}
+        id={`${label}-min`}
+        onChange={changeMinCallback}
         onMouseDown={() => setMouseState('down')}
         onMouseUp={() => setMouseState('up')}
       />
+      <input
+        type="range"
+        value={sliderMaxVal ? sliderMaxVal : max}
+        {...sliderProps}
+        className={`slider-max ${classes}`}
+        id={`${label}-max`}
+        onChange={changeMaxCallback}
+        onMouseDown={() => setMouseState('down')}
+        onMouseUp={() => setMouseState('up')}
+      />
+
+      <div className="slider-input">
+        <div className="slider-input-track">
+        </div>
+        <div className="slider-input-range">
+        </div>
+        <div className="slider-input-thumb thumb-left">
+        </div>
+        <div className="slider-input-thumb thumb-right">
+        </div>
+      </div>
+
     </div>
   )
 }
@@ -65,5 +132,6 @@ Slider.propTypes = {
   classes: PropTypes.string,
   label: PropTypes.string,
   onChange: PropTypes.func,
-  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  minValue: PropTypes.number,
+  maxValue: PropTypes.number,
 }

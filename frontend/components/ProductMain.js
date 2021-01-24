@@ -1,4 +1,4 @@
-import { useState, useEffect, memo } from 'react'
+import { useState, useEffect, memo, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import Image from 'next/image'
 
@@ -26,26 +26,22 @@ function ProductMain({
     handleRemoveFromCart,
   } = useCart()
 
-  const [isInCart, setIsInCart] = useState(() => checkIsInCart())
-
-  function checkIsInCart() {
+  const checkIsInCart = useCallback(() => {
     const product = cart.find(x => x.product.id === option.id)
     if (product) {
       return true
     }
     return false
-  }
+  }, [])
+
+  const [isInCart, setIsInCart] = useState(() => checkIsInCart)
 
   useEffect(() => {
     setOption(variations[index])
   }, [index])
 
   useEffect(() => {
-    if (checkIsInCart()) {
-      setIsInCart(true)
-    } else {
-      setIsInCart(false)
-    }
+    checkIsInCart ? setIsInCart(true) : setIsInCart(false)
   }, [cart])
 
   // if (image !== undefined && image.startsWith('http')) {

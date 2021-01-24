@@ -5,7 +5,7 @@ import Layout from '../components/Layout'
 import Carousel from '../components/Carousel'
 import CategoryCard from '../components/CategoryCard'
 import VerticalCards from '../components/VerticalCards'
-import VerticalCard from '../components/VerticalCard'
+import VerticalVariationCard from '../components/VerticalVariationCard'
 import { categoryUrl, hitsUrl, noveltiesUrl } from '../constants'
 
 const carouselImages = [
@@ -40,7 +40,7 @@ export default function Home({ categories }) {
         return []
       }
 
-      return data.results
+      return data
     }
 
     fetchData(hitsUrl).then(data => setHits(data))
@@ -73,12 +73,14 @@ export default function Home({ categories }) {
         <h4 className="vertical-title">Хиты продаж</h4>
         <VerticalCards>
           {hits.map((hit) => (
-            <VerticalCard
-              key={hit.slug}
-              title={hit.name}
-              slug={hit.slug}
-              price={hit.minimumPrice}
-              images={hit.images}
+            <VerticalVariationCard
+              key={hit.id}
+              id={hit.id}
+              title={hit.product.name}
+              slug={hit.product.slug}
+              size={hit.size}
+              price={hit.price}
+              images={hit.product.images}
             />
           ))}
         </VerticalCards>
@@ -88,12 +90,14 @@ export default function Home({ categories }) {
         <h4 className="vertical-title">Новинки</h4>
         <VerticalCards>
           {novelties.map((novelty) => (
-            <VerticalCard
-              key={novelty.slug}
-              title={novelty.name}
-              slug={novelty.slug}
-              price={novelty.minimumPrice}
-              images={novelty.images}
+            <VerticalVariationCard
+              key={novelty.id}
+              id={novelty.id}
+              title={novelty.product.name}
+              slug={novelty.product.slug}
+              size={novelty.size}
+              price={novelty.price}
+              images={novelty.product.images}
             />
           ))}
         </VerticalCards>

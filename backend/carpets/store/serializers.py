@@ -123,7 +123,6 @@ class ProductWithVariationsSerializer(serializers.ModelSerializer):
         many=True,
         exclude_fields=('product',)
     )
-    tags = VariationTagSerializer(many=True)
 
     class Meta:
         model = Product
@@ -136,7 +135,6 @@ class ProductWithVariationsSerializer(serializers.ModelSerializer):
             'description',
             'slug',
             'variations',
-            'tags',
         )
 
 

@@ -5,7 +5,7 @@ import Layout from '../../components/Layout'
 import ProductMain from '../../components/ProductMain'
 import ProductDesc from '../../components/ProductDesc'
 import VerticalCards from '../../components/VerticalCards'
-import VerticalCard from '../../components/VerticalCard'
+import VerticalVariationCard from '../../components/VerticalVariationCard'
 import useFavorites from '../../lib/hooks/useFavorites'
 import { productUrl } from '../../constants'
 
