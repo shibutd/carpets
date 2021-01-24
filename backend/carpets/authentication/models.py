@@ -4,6 +4,9 @@ from django.contrib.auth.models import (
     PermissionsMixin,
 )
 from django.db import models
+from phonenumber_field.modelfields import PhoneNumberField
+
+from store.validators import phone_regex_validator
 
 
 class CustomUserManager(BaseUserManager):
@@ -57,6 +60,10 @@ class CustomUser(PermissionsMixin, AbstractBaseUser):
         verbose_name='email address',
         max_length=255,
         unique=True,
+    )
+    phone_number = PhoneNumberField(
+        null=True,
+        validators=[phone_regex_validator],
     )
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)

@@ -82,7 +82,7 @@ export default function Product({ data }) {
         <h4 className="vertical-title">Похожие товары</h4>
         <VerticalCards>
           {similarProducts.map(product => (
-            <VerticalCard
+            <VerticalVariationCard
               key={product.slug}
               title={product.name}
               slug={product.slug}

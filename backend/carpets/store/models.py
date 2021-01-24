@@ -5,6 +5,9 @@ from django.contrib.auth import get_user_model
 from django.contrib.postgres.indexes import GinIndex
 from polymorphic.models import PolymorphicModel
 from slugify import slugify
+from phonenumber_field.modelfields import PhoneNumberField
+
+from store.validators import phone_regex_validator
 
 
 class Product(models.Model):
@@ -73,9 +76,6 @@ class ProductCategory(models.Model):
 
     def __str__(self):
         return self.name
-
-
-
 
 
 class ProductManufacturer(models.Model):
@@ -270,6 +270,10 @@ class PickupAddress(models.Model):
     pick up goods by themselves.
     """
     name = models.CharField(max_length=60)
+    phone_number = PhoneNumberField(
+        null=True,
+        validators=[phone_regex_validator],
+    )
 
     def __str__(self):
         return self.name

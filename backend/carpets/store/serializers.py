@@ -187,7 +187,7 @@ class PickupAddressSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PickupAddress
-        fields = ('name',)
+        fields = ('name', 'phone_number')
 
 
 class OrderLineSerializer(serializers.ModelSerializer):

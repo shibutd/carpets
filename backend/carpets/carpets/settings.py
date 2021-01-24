@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'polymorphic',
     'corsheaders',
     'django_filters',
+    'phonenumber_field',
 
     'django_extensions',
 
@@ -193,3 +194,9 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     "http://localhost:3000",
 ]
+
+
+# PHONENUMBER FIELD
+
+PHONENUMBER_DB_FORMAT = 'NATIONAL'
+PHONENUMBER_DEFAULT_REGION = 'RU'

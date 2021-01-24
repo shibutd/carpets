@@ -76,7 +76,6 @@ class ProductFilter(filters.FilterSet):
                 flat=True,
             ).distinct()
         )
-        print(sizes)
         minimum, maximum = value.split('%')
         index = 0 if name == 'width' else 1
         sizes = filter(
@@ -84,7 +83,6 @@ class ProductFilter(filters.FilterSet):
             sizes,
         )
         sizes = set(sizes)
-        print(sizes)
 
         queryset = queryset.filter(variations__size__value__in=sizes)
         return queryset

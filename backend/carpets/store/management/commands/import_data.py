@@ -4,6 +4,7 @@ import random
 from pathlib import Path
 from collections import Counter
 from decimal import Decimal
+from functools import reduce
 
 from django.core.files.images import ImageFile
 from django.core.management.base import BaseCommand
@@ -11,14 +12,14 @@ from django.core.management.base import BaseCommand
 from store.models import (
     Product,
     ProductCategory,
-    ProductSize,
     ProductManufacturer,
     ProductMaterial,
     ProductUnit,
     ProductImage,
     PickupAddress,
-    ProductTag,
     ProductVariation,
+    VariationSize,
+    VariationTag,
     VariationQuantity,
 )
 
@@ -81,12 +82,12 @@ class Command(BaseCommand):
             instance.save()
 
     def create_tags(self, tag_name):
-        tag, created = ProductTag.objects.get_or_create(name=tag_name)
+        tag, created = VariationTag.objects.get_or_create(name=tag_name)
         if created:
-            products = ProductVariation.objects.all()
-            products_count = products.count()
-            for idx in random.sample(range(products_count), k=5):
-                products[idx].tags.add(tag)
+            variations = ProductVariation.objects.all()
+            variations_count = variations.count()
+            for idx in random.sample(range(variations_count), k=5):
+                variations[idx].tags.add(tag)
 
     def handle(self, *args, **options):
         self.stdout.write("Importing products")
@@ -113,7 +114,16 @@ class Command(BaseCommand):
             # TEMPORARILY FOR CREATING PICKUP ADDRESSES
             if not prickup_addresses_created:
                 for address in item['quantities'].keys():
-                    PickupAddress.objects.create(name=address)
+                    PickupAddress.objects.create(
+                        name=address,
+                        phone_number='+7912{}'.format(
+                            reduce(
+                                (lambda x, y: x + str(random.randrange(0, 9))),
+                                range(7),
+                                '',
+                            )
+                        )
+                    )
                 prickup_addresses_created = True
             # TEMPORARILY FOR CREATING PICKUP ADDRESSES
 
@@ -138,7 +148,7 @@ class Command(BaseCommand):
                     )
 
             # Create size
-            size, created = ProductSize.objects.get_or_create(
+            size, created = VariationSize.objects.get_or_create(
                 value=item['size'],
             )
             if created:
