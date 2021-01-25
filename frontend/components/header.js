@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import Image from 'next/image'
 import Head from 'next/head'
@@ -9,14 +9,26 @@ import ShoppingCartSolid from './icons/ShoppingCartSolid'
 import HearthRegular from './icons/HearthRegular'
 import Search from './Search'
 import ShopAddresses from './ShopAddresses'
+import Catalog from './Catalog'
+import useOnClickOutSide from '../lib/hooks/useOnClickOutSide'
+
 
 export default function Header({ title, user, cart }) {
   const [cartLength, setCartLength] = useState(0)
   const [openedAddresses, setOpenedAddresses] = useState(false)
-  // const [openCatalog, setOpenCatalog] = useState(false)
+  const [openCatalog, setOpenCatalog] = useState(false)
+  const addressRef = useRef(null)
+  const catalogRef = useRef(null)
+
+  useOnClickOutSide(addressRef, () => setOpenedAddresses(false))
+  useOnClickOutSide(catalogRef, () => setOpenCatalog(false))
 
   const handleOpenAddresses = useCallback(() => {
     setOpenedAddresses(prev => !prev)
+  }, [])
+
+  const handleOpenCatalog = useCallback(() => {
+    setOpenCatalog(prev => !prev)
   }, [])
 
   useEffect(() => {
@@ -50,6 +62,7 @@ export default function Header({ title, user, cart }) {
           </a>
         </Link>
         <ShopAddresses
+          ref={addressRef}
           opened={openedAddresses}
           handleClick={handleOpenAddresses}
         />
@@ -62,7 +75,12 @@ export default function Header({ title, user, cart }) {
       </nav>
 
       <nav className="search-nav">
-        <button>Каталог товаров</button>
+        <Catalog
+          ref={catalogRef}
+          opened={openCatalog}
+          handleClick={handleOpenCatalog}
+        />
+        {/*<button>Каталог товаров</button>*/}
         <Search />
         <ul>
           <li>

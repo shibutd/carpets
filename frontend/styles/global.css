@@ -101,6 +101,7 @@ button {
   padding: 1rem 1.2rem;
   border-radius: 15px;
   letter-spacing: 0.1rem;
+  outline: none;
 }
 
 main {
@@ -144,12 +145,15 @@ nav ul {
   display: flex;
   flex-direction: column;
   position: absolute;
-  top: 77%;
+  top: 100%;
   left: 12%;
   width: 50vw;
+  border-radius: 0 0 10px 10px;
   background: var(--blue-color);
   color: black;
   z-index: 100;
+  animation: move-top-to-bottom 0.5s ease;
+
 }
 
 .top-nav-address-item {
@@ -255,6 +259,8 @@ nav ul {
   color: white;
 
   z-index: 100;
+
+
 }
 
 .search-nav-result div,
@@ -264,6 +270,66 @@ nav ul {
   margin: 2rem 2rem;
   height: 100%;
   color: white;
+}
+
+#catalog {
+  color: white;
+  position: relative;
+}
+
+.catalog-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 350px;
+  /*background: var(--blue-color);
+  color: var(--bg-gray-color);*/
+  background: var(--bg-gray-color);
+  color: var(--blue-color);
+  border-radius: 0 0 10px 10px;
+  z-index: 100;
+  animation: move-top-to-bottom 0.3s ease;
+}
+
+.catalog-item {
+  display: flex;
+  text-align: left;
+  padding: 1.4rem 3rem;
+}
+
+.catalog-item:hover, {
+  transform: translateX(10px);
+}
+
+.catalog-item:first-of-type {
+  margin: 2rem 0 0;
+}
+
+.catalog-item:last-of-type {
+  margin: 0 0 2rem;
+}
+
+.catalog-item>* {
+  margin-left: 10px;
+}
+
+.catalog-item-name {
+  color: var(--dark-gray-color);
+  font-size: var(--small-text);
+  line-height: 30px;
+  border-bottom: solid 2px transparent;
+}
+
+.catalog-item-name::after {
+  display: block;
+  content: '';
+  border-bottom: solid 2px var(--blue-color);
+  transform: scale(0);
+  transition: transform 0.25s ease-in-out;
+}
+
+.catalog-item-name:hover::after {
+  transform: scale(1);
 }
 
 
@@ -1378,20 +1444,34 @@ input[type=range]::-webkit-slider-thumb {
   }
 }
 
-@keyframes appear {
+@-webkit-keyframes move-top-to-bottom {
   from {
-    width: 0px;
-    height: 0px;
+    visibility: hidden;
     opacity: 0;
+    z-index: -1;
+    top: -50%;
   }
-
   to {
-    width: 15px;
-    height: 15px;
+    visibility: visible;
     opacity: 1;
-
+    z-index: 100;
+    top: 100%;
   }
+}
 
+@keyframes move-top-to-bottom {
+  from {
+    visibility: hidden;
+    opacity: 0;
+    z-index: -1;
+    top: -50%;
+  }
+  to {
+    visibility: visible;
+    opacity: 1;
+    z-index: 100;
+    top: 100%;
+  }
 }
 
 

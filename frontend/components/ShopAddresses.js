@@ -1,12 +1,11 @@
-import { useState, useEffect, memo } from 'react'
+import { useState, useEffect, memo, forwardRef } from 'react'
 import PropTypes from 'prop-types'
 
 import ChevronDownSolid from './icons/ChevronDownSolid'
 import ChevronUpSolid from './icons/ChevronUpSolid'
 import { pickupAddressUrl } from '../constants'
 
-
-function ShopAddresses({ opened, handleClick }) {
+const ShopAddresses = forwardRef(({ opened, handleClick }, ref) => {
   const [addresses, setAddresses] = useState([
     { name: '', phoneNumber: '+79121448812' }
   ])
@@ -26,6 +25,8 @@ function ShopAddresses({ opened, handleClick }) {
       number.slice(-2),
     )
   }
+
+  // console.log(ref)
 
   const selectAddress = (e) => {
     setSelectedAddressIdx(e.currentTarget.dataset.div_id)
@@ -50,7 +51,7 @@ function ShopAddresses({ opened, handleClick }) {
   }, [])
 
   return (
-    <div className="top-nav-address">
+    <div ref={ref} className="top-nav-address">
       <button onClick={handleClick}>
         Адреса магазинов
         {!opened ? (
@@ -88,7 +89,9 @@ function ShopAddresses({ opened, handleClick }) {
       </div>)}
     </div>
   )
-}
+})
+
+ShopAddresses.displayName = ShopAddresses
 
 ShopAddresses.propTypes = {
   opened: PropTypes.bool,
