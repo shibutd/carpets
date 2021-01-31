@@ -10,8 +10,8 @@ export default function CartItem({
   removeSingleFromCart,
   removeFromCart
 }) {
-  const { product, quantity } = item
-  let totalItemPrice = product.price * quantity
+  const { variation, quantity } = item
+  let totalItemPrice = variation.price * quantity
 
   let image = `/media/product-images/${name.replace(' ', '_')}.jpg`
 
@@ -26,12 +26,12 @@ export default function CartItem({
         />
       </div>
       <div className="cart-products-item-name">
-        <Link href={`/products/${product.slug}`}>
+        <Link href={`/products/${variation.product.slug}`}>
           <a>
-            {product.name}
+            {variation.product.name}
           </a>
         </Link>
-        <p>Размер: {convertSize(product.size)}</p>
+        <p>Размер: {convertSize(variation.size)}</p>
       </div>
       <div className="cart-products-item-plusminus">
         <Image
@@ -40,7 +40,7 @@ export default function CartItem({
           layout="fixed"
           height={14}
           width={14}
-          onClick={() => removeSingleFromCart(product)}
+          onClick={() => removeSingleFromCart(variation)}
         />
         <div className="cart-products-item-plusminus-val">
           {quantity}
@@ -51,7 +51,7 @@ export default function CartItem({
           layout="fixed"
           height={14}
           width={14}
-          onClick={() => addToCart(product)}
+          onClick={() => addToCart(variation)}
         />
       </div>
       <div className="cart-products-item-price">
@@ -69,7 +69,7 @@ export default function CartItem({
           alt=""
           height={14}
           width={14}
-          onClick={() => removeFromCart({ id: product.id })}
+          onClick={() => removeFromCart({ id: variation.id })}
         />
       </div>
     </div>

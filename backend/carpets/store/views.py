@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework import generics
 from rest_framework import views
 from rest_framework import viewsets
+from rest_framework import mixins
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -16,7 +17,6 @@ from store.serializers import (
     ProductCategorySerializer,
     ProductCategoryWithPropertiesSerializer,
     ProductVariationSerializer,
-    ProductVariationWithoutQuntitiesSerializer,
     ProductWithVariationsSerializer,
     PickupOrderSerializer,
     OrderLineSerializer,
@@ -35,24 +35,6 @@ from store.models import (
     PickupAddress,
     Promotion,
 )
-
-
-class OrderLineList(generics.ListAPIView):
-    """
-    Display list of order lines.
-    """
-    permission_classes = (IsAuthenticated,)
-    serializer_class = OrderLineSerializer
-
-    def get_queryset(self):
-        user = self.request.user
-        return OrderLine.objects.filter(
-            order__user=user,
-            order__status=OrderStatus.NEW,
-        ).select_related(
-            'variation__size',
-            'variation__product'
-        )
 
 
 class ProductCategoryViewSet(viewsets.ReadOnlyModelViewSet):
@@ -81,19 +63,6 @@ class PickupAddressList(generics.ListAPIView):
     queryset = PickupAddress.objects.all()
     serializer_class = PickupAddressSerializer
     permission_classes = (AllowAny,)
-
-
-# class OrderLineDetail(RetrieveAPIView):
-#     permission_classes = (IsAuthenticated,)
-#     serializer_class = OrderLineSerializer
-#     lookup_field = 'product'
-
-#     def get_queryset(self):
-#         user = self.request.user
-#         return OrderLine.objects.filter(
-#             order__user=user,
-#             order__status=OrderStatus.NEW,
-#         ).select_related('product')
 
 
 class ProductViewSet(viewsets.ReadOnlyModelViewSet):
@@ -184,18 +153,9 @@ class ProductVariationViewSet(viewsets.ReadOnlyModelViewSet):
     remove from cart.
     """
     queryset = ProductVariation.objects.all()
+    serializer_class = ProductVariationSerializer
     filterset_class = ProductVariationFilter
     lookup_field = 'id'
-
-    def get_serializer_class(self):
-        """
-        Return serializer class depending on request's action.
-        """
-        if self.action == 'list':
-            serializer_class = ProductVariationWithoutQuntitiesSerializer
-        else:
-            serializer_class = ProductVariationSerializer
-        return serializer_class
 
     def get_permissions(self):
         """
@@ -220,6 +180,15 @@ class ProductVariationViewSet(viewsets.ReadOnlyModelViewSet):
             'product__images'
         )
         return queryset
+
+    def get_serializer(self, *args, **kwargs):
+        """
+        Eclude fields from serializer depending on action type.
+        """
+        if self.action == 'list':
+            kwargs['exclude_fields'] = ('quantities',)
+
+        return super().get_serializer(*args, **kwargs)
 
     def list(self, request, *args, **kwargs):
         """
@@ -346,7 +315,6 @@ class ProductVariationViewSet(viewsets.ReadOnlyModelViewSet):
         variation = self.get_object()
 
         variations = favorite.variations.filter(id=variation.id)
-        print(variations)
         if not variations.exists():
             return Response(
                 {'error': 'Этого товара нет у Вас в избранном.'},
@@ -355,6 +323,62 @@ class ProductVariationViewSet(viewsets.ReadOnlyModelViewSet):
 
         favorite.variations.remove(variation)
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class OrderLineViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    """
+    Display list of order lines.
+    """
+    queryset = OrderLine.objects.all()
+    serializer_class = OrderLineSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        user = self.request.user
+        queryset = self.queryset
+
+        return queryset.filter(
+            order__user=user,
+            order__status=OrderStatus.NEW,
+        ).select_related(
+            'variation__size',
+            'variation__product'
+        )
+
+    @action(detail=False, methods=['post'])
+    def update_orderlines(self, request, *args, **kwargs):
+        """
+        Update user's orderlines with new variations.
+        """
+        orderlines = self.get_queryset()
+        orderlines_variation_ids = set(
+            map(str, orderlines.values_list(
+                'variation__id',
+                flat=True,
+            ))
+        )
+        order, created = Order.objects.get_or_create(
+            user=request.user,
+            status=OrderStatus.NEW,
+        )
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(
+            data=request.data,
+            many=True,
+            context={'ids': orderlines_variation_ids, 'order': order}
+        )
+
+        serializer.is_valid()
+        created_orderlines = serializer.save()
+
+        created_orderlines_serialized = serializer_class(
+            created_orderlines, many=True).data
+
+        return Response(
+            created_orderlines_serialized,
+            status=status.HTTP_201_CREATED
+        )
 
 
 class PickupOrderCreate(views.APIView):

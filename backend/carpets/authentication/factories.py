@@ -24,6 +24,9 @@ class UserFactory(factory.django.DjangoModelFactory):
 
 
 class UserAddressFactory(factory.django.DjangoModelFactory):
+    """
+    Factory for user's address model class.
+    """
 
     class Meta:
         model = UserAddress

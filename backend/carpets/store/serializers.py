@@ -1,3 +1,4 @@
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import serializers
 
 from store.models import (
@@ -57,6 +58,9 @@ class ProductSerializer(DynamicFieldsModelSerializer):
             'slug',
             'images',
         )
+        extra_kwargs = {
+            'slug': {'validators': []},
+        }
 
 
 class VariationQuantitySerializer(serializers.ModelSerializer):
@@ -84,11 +88,12 @@ class ProductVariationSerializer(DynamicFieldsModelSerializer):
         fields = ('id', 'size', 'price', 'quantities', 'product')
 
 
-class ProductVariationWithoutQuntitiesSerializer(serializers.ModelSerializer):
+class ProductVariationWithoutImagesSerializer(DynamicFieldsModelSerializer):
+    id = serializers.UUIDField(format='hex_verbose')
     size = serializers.ReadOnlyField(
         source='size.value'
     )
-    product = ProductSerializer()
+    product = ProductSerializer(exclude_fields=('images',), required=False)
 
     class Meta:
         model = ProductVariation
@@ -190,27 +195,50 @@ class PickupAddressSerializer(serializers.ModelSerializer):
         fields = ('name', 'phone_number')
 
 
+class OrderLineListSerializer(serializers.ListSerializer):
+    """
+    Serializer for multiple orderline instances.
+    """
+
+    def create(self, validated_data):
+        ids = self.context.get('ids', [])
+        order = self.context.get('order')
+
+        orderlines = []
+
+        for item in validated_data:
+            variation = item.get('variation')
+            id = variation.pop('id')
+            if not id or str(id) in ids:
+                continue
+
+            quantity = item.pop('quantity')
+
+            try:
+                variation = ProductVariation.objects.get(id=id)
+            except ObjectDoesNotExist:
+                continue
+
+            orderlines.append(
+                OrderLine(
+                    order=order,
+                    variation=variation,
+                    quantity=(quantity or 1),
+                )
+            )
+        return OrderLine.objects.bulk_create(orderlines)
+
+
 class OrderLineSerializer(serializers.ModelSerializer):
     """
-    Serializer for orderline.
+    Serializer for single orderline instance.
     """
-    product = serializers.SerializerMethodField()
+    variation = ProductVariationWithoutImagesSerializer()
 
     class Meta:
         model = OrderLine
-        fields = ('product', 'quantity')
-
-    def get_product(self, obj):
-        obj = OrderLine.objects.filter(id=obj.id).select_related(
-            'variation__size', 'variation__product')
-        variation = obj[0].variation
-        return {
-            'name': variation.product.name,
-            'slug': variation.product.slug,
-            'size': variation.size.value,
-            'price': variation.price,
-            'id': variation.id,
-        }
+        list_serializer_class = OrderLineListSerializer
+        fields = ('variation', 'quantity')
 
 
 class PickupOrderSerializer(serializers.ModelSerializer):

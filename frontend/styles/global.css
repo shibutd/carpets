@@ -148,7 +148,7 @@ nav ul {
   top: 100%;
   left: 12%;
   width: 50vw;
-  border-radius: 0 0 10px 10px;
+  border-radius: 10px;
   background: var(--blue-color);
   color: black;
   z-index: 100;
@@ -282,11 +282,9 @@ nav ul {
   top: 100%;
   left: 0;
   width: 350px;
-  /*background: var(--blue-color);
-  color: var(--bg-gray-color);*/
   background: var(--bg-gray-color);
   color: var(--blue-color);
-  border-radius: 0 0 10px 10px;
+  border-radius: 10px;
   z-index: 100;
   animation: move-top-to-bottom 0.3s ease;
 }
@@ -1013,7 +1011,7 @@ footer div {
 .register-form-input {
   display: flex;
   flex-direction: column;
-  margin-bottom: 4rem;
+  margin-bottom: 1rem;
   width: 35%;
 }
 
@@ -1050,9 +1048,6 @@ footer div {
 
 .register-form button:disabled {
   background: #DFDFDF;
-  width: 30%;
-  margin: 2rem 0;
-  font-size: var(--big-text);
 }
 
 #dropdown-button {

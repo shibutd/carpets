@@ -1,4 +1,4 @@
-import { useState, useEffect, memo, useCallback } from 'react'
+import { useState, useEffect, memo } from 'react'
 import PropTypes from 'prop-types'
 import Image from 'next/image'
 
@@ -26,23 +26,28 @@ function ProductMain({
     handleRemoveFromCart,
   } = useCart()
 
-  const checkIsInCart = useCallback(() => {
-    const product = cart.find(x => x.product.id === option.id)
+  const checkIsInCart = () => {
+    const product = cart.find(x => x.variation.id === option.id)
     if (product) {
       return true
     }
     return false
-  }, [])
+  }
 
-  const [isInCart, setIsInCart] = useState(() => checkIsInCart)
+  const [isInCart, setIsInCart] = useState(false)
 
   useEffect(() => {
     setOption(variations[index])
   }, [index])
 
   useEffect(() => {
-    checkIsInCart ? setIsInCart(true) : setIsInCart(false)
+    const productInCart = checkIsInCart()
+    setIsInCart(productInCart)
   }, [cart])
+
+  useEffect(() => {
+    setIsInCart(checkIsInCart())
+  }, [])
 
   // if (image !== undefined && image.startsWith('http')) {
   let image = `/media/product-images/${name.replace(/ /g, '_')}.jpg`
@@ -80,7 +85,11 @@ function ProductMain({
           <button
             className="product-buy"
             onClick={() => handleAddToCart({
-              name, slug, id: option.id, size: option.size, price: option.price
+              id: option.id,
+              size: option.size,
+              price: option.price,
+              name: name,
+              slug: slug,
             })}
           >
             В корзину

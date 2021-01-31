@@ -1,19 +1,19 @@
 import { useState, useEffect } from 'react'
-// import { useRouter } from 'next/router'
+import { useRouter } from 'next/router'
 
 import Layout from '../components/Layout'
 import FavoritesItem from '../components/FavoritesItem'
-// import useAuth from '../lib/hooks/useAuth'
+import useAuth from '../lib/hooks/useAuth'
 // import { authAxios } from '../lib/utils/authAxios'
 // import { favoritesUrl } from '../constants'
 import useFavorites from '../lib/hooks/useFavorites'
 
 
 export default function Favorites() {
-  // const router = useRouter()
+  const router = useRouter()
   const [favoriteItems, setFavoriteItems] = useState([])
   const [favoritesLoading, setFavoritesLoading] = useState(true)
-  // const [user, loading] = useAuth()
+  const [user, loaded] = useAuth()
   const {
     getFavorites,
     removeFromFavorites,
@@ -36,7 +36,15 @@ export default function Favorites() {
     })
   }, [])
 
-  return (
+  if (!loaded) {
+    return null
+  }
+
+  if (loaded && !user) {
+    router.push('/login?redirect=favorites')
+  }
+
+  return ((loaded && user) &&
     <Layout
       title={"Избранное | Алладин96.ру"}
     >

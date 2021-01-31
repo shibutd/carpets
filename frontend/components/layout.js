@@ -10,7 +10,7 @@ export default function Layout({ title, children }) {
   const { cart } = useCart()
 
   if (!loaded) {
-    return <div></div>
+    return null
   }
 
   return (

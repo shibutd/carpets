@@ -17,13 +17,12 @@ export default function Cart() {
   const [totalPrice, setTotalPrice] = useState(0)
 
   useEffect(() => {
-    console.log(cart.length)
     let newQuantity = 0
     let newPrice = 0
 
     cart.forEach(item => {
       newQuantity += item.quantity
-      newPrice += item.quantity * item.product.price
+      newPrice += item.quantity * item.variation.price
     })
 
     setTotalQuantity(newQuantity)
@@ -37,7 +36,7 @@ export default function Cart() {
           ? (<h5 id="empty-cart">В корзине нет товаров</h5>)
           : (cart.map(item => (
             <CartItem
-              key={item.product.id}
+              key={item.variation.id}
               item={item}
               addToCart={handleAddToCart}
               removeSingleFromCart={handleRemoveSingleFromCart}

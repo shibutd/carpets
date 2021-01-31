@@ -12,23 +12,18 @@ export const tokenRefreshUrl = `${authenticationUrl}/token_refresh/`
 
 
 // Interaction with store
-
 export const storeUrl = `${targetUrl}/store`
 
 // Products urls
-
 export const productUrl = `${storeUrl}/products`
 
 // Categories url
-
 export const categoryUrl = `${storeUrl}/categories`
 
 // Promotions url
-
 export const promotionUrl = `${storeUrl}/promotions`
 
 // Products variations url
-
 export const productVariationUrl = `${storeUrl}/product-variations`
 
 // Specific tag urls
@@ -65,8 +60,10 @@ export const removeFromFavoritesUrl = (variationId) => {
 }
 
 // Orderlines url
+export const getOrderLineUrl = `${storeUrl}/orderlines`
 
-export const orderLineUrl = `${storeUrl}/orderlines`
+// Update orderlines
+export const updateOrderLineUrl = `${getOrderLineUrl}/update_orderlines/`
 
 
 // Pickup addresses

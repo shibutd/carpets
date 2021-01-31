@@ -6,7 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from "yup"
 
 import { login, selectUser } from '../lib/slices/authSlice'
-// import useAuth from '../lib/hooks/useAuth'
+import useAuth from '../lib/hooks/useAuth'
 import useCart from '../lib/hooks/useCart'
 
 const schema = yup.object().shape({
@@ -23,8 +23,9 @@ export default function Login() {
   const router = useRouter()
   const dispatch = useDispatch()
   const [processing, setProcessing] = useState(false)
+  const [user, loaded] = useAuth()
   const { updateCart } = useCart()
-  const { user, error } = useSelector(selectUser)
+  const { error } = useSelector(selectUser)
   const { register, handleSubmit, errors } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
@@ -36,15 +37,19 @@ export default function Login() {
   const handleLoginFormSubmit = (data) => {
     setProcessing(true)
 
-    dispatch(login(data))
-      .then(() => {
-        updateCart()
-        router.query.redirect
-          ? router.push(`${router.query.redirect}`)
-          : router.push('/')
-      })
+    dispatch(login(data)).then(() => {
+      // updateCart()
+    })
 
     setProcessing(false)
+  }
+
+  if (user) {
+    router.query.redirect
+      ? router.push(`${router.query.redirect}`)
+      : router.push('/')
+
+    return <div></div>
   }
 
   return (
@@ -79,7 +84,9 @@ export default function Login() {
         {errors.password && <p>&#9888; {errors.password.message}</p>}
       </div>
 
-      <button disabled={processing} type="submit">Войти</button>
+      <button disabled={processing} type="submit">
+        Войти
+      </button>
     </form>
   )
 }

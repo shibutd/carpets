@@ -2,7 +2,8 @@ from django.urls import path, include
 from rest_framework import routers
 
 from store.views import (
-    OrderLineList,
+    # OrderLineList,
+    OrderLineViewSet,
     PickupOrderCreate,
     ProductViewSet,
     ProductVariationViewSet,
@@ -17,11 +18,12 @@ router = routers.SimpleRouter()
 router.register('products', ProductViewSet)
 router.register('product-variations', ProductVariationViewSet)
 router.register('categories', ProductCategoryViewSet)
+router.register('orderlines', OrderLineViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
     # path('orders/', PickupOrderCreate.as_view(), name='order-create'),
-    path('orderlines/', OrderLineList.as_view(), name='orderline-list'),
+    # path('orderlines/', OrderLineList.as_view(), name='orderline-list'),
     path(
         'pickup-addresses/',
         PickupAddressList.as_view(),
