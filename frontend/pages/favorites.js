@@ -13,7 +13,7 @@ export default function Favorites() {
   const router = useRouter()
   const [favoriteItems, setFavoriteItems] = useState([])
   const [favoritesLoading, setFavoritesLoading] = useState(true)
-  const [user, loaded] = useAuth()
+  const { user, loaded } = useAuth()
   const {
     getFavorites,
     removeFromFavorites,
@@ -30,18 +30,22 @@ export default function Favorites() {
   }
 
   useEffect(() => {
-    getFavorites().then((res) => {
-      setFavoriteItems(res ? res.data : [])
-      setFavoritesLoading(false)
-    })
-  }, [])
+    if (user) {
+      console.log('can get my favorites')
+      getFavorites().then((res) => {
+        setFavoriteItems(res ? res.data : [])
+        setFavoritesLoading(false)
+      })
+    }
+  }, [user])
 
   if (!loaded) {
-    return null
+    return <div></div>
   }
 
   if (loaded && !user) {
     router.push('/login?redirect=favorites')
+    return <div></div>
   }
 
   return ((loaded && user) &&

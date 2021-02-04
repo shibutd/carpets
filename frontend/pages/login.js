@@ -1,5 +1,3 @@
-import Link from 'next/link'
-
 import Layout from '../components/Layout'
 import Login from '../components/Login'
 
@@ -9,11 +7,7 @@ export default function LoginPage() {
     <Layout
       title={"Вход в аккаунт | Алладин96.ру"}
     >
-      <section className="register">
-        <h1>Войти в аккаунт</h1>
-        <p>У меня нет аккаунта. </p><Link href="/register"><a>Зарегистрироваться</a></Link>
-        <Login />
-      </section>
+      <Login />
     </Layout>
   )
 }

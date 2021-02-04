@@ -1,3 +1,4 @@
+import React from 'react'
 import PropTypes from 'prop-types'
 
 import useAuth from '../lib/hooks/useAuth'
@@ -6,18 +7,27 @@ import Header from './Header'
 import Footer from './Footer'
 
 export default function Layout({ title, children }) {
-  const [user, loaded] = useAuth()
+  const authContext = useAuth()
   const { cart } = useCart()
 
-  if (!loaded) {
+  if (!authContext.loaded) {
     return null
   }
 
+  const childrenWithProps = React.Children.map(children, child => {
+    if (React.isValidElement(child)) {
+      return React.cloneElement(child, {
+        ...authContext,
+      })
+    }
+    return child
+  })
+
   return (
     <>
-      <Header title={title} user={user} cart={cart} />
+      <Header title={title} auth={authContext} cart={cart} />
       <main>
-        { children }
+        {childrenWithProps}
       </main>
       <Footer />
     </>

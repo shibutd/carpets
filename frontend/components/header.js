@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, memo } from 'react'
 import PropTypes from 'prop-types'
 import Image from 'next/image'
 import Head from 'next/head'
@@ -13,7 +13,8 @@ import Catalog from './Catalog'
 import useOnClickOutSide from '../lib/hooks/useOnClickOutSide'
 
 
-export default function Header({ title, user, cart }) {
+function Header({ title, auth, cart }) {
+  const { user, logoutUser } = auth
   const [cartLength, setCartLength] = useState(0)
   const [openedAddresses, setOpenedAddresses] = useState(false)
   const [openCatalog, setOpenCatalog] = useState(false)
@@ -80,11 +81,10 @@ export default function Header({ title, user, cart }) {
           opened={openCatalog}
           handleClick={handleOpenCatalog}
         />
-        {/*<button>Каталог товаров</button>*/}
         <Search />
         <ul>
           <li>
-            <UserIcon user={user} />
+            <UserIcon user={user} onLogout={logoutUser} />
           </li>
           {user &&
           (<li>
@@ -119,6 +119,8 @@ export default function Header({ title, user, cart }) {
 
 Header.propTypes = {
   title: PropTypes.string,
-  user: PropTypes.string,
+  auth: PropTypes.object,
   cart: PropTypes.array,
 }
+
+export default memo(Header)

@@ -88,8 +88,8 @@ function ProductMain({
               id: option.id,
               size: option.size,
               price: option.price,
-              name: name,
-              slug: slug,
+              name,
+              slug,
             })}
           >
             В корзину

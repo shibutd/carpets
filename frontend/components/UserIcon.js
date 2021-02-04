@@ -1,27 +1,27 @@
-import { useState } from 'react'
+import { useState, useMemo, memo } from 'react'
 import PropTypes from 'prop-types'
 import Link from 'next/link'
 import { usePopper } from 'react-popper';
-import { useDispatch } from 'react-redux'
+// import { useDispatch } from 'react-redux'
 
-import { logout } from '../lib/slices/authSlice'
+// import { logout } from '../lib/slices/authSlice'
 import SvgUserRegular from './icons/SvgUserRegular'
 import SvgUserSolid from './icons/SvgUserSolid'
 
 
-export default function UserIcon({ user }) {
-  const dispatch = useDispatch()
+ function UserIcon({ user, onLogout }) {
+  // const dispatch = useDispatch()
   const [dropdownShow, setDropdownShow] = useState(false)
   const [referenceElement, setReferenceElement] = useState(null)
   const [popperElement, setPopperElement] = useState(null)
   const { styles, attributes } = usePopper(referenceElement, popperElement)
 
-  const userDisplayed = (username) => {
-    if (username !== undefined && username !== null) {
-      const usernameParts = username.split('@')
+  const userDisplayed = useMemo(() => {
+    if (user !== undefined && user !== null) {
+      const usernameParts = user.split('@')
       return usernameParts[0].charAt(0).toUpperCase() + usernameParts[0].slice(1)
     }
-  }
+  }, [user])
 
   return (
     <>
@@ -35,7 +35,7 @@ export default function UserIcon({ user }) {
               onClick={() => setDropdownShow(!dropdownShow)}
             >
               <SvgUserSolid width={18} height={18} />
-              <p>{userDisplayed(user)}</p>
+              <p>{userDisplayed}</p>
             </div>
 
             <div
@@ -43,13 +43,12 @@ export default function UserIcon({ user }) {
               className={dropdownShow ? "visible" : "hidden"}
               ref={setPopperElement}
               style={styles.popper}
-              onClick={() => dispatch(logout())}
+              onClick={onLogout}
               {...attributes.popper}
             >
               Выйти
             </div>
-          </>
-        )
+          </>)
         : (
           <Link href="/login">
             <a>
@@ -66,5 +65,8 @@ export default function UserIcon({ user }) {
 }
 
 UserIcon.propTypes = {
-  user: PropTypes.string
+  user: PropTypes.string,
+  onLogout: PropTypes.func,
 }
+
+export default memo(UserIcon)

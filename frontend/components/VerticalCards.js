@@ -1,11 +1,17 @@
-import { useState, useEffect, useRef, Children } from 'react'
+import React, { useState, useEffect, useRef, Children } from 'react'
 import PropTypes from 'prop-types'
 
-export default function VerticalCards({ children }) {
+import useFavorites from '../lib/hooks/useFavorites'
+import useCart from '../lib/hooks/useCart'
+
+export default function VerticalCards({ title, children, ...props }) {
   const [moveCounter, setMoveCounter] = useState(0)
   const [cardsLength, setCardsLength] = useState(3)
   const cardsRef = useRef(null)
   const [childrenCount, setChildrenCount] = useState(Children.count(children))
+
+  const { addToFavorites } = useFavorites()
+  const { handleAddToCart } = useCart()
 
   function changeCardsLength() {
     if (document.documentElement.clientWidth <= 1280) {
@@ -72,31 +78,45 @@ export default function VerticalCards({ children }) {
     showArrows()
   }, [moveCounter, cardsLength, childrenCount])
 
-  return (
-    <div ref={cardsRef} className="vertical-wrapper">
-      <div className="vertical-cards">
-        {children}
+  const childrenWithProps = React.Children.map(children, child => {
+    if (React.isValidElement(child) && typeof child.type === 'function') {
+      return React.cloneElement(child, {
+        addToFavorites,
+        handleAddToCart,
+        ...props
+      })
+    }
+    return child
+  })
 
+  return (
+    <section className="vertical">
+      <h4 className="vertical-title">{title}</h4>
+      <div ref={cardsRef} className="vertical-wrapper">
+        <div className="vertical-cards">
+          {childrenWithProps}
+        </div>
+        <a
+          className="prev-vertical-card"
+          onClick={() => updateCounter(-1)}
+        >
+          &#10094;
+        </a>
+        <a
+          className="next-vertical-card"
+          onClick={() => updateCounter(1)}
+        >
+          &#10095;
+        </a>
       </div>
-      <a
-        className="prev-vertical-card"
-        onClick={() => updateCounter(-1)}
-      >
-        &#10094;
-      </a>
-      <a
-        className="next-vertical-card"
-        onClick={() => updateCounter(1)}
-      >
-        &#10095;
-      </a>
-    </div>
+    </section>
   )
 }
 
 VerticalCards.propTypes = {
+  title: PropTypes.string,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node,
-  ])
+  ]),
 }

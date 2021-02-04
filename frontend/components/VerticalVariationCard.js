@@ -1,22 +1,19 @@
-import { useRef, useCallback } from 'react'
+import { useRef, useCallback, memo } from 'react'
 import PropTypes from 'prop-types'
 import Link from 'next/link'
 import Image from 'next/image'
 
 import HearthRegular from './icons/HearthRegular'
 import ShoppingCartSolid from './icons/ShoppingCartSolid'
-import useFavorites from '../lib/hooks/useFavorites'
-import useAuth from '../lib/hooks/useAuth'
-import useCart from '../lib/hooks/useCart'
+// import useFavorites from '../lib/hooks/useFavorites'
+// import useAuth from '../lib/hooks/useAuth'
 import { convertPrice } from '../lib/utils/converters'
 
 
-export default function VerticalVariationCard(props) {
-  const { id, title, slug, size, price, images, className } = props
+ function VerticalVariationCard(props) {
+  const { id, title, slug, size, price, images, ...rest } = props
+  const { user, addToFavorites, handleAddToCart } = rest
   const cardRef = useRef(null)
-  const { addToFavorites } = useFavorites()
-  const { user } = useAuth()
-  const { handleAddToCart } = useCart()
 
   const mainImage = images.length > 0 ? images[0].image : null
   const imageName = title.replace(/ /g, '_').replace(/\"/g, '')
@@ -51,7 +48,7 @@ export default function VerticalVariationCard(props) {
   return (
     <div
       ref={cardRef}
-      className={className ? `${className}` : "vertical-card"}
+      className="vertical-card"
     >
       <div className="vertical-card-left">
         <div className="vertical-card-image">
@@ -104,3 +101,5 @@ VerticalVariationCard.propTypes = {
   images: PropTypes.arrayOf(PropTypes.object),
   className: PropTypes.string,
 }
+
+export default memo(VerticalVariationCard)

@@ -43,8 +43,10 @@ export default function Home({ categories }) {
       return data
     }
 
-    fetchData(hitsUrl).then(data => setHits(data))
-    fetchData(noveltiesUrl).then(data => setNovelties(data))
+    fetchData(hitsUrl)
+      .then(data => setHits(data))
+    fetchData(noveltiesUrl)
+      .then(data => setNovelties(data))
   }, [])
 
   return (
@@ -69,39 +71,32 @@ export default function Home({ categories }) {
         </div>
       </section>
 
-      <section className="vertical">
-        <h4 className="vertical-title">Хиты продаж</h4>
-        <VerticalCards>
-          {hits.map((hit) => (
-            <VerticalVariationCard
-              key={hit.id}
-              id={hit.id}
-              title={hit.product.name}
-              slug={hit.product.slug}
-              size={hit.size}
-              price={hit.price}
-              images={hit.product.images}
-            />
-          ))}
-        </VerticalCards>
-      </section>
-
-      <section className="vertical">
-        <h4 className="vertical-title">Новинки</h4>
-        <VerticalCards>
-          {novelties.map((novelty) => (
-            <VerticalVariationCard
-              key={novelty.id}
-              id={novelty.id}
-              title={novelty.product.name}
-              slug={novelty.product.slug}
-              size={novelty.size}
-              price={novelty.price}
-              images={novelty.product.images}
-            />
-          ))}
-        </VerticalCards>
-      </section>
+      <VerticalCards title={"Хиты продаж"}>
+        {hits.map((hit) => (
+          <VerticalVariationCard
+            key={hit.id}
+            id={hit.id}
+            title={hit.product.name}
+            slug={hit.product.slug}
+            size={hit.size}
+            price={hit.price}
+            images={hit.product.images}
+          />
+        ))}
+      </VerticalCards>
+      <VerticalCards title={"Новинки"}>
+        {novelties.map((novelty) => (
+          <VerticalVariationCard
+            key={novelty.id}
+            id={novelty.id}
+            title={novelty.product.name}
+            slug={novelty.product.slug}
+            size={novelty.size}
+            price={novelty.price}
+            images={novelty.product.images}
+          />
+        ))}
+      </VerticalCards>
     </Layout>
   )
 }

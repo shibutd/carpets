@@ -1,13 +1,11 @@
-import { useState } from 'react'
+import { useState, memo } from 'react'
 import { useRouter } from 'next/router'
-import { useDispatch, useSelector } from 'react-redux'
+import Link from 'next/link'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from "yup"
 
-import { login, selectUser } from '../lib/slices/authSlice'
-import useAuth from '../lib/hooks/useAuth'
-import useCart from '../lib/hooks/useCart'
+// import useAuth from '../lib/hooks/useAuth'
 
 const schema = yup.object().shape({
   email: yup.string()
@@ -19,13 +17,10 @@ const schema = yup.object().shape({
     .required('Введите пароль'),
 })
 
-export default function Login() {
+function Login({ user, error, tryToLoginUser }) {
+// function Login(props) {
   const router = useRouter()
-  const dispatch = useDispatch()
   const [processing, setProcessing] = useState(false)
-  const [user, loaded] = useAuth()
-  const { updateCart } = useCart()
-  const { error } = useSelector(selectUser)
   const { register, handleSubmit, errors } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
@@ -34,13 +29,9 @@ export default function Login() {
     },
   })
 
-  const handleLoginFormSubmit = (data) => {
+  const handleLoginFormSubmit = async (data) => {
     setProcessing(true)
-
-    dispatch(login(data)).then(() => {
-      // updateCart()
-    })
-
+    await tryToLoginUser(data)
     setProcessing(false)
   }
 
@@ -53,40 +44,50 @@ export default function Login() {
   }
 
   return (
-    <form
-      className="register-form"
-      onSubmit={handleSubmit(handleLoginFormSubmit)}
-    >
-      {error && <p>&#9888; {error}</p>}
+    <section className="register">
+      <h1>Войти в аккаунт</h1>
+      <p>У меня нет аккаунта. </p>
+      <Link href="/register">
+        <a>Зарегистрироваться</a>
+      </Link>
 
-      <div className="register-form-input">
-        <label htmlFor="email">
-          Электронная почта
-        </label>
-        <input
-          name="email"
-          id="email"
-          ref={register}
-        />
-        {errors.email && <p>&#9888; {errors.email.message}</p>}
-      </div>
+      <form
+        className="register-form"
+        onSubmit={handleSubmit(handleLoginFormSubmit)}
+      >
+        {error && <p>&#9888; {error}</p>}
 
-      <div className="register-form-input">
-        <label htmlFor="password">
-          Пароль
-        </label>
-        <input
-          type="password"
-          name="password"
-          id="password"
-          ref={register}
-        />
-        {errors.password && <p>&#9888; {errors.password.message}</p>}
-      </div>
+        <div className="register-form-input">
+          <label htmlFor="email">
+            Электронная почта
+          </label>
+          <input
+            name="email"
+            id="email"
+            ref={register}
+          />
+          {errors.email && <p>&#9888; {errors.email.message}</p>}
+        </div>
 
-      <button disabled={processing} type="submit">
-        Войти
-      </button>
-    </form>
+        <div className="register-form-input">
+          <label htmlFor="password">
+            Пароль
+          </label>
+          <input
+            type="password"
+            name="password"
+            id="password"
+            ref={register}
+          />
+          {errors.password && <p>&#9888; {errors.password.message}</p>}
+        </div>
+
+        <button disabled={processing} type="submit">
+          Войти
+        </button>
+      </form>
+    </section>
   )
 }
+
+export default memo(Login)
