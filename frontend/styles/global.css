@@ -46,7 +46,10 @@ body {
 }
 
 html,
-body {
+body,
+input,
+textarea,
+button {
   font-family: 'PTRootUIWebRegular';
 }
 
@@ -836,6 +839,87 @@ footer div {
 #empty-cart {
   padding-top: 5rem;
   text-align: center;
+}
+
+
+/* CART PAGE */
+
+.checkout-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 50vw;
+}
+
+.checkout-circles {
+  display: flex;
+  justify-content: center;
+  min-height: 20vh;
+  padding: 2rem 0;
+}
+
+.checkout-circle {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--light-500-gray-color);
+  color: var(--medium-gray-color);
+  border: 1px solid var(--medium-gray-color);
+  line-height: 50px;
+  text-align: center;
+  font-size: var(--big-text);
+  margin: 0 10rem;
+}
+
+.circle-active {
+  background: var(--blue-color);
+  color: var(--bg-gray-color);
+  border-color: transparent;
+}
+
+.checkout-circle::before {
+  position: absolute;
+  content: attr(data-desc);
+  color: var(--dark-gray-color);
+  top: 90%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.checkout-circle::after {
+  position: absolute;
+  content: '';
+  width: 25rem;
+  height: 3px;
+  background: var(--medium-gray-color);
+  color: var(--medium-gray-color);
+  top: 50%;
+  left: 50%;
+  z-index: -1;
+}
+
+.checkout-circle:last-of-type::after {
+  display: none;
+}
+
+.checkout-buttons {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.checkout-buttons > * {
+  margin-right: 2rem;
+  padding: 1.2rem 2rem;
+  font-size: var(--text);
+}
+
+#backwardbutton {
+  background: var(--medium-gray-color);
+  color: var(--bg-gray-color);
+}
+
+#forwardbutton {
+
 }
 
 
