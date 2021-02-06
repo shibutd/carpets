@@ -13,6 +13,7 @@
 :root {
   --bg-gray-color: #F9F9F9;
   --blue-color: #04619E;
+  --bright-blue-color: #0461B9;
   --dark-gray-color: #313131;
   --medium-gray-color: #C8C8C8;
   --light-500-gray-color: #EDEDED;
@@ -97,6 +98,7 @@ a:hover {
 
 button {
   font-size: var(--small-text);
+  background-position: center;
   background: var(--blue-color);
   color: white;
   border: none;
@@ -105,7 +107,21 @@ button {
   border-radius: 15px;
   letter-spacing: 0.1rem;
   outline: none;
+  /*box-shadow: 0 0 4px #999;*/
+  /*transition: background 0.8s;*/
 }
+
+/*button:hover {
+  background: var(--bright-blue-color)
+    radial-gradient(circle, transparent 1%, var(--bright-blue-color) 1%)
+    center/15000%;
+}*/
+
+/*button:active {
+  background-color: #6eb9f7;
+  background-size: 100%;
+  transition: background 0s;
+}*/
 
 main {
   min-height: 75vh
@@ -298,7 +314,8 @@ nav ul {
   padding: 1.4rem 3rem;
 }
 
-.catalog-item:hover, {
+.catalog-item:hover,
+  {
   transform: translateX(10px);
 }
 
@@ -853,7 +870,7 @@ footer div {
 .checkout-circles {
   display: flex;
   justify-content: center;
-  min-height: 20vh;
+  align-items: center;
   padding: 2rem 0;
 }
 
@@ -907,7 +924,7 @@ footer div {
   justify-content: flex-end;
 }
 
-.checkout-buttons > * {
+.checkout-buttons>* {
   margin-right: 2rem;
   padding: 1.2rem 2rem;
   font-size: var(--text);
@@ -918,8 +935,44 @@ footer div {
   color: var(--bg-gray-color);
 }
 
-#forwardbutton {
+#forwardbutton {}
 
+.checkout-ordersummary {
+  margin: 4rem auto;
+  width: 80%;
+}
+
+.checkout-ordersummary-table {
+  width: 100%;
+  background: var(--light-gray-color);
+  border-radius: 15px;
+  box-shadow: 0 0 6px var(--light-500-gray-color);
+  font-size: var(--text);
+  margin: 2rem 0;
+  border-collapse: collapse;
+  empty-cells: show;
+}
+
+.checkout-ordersummary-table td, tr {
+  border-bottom: 1px solid var(--medium-gray-color);
+}
+
+.checkout-ordersummary-table td {
+  padding: 2rem 0 2rem 2rem;
+}
+
+.checkout-ordersummary-table tr td:last-of-type {
+  text-align: center;
+  padding: 0;
+}
+
+.checkout-ordersummary-table tfoot td, tr {
+  border-bottom: none;
+}
+
+.checkout-ordersummary-table tfoot {
+  font-weight: bold;
+  text-align: right;
 }
 
 
@@ -1530,6 +1583,7 @@ input[type=range]::-webkit-slider-thumb {
     z-index: -1;
     top: -50%;
   }
+
   to {
     visibility: visible;
     opacity: 1;
@@ -1545,6 +1599,7 @@ input[type=range]::-webkit-slider-thumb {
     z-index: -1;
     top: -50%;
   }
+
   to {
     visibility: visible;
     opacity: 1;

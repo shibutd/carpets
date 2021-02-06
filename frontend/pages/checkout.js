@@ -45,7 +45,7 @@ export default function Checkout() {
             </div>
             <div
               className={`checkout-circle ${currentTab === 2 ? "circle-active" : ""}`}
-              data-desc="Оформление"
+              data-desc="Доставка"
             >
               2
             </div>
