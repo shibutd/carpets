@@ -21,7 +21,7 @@ function Login({ user, error, tryToLoginUser }) {
 // function Login(props) {
   const router = useRouter()
   const [processing, setProcessing] = useState(false)
-  const { register, handleSubmit, errors } = useForm({
+  const { register, handleSubmit, errors, isSubmitting } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
       email: "admin@admin.com",
@@ -30,15 +30,17 @@ function Login({ user, error, tryToLoginUser }) {
   })
 
   const handleLoginFormSubmit = async (data) => {
-    setProcessing(true)
+    // setProcessing(true)
     await tryToLoginUser(data)
-    setProcessing(false)
+    // setProcessing(false)
   }
 
   if (user) {
-    router.query.redirect
-      ? router.push(`${router.query.redirect}`)
-      : router.push('/')
+    const route = router.query.redirect ?? '/'
+    router.push(route)
+    // router.query.redirect
+    //   ? router.push(`${router.query.redirect}`)
+    //   : router.push('/')
 
     return <div></div>
   }
@@ -82,7 +84,8 @@ function Login({ user, error, tryToLoginUser }) {
           {errors.password && <p>&#9888; {errors.password.message}</p>}
         </div>
 
-        <button disabled={processing} type="submit">
+        {/*<button disabled={processing} type="submit">*/}
+        <button disabled={isSubmitting} type="submit">
           Войти
         </button>
       </form>

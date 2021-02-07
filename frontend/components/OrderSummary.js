@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 
 import useCart from '../lib/hooks/useCart'
 
-export default function OrderSummary() {
+export default function OrderSummary({ changeTab }) {
   const { cart, updateCart } = useCart()
 
   // const {
@@ -51,6 +51,14 @@ export default function OrderSummary() {
           </tr>
         </tfoot>
       </table>
+      <div className="checkout-buttons">
+        <button
+          id="forwardbutton"
+          onClick={() => changeTab(1)}
+        >
+          Далее &#10095;
+        </button>
+      </div>
     </div>
   )
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 
 import Layout from '../components/Layout'
 import OrderSummary from '../components/OrderSummary'
@@ -10,22 +10,22 @@ export default function Checkout() {
   const [currentTab, setCurrentTab] = useState(1)
   let renderComponent
 
-  const handleChangeCurrentTab = (n) => {
+  const handleChangeCurrentTab = useCallback((n) => {
     const newTab = currentTab + n
     if (newTab > 0 && newTab <= 3) setCurrentTab(newTab)
-  }
+  }, [currentTab])
 
 
   if (currentTab === 1) {
-    renderComponent = <OrderSummary />
+    renderComponent = <OrderSummary changeTab={handleChangeCurrentTab} />
   }
 
   if (currentTab === 2) {
-    renderComponent = <AddressForm />
+    renderComponent = <AddressForm changeTab={handleChangeCurrentTab} />
   }
 
   if (currentTab === 3) {
-    renderComponent = <Payment />
+    renderComponent = <Payment changeTab={handleChangeCurrentTab} />
   }
 
   return (
@@ -59,7 +59,7 @@ export default function Checkout() {
 
           {renderComponent}
 
-          <div className="checkout-buttons">
+          {/*<div className="checkout-buttons">
             <button
               id="backwardbutton"
               onClick={() => handleChangeCurrentTab(-1)}
@@ -74,7 +74,7 @@ export default function Checkout() {
             >
               Далее &#10095;
             </button>
-          </div>
+          </div>*/}
 
         </div>
       </section>
