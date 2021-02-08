@@ -22,6 +22,7 @@ from store.serializers import (
     OrderLineSerializer,
     PickupAddressSerializer,
     PromotionSerializer,
+    OrderPolymorphicSerializer,
 )
 from authentication.models import UserFavorite
 from store.models import (
@@ -381,22 +382,29 @@ class OrderLineViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         )
 
 
-class PickupOrderCreate(views.APIView):
-    pass
-    # queryset = User.objects.all()
+class OrderViewset(viewsets.GenericViewSet):
+    queryset = Order.objects.all()
+    serializer_class = OrderPolymorphicSerializer
+    permission_classes = (IsAuthenticated,)
 
-    # permission_classes = (IsAuthenticated,)
+    @action(detail=False, methods=['post'])
+    def create_pickup_order(self, request, *args, **kwargs):
 
-    # def post(self, request, format=None):
-    #     serializer = PickupOrderSerializer(
-    #         data=request.data,
-    #         context={'user': request.user}
-    #     )
 
-    #     serializer.is_valid(raise_exception=True)
-    #     serializer.save()
 
-    #     return Response(serializer.data, status=status.HTTP_201_CREATED)
+        serializer = OrderSerializer(
+            data=request.data,
+            context={'user': request.user}
+        )
+
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    @action(detail=False, methods=['post'])
+    def create_delivery_order(self, request, *args, **kwargs):
+        pass
 
 
 class PromotionList(generics.ListAPIView):

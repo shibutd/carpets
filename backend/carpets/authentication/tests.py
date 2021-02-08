@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from authentication.factories import UserFactory
+from authentication.factories import UserFactory, UserAddressFactory
 
 
 class UserCreateTests(TestCase):
@@ -136,3 +136,65 @@ class JWTAuthenicationTests(APITestCase):
 
     def tearDown(self):
         self.user.delete()
+
+
+class UserAddressTests(APITestCase):
+
+    @classmethod
+    def setUpTestData(self):
+        self.users = UserFactory.create_batch(2)
+        user1, user2 = self.users
+        UserAddressFactory.create(user=user1)
+        UserAddressFactory.create_batch(2, user=user2)
+
+    def test_user_can_retrieve_own_addresses_list(self):
+        """
+        Ensure user can retrieve list of his saved addresses.
+        """
+        url = reverse('authentication:user-addresses-list')
+        user1, user2 = self.users
+
+        self.client.force_authenticate(user1)
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+
+        self.client.force_authenticate(user2)
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
+
+    def test_user_can_create_address(self):
+        """
+        Ensure user can create new address.
+        """
+        url = reverse('authentication:user-addresses-list')
+        user1, user2 = self.users
+
+        self.client.force_authenticate(user1)
+        response = self.client.post(
+            url,
+            {
+                'city': 'London',
+                'street': 'Baker St.',
+                'house_number': 221,
+                'appartment_number': 25
+            },
+            format='json',
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_201_CREATED
+        )
+        self.assertEqual(response.data['city'], 'London')
+        self.assertEqual(response.data['street'], 'Baker St.')
+        self.assertEqual(response.data['house_number'], 221)
+        self.assertEqual(response.data['appartment_number'], 25)
+
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)

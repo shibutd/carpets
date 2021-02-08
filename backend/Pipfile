@@ -15,6 +15,7 @@ python-dotenv = "*"
 psycopg2 = "*"
 djangorestframework-camel-case = "*"
 django-filter = "*"
+django-rest-polymorphic = "*"
 
 [dev-packages]
 django-extensions = "*"

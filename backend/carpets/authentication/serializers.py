@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from authentication.models import CustomUser
+from authentication.models import CustomUser, UserAddress
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
@@ -19,3 +19,19 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         return CustomUser.objects.create_user(**validated_data)
+
+
+class UserAddressSerializer(serializers.ModelSerializer):
+    """
+    Serializer for user address.
+    """
+
+    class Meta:
+        model = UserAddress
+        fields = (
+            'id',
+            'city',
+            'street',
+            'house_number',
+            'appartment_number',
+        )

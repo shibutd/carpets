@@ -4,7 +4,7 @@ from rest_framework import routers
 from store.views import (
     # OrderLineList,
     OrderLineViewSet,
-    PickupOrderCreate,
+    # PickupOrderCreate,
     ProductViewSet,
     ProductVariationViewSet,
     PickupAddressList,

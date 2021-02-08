@@ -1,18 +1,21 @@
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import serializers
+from rest_polymorphic.serializers import PolymorphicSerializer
 
 from store.models import (
     Product,
     ProductCategory,
     ProductImage,
     PickupOrder,
-    Order,
     OrderStatus,
-    OrderLine,
-    PickupAddress,
     ProductVariation,
     VariationTag,
     VariationQuantity,
+    Order,
+    PickupOrder,
+    PickupAddress,
+    DeliveryOrder,
+    OrderLine,
     Promotion,
 )
 
@@ -241,39 +244,64 @@ class OrderLineSerializer(serializers.ModelSerializer):
         fields = ('variation', 'quantity')
 
 
-class PickupOrderSerializer(serializers.ModelSerializer):
-    lines = OrderLineSerializer(many=True)
+class OrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = ('status', 'date_added')
 
+
+class PickupOrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = PickupOrder
-        fields = ('pickup_address', 'lines')
+        fields = ('status', 'pickup_address', 'date_added')
 
-    def validate_lines(self, value):
-        if len(value) == 0:
-            raise serializers.ValidationError(
-                'Order must contain products to be created.'
-            )
-        return value
 
-    def create(self, validated_data):
-        user = self.context.get('user')
-        lines = validated_data.pop('lines')
+class DeliveryOrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DeliveryOrder
+        fields = ('status', 'delivery_address', 'date_added')
 
-        pickup_order = PickupOrder.objects.create(
-            user=user,
-            **validated_data
-        )
 
-        for line in lines:
-            product_slug = line['product']['slug']
-            quantity = line['quantity']
-            OrderLine.objects.create(
-                order=pickup_order,
-                product=Product.objects.get(slug=product_slug),
-                quantity=quantity,
-            )
+class OrderPolymorphicSerializer(PolymorphicSerializer):
+    model_serializer_mapping = {
+        Order: OrderSerializer,
+        PickupOrder: PickupOrderSerializer,
+        DeliveryOrder: DeliveryOrderSerializer
+    }
 
-        return pickup_order
+
+    # lines = OrderLineSerializer(many=True)
+
+    # class Meta:
+    #     model = PickupOrder
+    #     fields = ('pickup_address', 'lines')
+
+    # def validate_lines(self, value):
+    #     if len(value) == 0:
+    #         raise serializers.ValidationError(
+    #             'Order must contain products to be created.'
+    #         )
+    #     return value
+
+    # def create(self, validated_data):
+    #     user = self.context.get('user')
+    #     lines = validated_data.pop('lines')
+
+    #     pickup_order = PickupOrder.objects.create(
+    #         user=user,
+    #         **validated_data
+    #     )
+
+    #     for line in lines:
+    #         product_slug = line['product']['slug']
+    #         quantity = line['quantity']
+    #         OrderLine.objects.create(
+    #             order=pickup_order,
+    #             product=Product.objects.get(slug=product_slug),
+    #             quantity=quantity,
+    #         )
+
+    #     return pickup_order
 
 
 class PromotionSerializer(serializers.ModelSerializer):

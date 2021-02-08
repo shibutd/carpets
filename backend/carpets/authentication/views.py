@@ -1,5 +1,7 @@
 from rest_framework import status
 from rest_framework import viewsets
+from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -8,7 +10,11 @@ from rest_framework_simplejwt.serializers import (
     TokenRefreshSerializer
 )
 
-from authentication.serializers import CustomUserSerializer
+from authentication.serializers import (
+    CustomUserSerializer,
+    UserAddressSerializer,
+)
+from authentication.models import UserAddress
 
 
 class CustomUserViewSet(viewsets.ViewSet):
@@ -52,3 +58,19 @@ class CustomUserViewSet(viewsets.ViewSet):
             serializer.validated_data,
             status=status.HTTP_200_OK,
         )
+
+
+class UserAddressListCreateView(generics.ListCreateAPIView):
+    queryset = UserAddress.objects.all()
+    serializer_class = UserAddressSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        user = self.request.user
+        queryset = self.queryset
+
+        return queryset.filter(user=user)
+
+    def perform_create(self, serializer):
+        user = self.request.user
+        serializer.save(user=user)
