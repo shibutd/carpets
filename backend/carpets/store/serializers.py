@@ -2,12 +2,11 @@ from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import serializers
 from rest_polymorphic.serializers import PolymorphicSerializer
 
+from authentication.models import UserAddress
 from store.models import (
     Product,
     ProductCategory,
     ProductImage,
-    PickupOrder,
-    OrderStatus,
     ProductVariation,
     VariationTag,
     VariationQuantity,
@@ -195,7 +194,7 @@ class PickupAddressSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PickupAddress
-        fields = ('name', 'phone_number')
+        fields = ('id', 'name', 'phone_number')
 
 
 class OrderLineListSerializer(serializers.ListSerializer):
@@ -245,63 +244,60 @@ class OrderLineSerializer(serializers.ModelSerializer):
 
 
 class OrderSerializer(serializers.ModelSerializer):
+    """
+    Serializer for order model class.
+    """
     class Meta:
         model = Order
         fields = ('status', 'date_added')
 
 
 class PickupOrderSerializer(serializers.ModelSerializer):
+    """
+    Serializer for pickup order model class.
+    """
+    status = serializers.ReadOnlyField(
+        source='get_status_display'
+    )
+    pickup_address = serializers.PrimaryKeyRelatedField(
+        queryset=PickupAddress.objects.all()
+    )
+    date_added = serializers.DateTimeField(
+        format="%Y-%m-%d %H:%M", read_only=True)
+
     class Meta:
         model = PickupOrder
         fields = ('status', 'pickup_address', 'date_added')
 
 
 class DeliveryOrderSerializer(serializers.ModelSerializer):
+    """
+    Serializer for delivery order model class.
+    """
+    status = serializers.ReadOnlyField(
+        source='get_status_display'
+    )
+    delivery_address = serializers.PrimaryKeyRelatedField(
+        queryset=UserAddress.objects.all()
+    )
+    date_added = serializers.DateTimeField(
+        format="%d-%m-%Y %H:%M", read_only=True)
+
     class Meta:
         model = DeliveryOrder
         fields = ('status', 'delivery_address', 'date_added')
 
 
 class OrderPolymorphicSerializer(PolymorphicSerializer):
+    """
+    Polymorphic serializer to determine type of serializer to use.
+    """
+    resource_type_field_name = 'ordertype'
     model_serializer_mapping = {
         Order: OrderSerializer,
         PickupOrder: PickupOrderSerializer,
-        DeliveryOrder: DeliveryOrderSerializer
+        DeliveryOrder: DeliveryOrderSerializer,
     }
-
-
-    # lines = OrderLineSerializer(many=True)
-
-    # class Meta:
-    #     model = PickupOrder
-    #     fields = ('pickup_address', 'lines')
-
-    # def validate_lines(self, value):
-    #     if len(value) == 0:
-    #         raise serializers.ValidationError(
-    #             'Order must contain products to be created.'
-    #         )
-    #     return value
-
-    # def create(self, validated_data):
-    #     user = self.context.get('user')
-    #     lines = validated_data.pop('lines')
-
-    #     pickup_order = PickupOrder.objects.create(
-    #         user=user,
-    #         **validated_data
-    #     )
-
-    #     for line in lines:
-    #         product_slug = line['product']['slug']
-    #         quantity = line['quantity']
-    #         OrderLine.objects.create(
-    #             order=pickup_order,
-    #             product=Product.objects.get(slug=product_slug),
-    #             quantity=quantity,
-    #         )
-
-    #     return pickup_order
 
 
 class PromotionSerializer(serializers.ModelSerializer):

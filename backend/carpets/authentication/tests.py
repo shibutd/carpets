@@ -141,9 +141,9 @@ class JWTAuthenicationTests(APITestCase):
 class UserAddressTests(APITestCase):
 
     @classmethod
-    def setUpTestData(self):
-        self.users = UserFactory.create_batch(2)
-        user1, user2 = self.users
+    def setUpTestData(cls):
+        cls.users = UserFactory.create_batch(2)
+        user1, user2 = cls.users
         UserAddressFactory.create(user=user1)
         UserAddressFactory.create_batch(2, user=user2)
 

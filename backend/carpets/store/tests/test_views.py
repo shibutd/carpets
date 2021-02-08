@@ -2,14 +2,15 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from authentication.factories import UserFactory
+from authentication.factories import UserFactory, UserAddressFactory
 from store.factories import (
     ProductFactory,
     ProductVariationFactory,
     OrderFactory,
     OrderLineFactory,
+    PickupAddressFactory,
 )
-from store.models import Order, PickupOrder, DeliveryOrder
+from store.models import Order, PickupOrder, DeliveryOrder, OrderStatus
 
 
 class ProductTests(APITestCase):
@@ -195,3 +196,91 @@ class ProductVaritaionTests(APITestCase):
 
     def test_remove_from_favorites(self):
         pass
+
+
+class OrderCreateTests(APITestCase):
+
+    def setUp(self):
+        self.user = UserFactory.create()
+        OrderFactory.create(user=self.user)
+
+    def test_user_can_create_pickup_order(self):
+        """
+        Ensure user can create pickup order.
+        """
+        url = reverse('store:order-list')
+
+        self.client.force_authenticate(self.user)
+        pickup_address = PickupAddressFactory.create()
+
+        response = self.client.post(
+            url,
+            {
+                'ordertype': 'PickupOrder',
+                'pickup_address': pickup_address.id,
+            },
+            format='json',
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['status'], 'Paid')
+        self.assertEqual(
+            response.data['pickup_address'],
+            pickup_address.id
+        )
+        self.assertEqual(
+            Order.objects.filter(
+                user=self.user,
+                status=OrderStatus.NEW
+            ).count(),
+            0,
+        )
+        self.assertEqual(
+            Order.objects.filter(
+                user=self.user,
+                status=OrderStatus.PAID
+            ).instance_of(PickupOrder).count(),
+            1,
+        )
+
+    def test_user_can_create_delivery_order(self):
+        """
+        Ensure user can create delivery order.
+        """
+        url = reverse('store:order-list')
+
+        self.client.force_authenticate(self.user)
+        delivery_address = UserAddressFactory.create(user=self.user)
+
+        response = self.client.post(
+            url,
+            {
+                'ordertype': 'DeliveryOrder',
+                'delivery_address': delivery_address.id,
+            },
+            format='json',
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['status'], 'Paid')
+        self.assertEqual(
+            response.data['delivery_address'],
+            delivery_address.id
+        )
+        self.assertEqual(
+            Order.objects.filter(
+                user=self.user,
+                status=OrderStatus.NEW
+            ).count(),
+            0,
+        )
+        self.assertEqual(
+            Order.objects.filter(
+                user=self.user,
+                status=OrderStatus.PAID
+            ).instance_of(DeliveryOrder).count(),
+            1,
+        )
+
+    def tearDown(self):
+        self.user.delete()

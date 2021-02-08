@@ -11,6 +11,7 @@ from store.models import (
     VariationSize,
     Order,
     OrderLine,
+    PickupAddress,
 )
 
 
@@ -93,3 +94,20 @@ class OrderLineFactory(factory.django.DjangoModelFactory):
 
     order = factory.SubFactory(OrderFactory)
     variation = factory.SubFactory(ProductVariation)
+
+
+class PickupAddressFactory(factory.django.DjangoModelFactory):
+    """
+    Factory for pickup order model class.
+    """
+    class Meta:
+        model = PickupAddress
+
+    name = factory.Sequence(lambda n: 'pickup-order-{}'.format(n))
+
+    @factory.lazy_attribute
+    def phone_number(self):
+        random_numbers = ''.join(
+            [str(random.randint(0, 9)) for _ in range(7)]
+        )
+        return '8912{}'.format(random_numbers)

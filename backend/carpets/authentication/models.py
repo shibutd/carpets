@@ -83,6 +83,9 @@ class CustomUser(PermissionsMixin, AbstractBaseUser):
 
 
 class UserAddress(models.Model):
+    """
+    User's address model class.
+    """
     user = models.ForeignKey(
         'CustomUser',
         on_delete=models.CASCADE,
@@ -101,6 +104,9 @@ class UserAddress(models.Model):
 
 
 class UserFavorite(models.Model):
+    """
+    User's favorites model class.
+    """
     user = models.OneToOneField(
         'CustomUser',
         on_delete=models.CASCADE,

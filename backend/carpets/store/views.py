@@ -3,7 +3,6 @@ from functools import wraps
 from django.db.models import Prefetch
 from rest_framework import status
 from rest_framework import generics
-from rest_framework import views
 from rest_framework import viewsets
 from rest_framework import mixins
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -18,7 +17,6 @@ from store.serializers import (
     ProductCategoryWithPropertiesSerializer,
     ProductVariationSerializer,
     ProductWithVariationsSerializer,
-    PickupOrderSerializer,
     OrderLineSerializer,
     PickupAddressSerializer,
     PromotionSerializer,
@@ -328,7 +326,8 @@ class ProductVariationViewSet(viewsets.ReadOnlyModelViewSet):
 
 class OrderLineViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     """
-    Display list of order lines.
+    Display list of order lines and update new order with products
+    existing in cart.
     """
     queryset = OrderLine.objects.all()
     serializer_class = OrderLineSerializer
@@ -382,29 +381,30 @@ class OrderLineViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         )
 
 
-class OrderViewset(viewsets.GenericViewSet):
+class OrderCreateView(generics.CreateAPIView):
+    """
+    Create Paid order (pickup or delivery depending
+    on sent param 'ordertype').
+    """
     queryset = Order.objects.all()
     serializer_class = OrderPolymorphicSerializer
     permission_classes = (IsAuthenticated,)
 
-    @action(detail=False, methods=['post'])
-    def create_pickup_order(self, request, *args, **kwargs):
-
-
-
-        serializer = OrderSerializer(
-            data=request.data,
-            context={'user': request.user}
+    def perform_create(self, serializer):
+        order, created = Order.objects.get_or_create(
+            user=self.request.user,
+            status=OrderStatus.NEW,
+        )
+        created_order = serializer.save(
+            user=self.request.user,
+            status=OrderStatus.PAID,
         )
 
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
+        for orderline in order.lines.all():
+            orderline.order = created_order
 
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-    @action(detail=False, methods=['post'])
-    def create_delivery_order(self, request, *args, **kwargs):
-        pass
+        created_order.save()
+        order.delete()
 
 
 class PromotionList(generics.ListAPIView):

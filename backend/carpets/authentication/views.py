@@ -66,11 +66,7 @@ class UserAddressListCreateView(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        user = self.request.user
-        queryset = self.queryset
-
-        return queryset.filter(user=user)
+        return self.queryset.filter(user=self.request.user)
 
     def perform_create(self, serializer):
-        user = self.request.user
-        serializer.save(user=user)
+        serializer.save(user=self.request.user)
