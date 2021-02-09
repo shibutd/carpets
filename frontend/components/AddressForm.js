@@ -102,7 +102,6 @@ export default function AddressForm({ changeTab }) {
         <>
           <p>Выберите пункт самовывоза:</p>
           <div className="checkout-addressform-address">
-            <label htmlFor="">Выбрать:</label>
             <select value={selected} onChange={handleChangeSelect}>
               <option value="none">{"..."}</option>
               {(addresses || []).map(address => (
