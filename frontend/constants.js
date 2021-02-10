@@ -2,13 +2,21 @@ const targetUrl = 'http://127.0.0.1:8000'
 
 // Authentication urls
 
-const authenticationUrl = `${targetUrl}/auth/users`
+const authenticationUrl = `${targetUrl}/auth`
 
-export const userCreateUrl = `${authenticationUrl}/`
+// User url
 
-export const tokenObtainUrl = `${authenticationUrl}/token_obtain_pair/`
+const userUrl = `${authenticationUrl}/users`
 
-export const tokenRefreshUrl = `${authenticationUrl}/token_refresh/`
+export const userCreateUrl = `${userUrl}/`
+
+export const tokenObtainUrl = `${userUrl}/token_obtain_pair/`
+
+export const tokenRefreshUrl = `${userUrl}/token_refresh/`
+
+// User Addresses url
+
+export const userAddressUrl = `${authenticationUrl}/user-addresses/`
 
 
 // Interaction with store

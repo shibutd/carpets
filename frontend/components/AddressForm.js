@@ -3,10 +3,17 @@ import { useState, useEffect, useMemo } from 'react'
 // import Link from 'next/link'
 import { useQuery } from 'react-query'
 import { useForm } from 'react-hook-form'
+import { useDispatch, useSelector } from 'react-redux'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from "yup"
 
-import { fetchAddresses } from '../lib/utils/fetchAddresses'
+import {
+  createAddress,
+  changeAddress,
+  selectAddress,
+} from '../lib/slices/addressSlice'
+import { fetchPickupAddresses } from '../lib/utils/fetchPickupAddresses'
+import { fetchUserAddresses } from '../lib/utils/fetchUserAddresses'
 
 const schema = yup.object().shape({
   city: yup.string()
@@ -14,16 +21,20 @@ const schema = yup.object().shape({
   street: yup.string()
     .required('Введите улицу'),
   houseNumber: yup.number()
+    .typeError('Введите номер дома')
     .required('Введите номер дома'),
   appartmentNumber: yup.string().notRequired(),
 })
 
+
 export default function AddressForm({ changeTab }) {
-  const [deliveryType, setDeliveryType] = useState("pickup")
-  // const [addresses, setAddresses] = useState([])
+  const dispatch = useDispatch()
+  const { addressType, addressId, loading } = useSelector(selectAddress)
+
+  const [deliveryType, setDeliveryType] = useState('pickup')
   const [selected, setSelected] = useState('none')
-  // const [disabled, setDisabled] = useState(true)
-  const { register, errors, formState } = useForm({
+
+  const { register, errors, formState, getValues } = useForm({
     mode: 'onChange',
     resolver: yupResolver(schema),
     defaultValues: {
@@ -37,10 +48,10 @@ export default function AddressForm({ changeTab }) {
   const {
     // isLoading,
     // isError,
-    data: addresses,
+    data: pickupAddresses,
   } = useQuery(
-    'addresses',
-    () => fetchAddresses(),
+    'pickupAddresses',
+    () => fetchPickupAddresses(),
     {
       staleTime: 6000,
       cacheTime: 60000,
@@ -48,15 +59,11 @@ export default function AddressForm({ changeTab }) {
     }
   )
 
-  const handleOptionChange = (e) => {
-    const value = e.target.value
-    setDeliveryType(value)
-  }
-
-  const handleChangeSelect = (e) => {
-    const value = e.target.value
-    setSelected(value)
-  }
+  const {
+    // isLoading,
+    // isError,
+    data: userAddresses,
+  } = useQuery('userAddresses', () => fetchUserAddresses())
 
   const isDisabled = useMemo(() => {
     if (deliveryType === 'pickup') {
@@ -68,11 +75,34 @@ export default function AddressForm({ changeTab }) {
     return true
   }, [deliveryType, selected, formState])
 
+  const handleOptionChange = (e) => {
+    const value = e.target.value
+    setDeliveryType(value)
+  }
+
+  const handleChangeSelect = (e) => {
+    const value = e.target.value
+    setSelected(value)
+  }
+
+  const handleClick = async () => {
+    if (deliveryType === 'delivery' && !isDisabled) {
+      const values = getValues()
+      console.log(values)
+      // await dispatch(createAddress())
+    }
+    changeTab(1)
+  }
+
   // useEffect(() => {
   //   const { isDirty, isValid } = formState
   //   console.log("isDirty", isDirty)
   //   console.log("isValid", isValid)
   // }, [formState])
+
+  useEffect(() => {
+    console.log('useraddresses', userAddresses)
+  }, [userAddresses])
 
   return (
     <div className="checkout-addressform">
@@ -104,7 +134,7 @@ export default function AddressForm({ changeTab }) {
           <div className="checkout-addressform-address">
             <select value={selected} onChange={handleChangeSelect}>
               <option value="none">{"..."}</option>
-              {(addresses || []).map(address => (
+              {(pickupAddresses || []).map(address => (
                 <option
                   key={address.phoneNumber}
                   value={address.name}
@@ -185,9 +215,9 @@ export default function AddressForm({ changeTab }) {
         <button
           id="forwardbutton"
           disabled={isDisabled}
-          onClick={() => changeTab(1)}
+          onClick={() => handleClick()}
         >
-          Далее &#10095;
+          {loading ? 'loading...' : <span>Далее &#10095;</span>}
         </button>
       </div>
     </div>
