@@ -11,23 +11,14 @@ export default function Layout({ title, children }) {
   const { cart } = useCart()
 
   if (!authContext.loaded) {
-    return null
+    return <div />
   }
-
-  const childrenWithProps = React.Children.map(children, child => {
-    if (React.isValidElement(child)) {
-      return React.cloneElement(child, {
-        ...authContext,
-      })
-    }
-    return child
-  })
 
   return (
     <>
       <Header title={title} auth={authContext} cart={cart} />
       <main>
-        {childrenWithProps}
+        {children}
       </main>
       <Footer />
     </>

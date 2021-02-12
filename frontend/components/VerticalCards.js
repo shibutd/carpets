@@ -2,14 +2,16 @@ import React, { useState, useEffect, useRef, Children } from 'react'
 import PropTypes from 'prop-types'
 
 import useFavorites from '../lib/hooks/useFavorites'
+import useAuth from '../lib/hooks/useAuth'
 import useCart from '../lib/hooks/useCart'
 
-export default function VerticalCards({ title, children, ...props }) {
+export default function VerticalCards({ title, children }) {
   const [moveCounter, setMoveCounter] = useState(0)
   const [cardsLength, setCardsLength] = useState(3)
   const cardsRef = useRef(null)
   const [childrenCount, setChildrenCount] = useState(Children.count(children))
 
+  const { user } = useAuth()
   const { addToFavorites } = useFavorites()
   const { handleAddToCart } = useCart()
 
@@ -79,11 +81,11 @@ export default function VerticalCards({ title, children, ...props }) {
   }, [moveCounter, cardsLength, childrenCount])
 
   const childrenWithProps = React.Children.map(children, child => {
-    if (React.isValidElement(child) && typeof child.type === 'function') {
+    if (React.isValidElement(child)) {
       return React.cloneElement(child, {
+        user,
         addToFavorites,
         handleAddToCart,
-        ...props
       })
     }
     return child

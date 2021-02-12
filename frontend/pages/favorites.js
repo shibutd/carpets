@@ -3,9 +3,8 @@ import { useRouter } from 'next/router'
 
 import Layout from '../components/Layout'
 import FavoritesItem from '../components/FavoritesItem'
+import BouncerLoading from '../components/BouncerLoading'
 import useAuth from '../lib/hooks/useAuth'
-// import { authAxios } from '../lib/utils/authAxios'
-// import { favoritesUrl } from '../constants'
 import useFavorites from '../lib/hooks/useFavorites'
 
 
@@ -70,8 +69,10 @@ export default function Favorites() {
               />
             ))) : (
               favoritesLoading ? (
-                <div className="favorites-empty">
-                  <p>Загрузка...</p>
+                <div
+                  style={{ display: 'flex', justifyContent: 'center', padding: '2rem' }}
+                >
+                  <BouncerLoading />
                 </div>
               ) : (
             <div className="favorites-empty">

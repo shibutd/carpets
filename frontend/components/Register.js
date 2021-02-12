@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from "yup"
 
-// import useAuth from '../lib/hooks/useAuth'
+import useAuth from '../lib/hooks/useAuth'
 
 const schema = yup.object().shape({
   email: yup.string()
@@ -20,8 +20,9 @@ const schema = yup.object().shape({
     .required('Введите пароль повторно'),
 })
 
-function Register({ user, error, tryToRegisterUser }) {
+function Register() {
   const router = useRouter()
+  const { user, error, tryToRegisterUser } = useAuth()
   const [processing, setProcessing] = useState(false)
   const { register, handleSubmit, errors } = useForm({
     resolver: yupResolver(schema),
@@ -31,6 +32,7 @@ function Register({ user, error, tryToRegisterUser }) {
       confirmPassword: "54321qwe",
     },
   })
+  const redirect = router.query.redirect
 
   const handleLoginFormSubmit = async (data) => {
     setProcessing(true)
@@ -39,10 +41,7 @@ function Register({ user, error, tryToRegisterUser }) {
   }
 
   if (user) {
-    router.query.redirect
-      ? router.push(`${router.query.redirect}`)
-      : router.push('/')
-
+    router.push(redirect ?? '/')
     return <div></div>
   }
 
@@ -50,7 +49,7 @@ function Register({ user, error, tryToRegisterUser }) {
     <section className="register">
       <h1>Регистрация</h1>
       <p>Я уже зарегистрировался. </p>
-      <Link href="/login">
+      <Link href={`/login${redirect ? `?redirect=${redirect}` : ''}`}>
         <a>Войти в аккаунт</a>
       </Link>
       <form
@@ -99,7 +98,9 @@ function Register({ user, error, tryToRegisterUser }) {
           )}
         </div>
 
-        <button disabled={processing} type="submit">Зарегистрироваться</button>
+        <button disabled={processing} type="submit">
+          Зарегистрироваться
+        </button>
       </form>
     </section>
   )

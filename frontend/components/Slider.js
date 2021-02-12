@@ -112,14 +112,10 @@ function Slider({ classes, label, onChange, minValue, maxValue, ...sliderProps }
       />
 
       <div className="slider-input">
-        <div className="slider-input-track">
-        </div>
-        <div className="slider-input-range">
-        </div>
-        <div className="slider-input-thumb thumb-left">
-        </div>
-        <div className="slider-input-thumb thumb-right">
-        </div>
+        <div className="slider-input-track" />
+        <div className="slider-input-range" />
+        <div className="slider-input-thumb thumb-left" />
+        <div className="slider-input-thumb thumb-right" />
       </div>
 
     </div>

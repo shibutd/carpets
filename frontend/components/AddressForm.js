@@ -207,13 +207,12 @@ export default function AddressForm({ changeTab }) {
       </>)}
       <div className="checkout-buttons">
         <button
-          id="backwardbutton"
+          className="dark-gray-button"
           onClick={() => changeTab(-1)}
         >
           &#10094; Назад
         </button>
         <button
-          id="forwardbutton"
           disabled={isDisabled}
           onClick={() => handleClick()}
         >

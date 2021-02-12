@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from "yup"
 
-// import useAuth from '../lib/hooks/useAuth'
+import useAuth from '../lib/hooks/useAuth'
 
 const schema = yup.object().shape({
   email: yup.string()
@@ -17,31 +17,27 @@ const schema = yup.object().shape({
     .required('Введите пароль'),
 })
 
-function Login({ user, error, tryToLoginUser }) {
-// function Login(props) {
+function Login() {
   const router = useRouter()
+  const { user, error, tryToLoginUser } = useAuth()
   const [processing, setProcessing] = useState(false)
-  const { register, handleSubmit, errors, isSubmitting } = useForm({
+  const { register, handleSubmit, errors } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
       email: "admin@admin.com",
       password: "54321qwe",
     },
   })
+  const redirect = router.query.redirect
 
   const handleLoginFormSubmit = async (data) => {
-    // setProcessing(true)
+    setProcessing(true)
     await tryToLoginUser(data)
-    // setProcessing(false)
+    setProcessing(false)
   }
 
   if (user) {
-    const route = router.query.redirect ?? '/'
-    router.push(route)
-    // router.query.redirect
-    //   ? router.push(`${router.query.redirect}`)
-    //   : router.push('/')
-
+    router.push(redirect ?? '/')
     return <div></div>
   }
 
@@ -49,7 +45,7 @@ function Login({ user, error, tryToLoginUser }) {
     <section className="register">
       <h1>Войти в аккаунт</h1>
       <p>У меня нет аккаунта. </p>
-      <Link href="/register">
+      <Link href={`/register${redirect ? `?redirect=${redirect}` : ''}`}>
         <a>Зарегистрироваться</a>
       </Link>
 
@@ -84,8 +80,7 @@ function Login({ user, error, tryToLoginUser }) {
           {errors.password && <p>&#9888; {errors.password.message}</p>}
         </div>
 
-        {/*<button disabled={processing} type="submit">*/}
-        <button disabled={isSubmitting} type="submit">
+        <button disabled={processing} type="submit">
           Войти
         </button>
       </form>

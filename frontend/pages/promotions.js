@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 
 import Layout from '../components/Layout'
+import BouncerLoading from '../components/BouncerLoading'
 import { promotionUrl } from '../constants'
 
 // const promotions = [
@@ -12,6 +13,7 @@ import { promotionUrl } from '../constants'
 
 export default function Promotions() {
   const [promotions, setPromotions] = useState([])
+  const [promotionsLoading, setPromotionsLoading] = useState(true)
 
   useEffect(() => {
     async function fetchData(url) {
@@ -22,6 +24,7 @@ export default function Promotions() {
         return []
       }
 
+      setPromotionsLoading(false)
       return data
     }
 
@@ -34,12 +37,20 @@ export default function Promotions() {
     >
       <section className="promotions">
         <h1>Акции</h1>
-        {promotions.map((promotion) => (
-          <div key={promotion.id} className="promotion">
-            <h5>{promotion.title}</h5>
-            <p>{promotion.description}</p>
+        {promotionsLoading ? (
+          <div
+            style={{ display: 'flex', justifyContent: 'center', padding: '2rem' }}
+          >
+            <BouncerLoading />
           </div>
-        ))}
+        ) : (
+          promotions.map((promotion) => (
+            <div key={promotion.id} className="promotion">
+              <h5>{promotion.title}</h5>
+              <p>{promotion.description}</p>
+            </div>
+          ))
+        )}
       </section>
     </Layout>
   )

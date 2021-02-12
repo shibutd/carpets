@@ -5,8 +5,6 @@ import Image from 'next/image'
 
 import HearthRegular from './icons/HearthRegular'
 import ShoppingCartSolid from './icons/ShoppingCartSolid'
-// import useFavorites from '../lib/hooks/useFavorites'
-// import useAuth from '../lib/hooks/useAuth'
 import { convertPrice } from '../lib/utils/converters'
 
 
@@ -14,6 +12,7 @@ import { convertPrice } from '../lib/utils/converters'
   const { id, title, slug, size, price, images, ...rest } = props
   const { user, addToFavorites, handleAddToCart } = rest
   const cardRef = useRef(null)
+  const timerRef = useRef(null)
 
   const mainImage = images.length > 0 ? images[0].image : null
   const imageName = title.replace(/ /g, '_').replace(/\"/g, '')
@@ -22,7 +21,7 @@ import { convertPrice } from '../lib/utils/converters'
     ? `/media/product-images/${imageName}.jpg`
     : `/media/product-images/No_Image.jpg`
 
-  const handleClickFavorite = useCallback(() => {
+  const handleClickFavorite = () => {
     const favoriteIcon = cardRef.current.querySelector('.vertical-cart-icon')
 
     if (!user) {
@@ -43,7 +42,25 @@ import { convertPrice } from '../lib/utils/converters'
     }, 2000)
 
     addToFavorites(id)
-  }, [])
+  }
+
+  const handleClickAddToCart = () => {
+    clearTimeout(timerRef.current)
+    handleAddToCart({ name, slug, id, size, price })
+
+    const addToCartIcon = cardRef.current.querySelector(
+      '.vertical-cart-button'
+    )
+
+    addToCartIcon.classList.add('vertical-cart-button-pushed')
+    addToCartIcon.classList.add('tooltip')
+
+    timerRef.current = setTimeout(() => {
+      addToCartIcon.classList.remove('vertical-cart-button-pushed')
+      addToCartIcon.classList.remove('tooltip')
+    }, 2000)
+
+  }
 
   return (
     <div
@@ -81,9 +98,8 @@ import { convertPrice } from '../lib/utils/converters'
         </button>
         <button
           className="vertical-cart-button"
-          onClick={() => handleAddToCart({
-            name, slug, id, size, price
-          })}
+          value="Добавлено в корзину"
+          onClick={handleClickAddToCart}
         >
           <ShoppingCartSolid height={20} width={20} />
         </button>

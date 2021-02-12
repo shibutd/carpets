@@ -27,8 +27,6 @@ export default function RangeSlider({ size, onChange }) {
     }
   })
 
-  console.log(minWidth, maxWidth, minLength, maxLength)
-
   const [sliderMinWidth, sliderMaxWidth, sliderWidthConfig] = useSlide({
       min: minWidth,
       max: maxWidth,

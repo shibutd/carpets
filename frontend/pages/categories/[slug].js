@@ -1,10 +1,11 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { useQuery } from 'react-query'
 
 import Layout from '../../components/Layout'
 import VerticalProductCard from '../../components/VerticalProductCard'
 import CategorySidebar from '../../components/CategorySidebar'
+import BouncerLoading from '../../components/BouncerLoading'
 import { fetchProducts } from '../../lib/utils/fetchProducts'
 import { categoryUrl } from '../../constants'
 
@@ -73,9 +74,9 @@ export default function Category({ category }) {
           <div className="category-product-list">
             {isLoading ? (
               <div
-                style={{ fontSize: "var(--text)", textAlign: "center" }}
+                style={{ display: 'flex', justifyContent: 'center', padding: '2rem' }}
               >
-                Загрузка...
+                <BouncerLoading />
               </div>
             ) : isError ? (
               <div
@@ -126,5 +127,8 @@ export default function Category({ category }) {
 }
 
 Category.propTypes = {
-  data: PropTypes.object
+  category: PropTypes.object,
+  name: PropTypes.string,
+  slug: PropTypes.string,
+  properties: PropTypes.object,
 }
