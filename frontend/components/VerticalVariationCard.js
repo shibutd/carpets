@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import Link from 'next/link'
 import Image from 'next/image'
 
+import BubblyButton from './BubblyButton'
 import HearthRegular from './icons/HearthRegular'
 import ShoppingCartSolid from './icons/ShoppingCartSolid'
 import { convertPrice } from '../lib/utils/converters'
@@ -53,11 +54,11 @@ import { convertPrice } from '../lib/utils/converters'
     )
 
     addToCartIcon.classList.add('vertical-cart-button-pushed')
-    addToCartIcon.classList.add('tooltip')
+    // addToCartIcon.classList.add('tooltip')
 
     timerRef.current = setTimeout(() => {
       addToCartIcon.classList.remove('vertical-cart-button-pushed')
-      addToCartIcon.classList.remove('tooltip')
+      // addToCartIcon.classList.remove('tooltip')
     }, 2000)
 
   }
@@ -96,13 +97,12 @@ import { convertPrice } from '../lib/utils/converters'
         >
           <HearthRegular height={20} width={20} />
         </button>
-        <button
+        <BubblyButton
           className="vertical-cart-button"
-          value="Добавлено в корзину"
           onClick={handleClickAddToCart}
         >
           <ShoppingCartSolid height={20} width={20} />
-        </button>
+        </BubblyButton>
       </div>
     </div>
   )

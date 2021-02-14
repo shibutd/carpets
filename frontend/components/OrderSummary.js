@@ -1,20 +1,12 @@
-import { useEffect } from 'react'
-// import { useQuery } from 'react-query'
-
 import useCart from '../lib/hooks/useCart'
+import { convertPrice } from '../lib/utils/converters'
 
 export default function OrderSummary({ changeTab }) {
-  const { cart, updateCart } = useCart()
+  const { cart } = useCart()
 
-  // const {
-  //   isLoading,
-  //   isError,
-  //   data,
-  // } = useQuery('orderlines', () => fetchOrderlines())
-
-  // useEffect(() => {
-  //   updateCart()
-  // }, [])
+  const total = cart.reduce((sum, item) => {
+    return sum + item.variation.price * item.quantity
+  }, 0)
 
   return (
     <div className="checkout-ordersummary">
@@ -34,9 +26,9 @@ export default function OrderSummary({ changeTab }) {
             <tr key={item.variation.id}>
               <td>{idx + 1}.</td>
               <td>{item.variation.product.name}</td>
-              <td>{item.variation.price} ₽</td>
+              <td>{`${convertPrice(item.variation.price)} ₽`}</td>
               <td width="20%">{item.quantity}</td>
-              <td>{item.variation.price * item.quantity} ₽</td>
+              <td>{`${convertPrice(item.variation.price * item.quantity)} ₽`}</td>
             </tr>
           ))}
         </tbody>
@@ -44,9 +36,7 @@ export default function OrderSummary({ changeTab }) {
           <tr>
             <td colSpan="4">Общая сумма:</td>
             <td>
-              {cart.reduce((sum, item) => {
-                return sum + item.variation.price * item.quantity
-              }, 0)} ₽
+              {`${convertPrice(total)} ₽`}
             </td>
           </tr>
         </tfoot>

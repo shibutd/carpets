@@ -32,6 +32,28 @@ function Header({ title, auth, cart }) {
     setOpenCatalog(prev => !prev)
   }, [])
 
+  function showSearchNav() {
+    const topNav = document.querySelector('.top-nav')
+    const searchNav = document.querySelector('.search-nav')
+
+    const scrolled = document.scrollingElement.scrollTop
+
+    if (scrolled >= topNav.clientHeight + searchNav.clientHeight) {
+      topNav.style.marginBottom = `${searchNav.clientHeight}px`
+      searchNav.classList.add('search-nav-fixed')
+    } else {
+      topNav.style.marginBottom = "0"
+      searchNav.classList.remove('search-nav-fixed')
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener('scroll', showSearchNav)
+    return () => {
+      window.removeEventListener('scroll', showSearchNav)
+    }
+  }, [])
+
   useEffect(() => {
     let length = 0
     for (let i = 0; i < cart.length; i++) {
@@ -39,6 +61,7 @@ function Header({ title, auth, cart }) {
     }
     setCartLength(length)
   }, [cart])
+
 
   return (
     <>

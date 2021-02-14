@@ -5,14 +5,14 @@ import PropTypes from 'prop-types'
 function Checkbox({ label, isSelected, onCheckboxChange }) {
   return (
     <div className="category-sidebar-checkbox">
-      <input
-        id={label}
-        name={label}
-        type="checkbox"
-        checked={isSelected}
-        onChange={onCheckboxChange}
-      />
-      <label htmlFor={label}>
+      <label>
+        <input
+          name={label}
+          type="checkbox"
+          checked={isSelected}
+          onChange={onCheckboxChange}
+        />
+        <span className="checkmark-square"></span>
         {label}
       </label>
     </div>

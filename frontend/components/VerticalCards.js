@@ -80,6 +80,10 @@ export default function VerticalCards({ title, children }) {
     showArrows()
   }, [moveCounter, cardsLength, childrenCount])
 
+  useEffect(() => {
+    if (document.documentElement.clientWidth > 1280) setCardsLength(4)
+  }, [])
+
   const childrenWithProps = React.Children.map(children, child => {
     if (React.isValidElement(child)) {
       return React.cloneElement(child, {

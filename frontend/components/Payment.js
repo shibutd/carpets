@@ -1,4 +1,3 @@
-import { useState } from 'react'
 
 
 export default function Payment({ changeTab }) {
@@ -58,13 +57,12 @@ export default function Payment({ changeTab }) {
 
       <div className="checkout-buttons">
         <button
-          id="backwardbutton"
+          className="dark-gray-button"
           onClick={() => changeTab(-1)}
         >
           &#10094; Назад
         </button>
         <button
-          id="forwardbutton"
           style={{ opacity: 0 }}
         >
           Далее &#10095;

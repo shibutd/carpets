@@ -2,6 +2,7 @@ import { useState, useEffect, memo } from 'react'
 import PropTypes from 'prop-types'
 import Image from 'next/image'
 
+import BubblyButton from './BubblyButton'
 import HearthRegular from './icons/HearthRegular'
 import useCart from '../lib/hooks/useCart'
 import useFavorites from '../lib/hooks/useFavorites'
@@ -82,7 +83,8 @@ function ProductMain({
         </div>
         <h3>{`${convertPrice(option.price)} ₽`}</h3>
         <div className="product-main-buttons">
-          <button
+          <BubblyButton
+            label={"В корзину"}
             className="product-buy"
             onClick={() => handleAddToCart({
               id: option.id,
@@ -91,15 +93,15 @@ function ProductMain({
               name,
               slug,
             })}
-          >
-            В корзину
-          </button>
-          {isInCart && (<button
-            className="product-buy"
-            onClick={() => handleRemoveFromCart({ id: option.id })}
-          >
-            Убрать из корзины
-          </button>)}
+          />
+          {isInCart && (
+            <button
+              className="product-buy"
+              onClick={() => handleRemoveFromCart({ id: option.id })}
+            >
+              Убрать
+            </button>
+          )}
           <button
             className="product-favorite tooltip"
             value="Добавить в избранное"

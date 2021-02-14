@@ -108,24 +108,28 @@ export default function AddressForm({ changeTab }) {
     <div className="checkout-addressform">
       <p>Выберите тип доставки:</p>
       <form className="checkout-addressform-choice">
-        <label>
-          <input
-            type="radio"
-            value="pickup"
-            checked={deliveryType === "pickup"}
-            onChange={handleOptionChange}
-          />
-          Самовывоз
-        </label>
-        <label>
-          <input
-            type="radio"
-            value="delivery"
-            checked={deliveryType === "delivery"}
-            onChange={handleOptionChange}
-          />
-          Доставка
-        </label>
+          <label>
+            <input
+              type="radio"
+              value="pickup"
+              checked={deliveryType === "pickup"}
+              onChange={handleOptionChange}
+            />
+            <span className="checkmark-round"></span>
+            Самовывоз
+          </label>
+
+          <label>
+            <input
+              type="radio"
+              value="delivery"
+              checked={deliveryType === "delivery"}
+              onChange={handleOptionChange}
+            />
+            <span className="checkmark-round"></span>
+            Доставка
+          </label>
+
       </form>
 
       {(deliveryType === "pickup") && (
