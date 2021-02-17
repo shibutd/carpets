@@ -1142,7 +1142,6 @@ footer div {
   color: var(--bg-gray-color);
 }
 
-#forwardbutton {}
 
 /* CHECKKOUT ORDERSUMMARY*/
 
@@ -1152,9 +1151,6 @@ footer div {
 
 .checkout-ordersummary-table {
   width: 100%;
-  background: var(--light-gray-color);
-  border-radius: 15px;
-  box-shadow: 0 0 6px var(--light-500-gray-color);
   font-size: var(--text);
   margin: 2rem 0;
   border-collapse: collapse;
@@ -2010,6 +2006,12 @@ input {
   background: transparent;
 }
 
+.light-gray-container {
+  background: var(--light-gray-color);
+  border-radius: 15px;
+  box-shadow: 0 0 6px var(--light-500-gray-color);
+}
+
 
 /* ANIMATIONS */
 
@@ -2201,6 +2203,10 @@ input {
 
   .category-products-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .checkout-wrapper {
+    width: 98%;
   }
 
   footer {

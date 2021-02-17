@@ -1,13 +1,19 @@
 import { useState, useCallback } from 'react'
+import { useRouter } from 'next/router'
 
 import Layout from '../components/Layout'
 import OrderSummary from '../components/OrderSummary'
 import AddressForm from '../components/AddressForm'
 import Payment from '../components/Payment'
+import useAuth from '../lib/hooks/useAuth'
+import useCart from '../lib/hooks/useCart'
 
 
 export default function Checkout() {
+  const router = useRouter()
   const [currentTab, setCurrentTab] = useState(1)
+  const { user, loaded } = useAuth()
+  const { cart } = useCart()
   let renderComponent
 
   const handleChangeCurrentTab = useCallback((n) => {
@@ -15,9 +21,26 @@ export default function Checkout() {
     if (newTab > 0 && newTab <= 3) setCurrentTab(newTab)
   }, [currentTab])
 
+  if (!loaded) {
+    return <div></div>
+  }
+
+  if (loaded && !user) {
+    router.push('/login?redirect=favorites')
+    return <div></div>
+  }
+
+  if (cart.length === 0) {
+    router.push('/')
+    return <div></div>
+  }
 
   if (currentTab === 1) {
-    renderComponent = <OrderSummary changeTab={handleChangeCurrentTab} />
+    renderComponent =
+      <OrderSummary
+        cart={cart}
+        changeTab={handleChangeCurrentTab}
+      />
   }
 
   if (currentTab === 2) {
@@ -25,7 +48,11 @@ export default function Checkout() {
   }
 
   if (currentTab === 3) {
-    renderComponent = <Payment changeTab={handleChangeCurrentTab} />
+    renderComponent =
+      <Payment
+        cart={cart}
+        changeTab={handleChangeCurrentTab}
+      />
   }
 
   return (

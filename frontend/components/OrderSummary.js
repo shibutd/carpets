@@ -1,9 +1,6 @@
-import useCart from '../lib/hooks/useCart'
 import { convertPrice } from '../lib/utils/converters'
 
-export default function OrderSummary({ changeTab }) {
-  const { cart } = useCart()
-
+export default function OrderSummary({ cart, changeTab }) {
   const total = cart.reduce((sum, item) => {
     return sum + item.variation.price * item.quantity
   }, 0)
@@ -11,7 +8,7 @@ export default function OrderSummary({ changeTab }) {
   return (
     <div className="checkout-ordersummary">
       <p>Внимательно проверьте заказ:</p>
-      <table className="checkout-ordersummary-table">
+      <table className="checkout-ordersummary-table light-gray-container">
         <thead>
           <tr>
             <td>№</td>

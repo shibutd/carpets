@@ -1,12 +1,14 @@
-import { useState, useEffect, useMemo } from 'react'
-// import { useRouter } from 'next/router'
-// import Link from 'next/link'
+import { useState, useCallback, useMemo } from 'react'
 import { useQuery } from 'react-query'
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from "yup"
 
+
+import BouncerLoading from './BouncerLoading'
+import PickupAddressForm from './PickupAddressForm'
+import DeliveryAddressForm from './DeliveryAddressForm'
 import {
   createAddress,
   changeAddress,
@@ -28,13 +30,21 @@ const schema = yup.object().shape({
 
 
 export default function AddressForm({ changeTab }) {
+  let renderedElement
   const dispatch = useDispatch()
-  const { addressType, addressId, loading } = useSelector(selectAddress)
+  const { addressType, addressId, loading, error } = useSelector(selectAddress)
 
   const [deliveryType, setDeliveryType] = useState('pickup')
-  const [selected, setSelected] = useState('none')
+  const [deliveryAddressCreate, setDeliveryAddressCreate] = useState(true)
 
-  const { register, errors, formState, getValues } = useForm({
+  const [selected, setSelected] = useState({
+    pickupId: -1,
+    pickupIsValid: false,
+    deliveryId: -1,
+    deliveryIsValid: false,
+  })
+
+  const { register, errors: formErrors, formState, getValues } = useForm({
     mode: 'onChange',
     resolver: yupResolver(schema),
     defaultValues: {
@@ -63,46 +73,94 @@ export default function AddressForm({ changeTab }) {
     // isLoading,
     // isError,
     data: userAddresses,
-  } = useQuery('userAddresses', () => fetchUserAddresses())
+  } = useQuery('userAddresses',
+    () => fetchUserAddresses(),
+    {
+      staleTime: 6000,
+      cacheTime: 60000,
+      refetchOnWindowFocus: false,
+    }
+  )
+
+  const formIsValid = () => {
+    const { isDirty, isValid } = formState
+    return isDirty && isValid
+  }
 
   const isDisabled = useMemo(() => {
-    if (deliveryType === 'pickup') {
-      return selected === 'none'
+    switch (deliveryType) {
+      case 'pickup':
+        return !selected.pickupIsValid
+      case 'delivery':
+        return deliveryAddressCreate
+          ? !formIsValid()
+          : !selected.deliveryIsValid
+      default:
+        return true
     }
-    if (deliveryType === 'delivery') {
-      return (!formState.isDirty) || (!formState.isValid)
-    }
-    return true
   }, [deliveryType, selected, formState])
 
-  const handleOptionChange = (e) => {
-    const value = e.target.value
-    setDeliveryType(value)
-  }
+  const handleChangeSelected = useCallback((args) => {
+    // console.log(args)
+    setSelected({ ...selected, ...args })
+  }, [])
 
-  const handleChangeSelect = (e) => {
+  const handleChangeDeliveryAddressCreate = useCallback((e) => {
     const value = e.target.value
-    setSelected(value)
-  }
+    setDeliveryAddressCreate(value === 'true' ? true : false)
+  }, [])
 
-  const handleClick = async () => {
-    if (deliveryType === 'delivery' && !isDisabled) {
-      const values = getValues()
-      console.log(values)
-      // await dispatch(createAddress())
+  // useEffect(() => {
+  //   console.log(selected)
+  // }, [selected])
+
+  // const timeout = (ms) => {
+  //   return new Promise(resolve => {
+  //     setTimeout(resolve, ms)
+  //   })
+  // }
+
+  const handleChangeTab = async () => {
+    if (isDisabled) return
+
+    // setLoading(true)
+    if (deliveryType === 'pickup') {
+      dispatch(changeAddress({
+        type: 'pickup',
+        id: selected.pickupId
+      }))
+    } else if (deliveryType === 'delivery' && deliveryAddressCreate) {
+      // await timeout(5000)
+      const disp = await dispatch(createAddress(getValues()))
+      if (disp.meta.requestStatus === 'rejected') {
+        return
+      }
+    } else if (deliveryType === 'delivery' && !deliveryAddressCreate) {
+      dispatch(changeAddress({
+        type: 'delivery',
+        id: selected.deliveryId
+      }))
     }
+    // setLoading(false)
     changeTab(1)
   }
 
-  // useEffect(() => {
-  //   const { isDirty, isValid } = formState
-  //   console.log("isDirty", isDirty)
-  //   console.log("isValid", isValid)
-  // }, [formState])
-
-  useEffect(() => {
-    console.log('useraddresses', userAddresses)
-  }, [userAddresses])
+  renderedElement = deliveryType === 'pickup'
+    ? <PickupAddressForm
+        address={selected}
+        changeAddress={handleChangeSelected}
+        addresses={pickupAddresses ?? []}
+      />
+    : <DeliveryAddressForm
+        address={selected}
+        changeAddress={handleChangeSelected}
+        addressCreate={deliveryAddressCreate}
+        changeAddressCreate={handleChangeDeliveryAddressCreate}
+        addresses={userAddresses ?? []}
+        register={register}
+        formErrors={formErrors}
+        error={error}
+      />
 
   return (
     <div className="checkout-addressform">
@@ -113,7 +171,7 @@ export default function AddressForm({ changeTab }) {
               type="radio"
               value="pickup"
               checked={deliveryType === "pickup"}
-              onChange={handleOptionChange}
+              onChange={() => setDeliveryType('pickup')}
             />
             <span className="checkmark-round"></span>
             Самовывоз
@@ -124,91 +182,13 @@ export default function AddressForm({ changeTab }) {
               type="radio"
               value="delivery"
               checked={deliveryType === "delivery"}
-              onChange={handleOptionChange}
+              onChange={() => setDeliveryType('delivery')}
             />
             <span className="checkmark-round"></span>
             Доставка
           </label>
-
       </form>
-
-      {(deliveryType === "pickup") && (
-        <>
-          <p>Выберите пункт самовывоза:</p>
-          <div className="checkout-addressform-address">
-            <select value={selected} onChange={handleChangeSelect}>
-              <option value="none">{"..."}</option>
-              {(pickupAddresses || []).map(address => (
-                <option
-                  key={address.phoneNumber}
-                  value={address.name}
-                >
-                  {address.name}
-                </option>
-              ))}
-            </select>
-          </div>
-        </>
-      )}
-
-      {(deliveryType === "delivery") && (
-      <>
-        <p>Введите адрес доставки:</p>
-        <div className="checkout-addressform-address">
-          <form className="checkout-addressform-address-form fade">
-            {/*{error && <p>&#9888; {error}</p>}*/}
-
-            <div className="">
-              <label htmlFor="city">
-                Город*
-              </label>
-              <input
-                name="city"
-                id="city"
-                ref={register}
-              />
-              {errors.city && <p>&#9888; {errors.city.message}</p>}
-            </div>
-
-            <div className="">
-              <label htmlFor="street">
-                Улица*
-              </label>
-              <input
-                name="street"
-                id="street"
-                ref={register}
-              />
-              {errors.street && <p>&#9888; {errors.street.message}</p>}
-            </div>
-
-            <div className="">
-              <label htmlFor="houseNumber">
-                Дом*
-              </label>
-              <input
-                name="houseNumber"
-                id="houseNumber"
-                ref={register}
-              />
-              {errors.houseNumber && <p>&#9888; {errors.houseNumber.message}</p>}
-            </div>
-
-            <div className="">
-              <label htmlFor="appartmentNumber">
-                Квартира
-              </label>
-              <input
-                name="appartmentNumber"
-                id="appartmentNumber"
-                ref={register}
-              />
-              {errors.appartmentNumber && <p>&#9888; {errors.appartmentNumber.message}</p>}
-            </div>
-
-          </form>
-        </div>
-      </>)}
+      {renderedElement}
       <div className="checkout-buttons">
         <button
           className="dark-gray-button"
@@ -218,9 +198,17 @@ export default function AddressForm({ changeTab }) {
         </button>
         <button
           disabled={isDisabled}
-          onClick={() => handleClick()}
+          onClick={() => handleChangeTab()}
         >
-          {loading ? 'loading...' : <span>Далее &#10095;</span>}
+          {loading
+            ? <BouncerLoading
+                totalHeight={'20px'}
+                height={'5px'}
+                width={'5px'}
+                background={'white'}
+              />
+            : <span>Далее &#10095;</span>
+          }
         </button>
       </div>
     </div>

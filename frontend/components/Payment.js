@@ -1,6 +1,9 @@
+import { useDispatch, useSelector } from 'react-redux'
 
 
-export default function Payment({ changeTab }) {
+export default function Payment({ cart, changeTab }) {
+  const { addressType, addressId, loading } = useSelector(selectAddress)
+
 
   const handleClick = (e) => {
     const value = e.target.value
