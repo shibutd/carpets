@@ -26,7 +26,7 @@ export default function Checkout() {
   }
 
   if (loaded && !user) {
-    router.push('/login?redirect=favorites')
+    router.push('/login?redirect=checkout')
     return <div></div>
   }
 

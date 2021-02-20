@@ -15,8 +15,10 @@ function DeliveryAddressForm({
 
   const handleChangeSelected = (e) => {
     const value = parseInt(e.target.value)
+    const deliveryAddress = addresses.filter(address => address.id === value)[0]
     changeAddress({
       deliveryId: value,
+      deliveryAddress: deliveryAddress || {},
       deliveryIsValid: value !== -1
     })
   }
@@ -35,7 +37,7 @@ function DeliveryAddressForm({
                 onChange={changeAddressCreate}
               />
               <span className="checkmark-round"></span>
-              Выбрать адрес
+              Выбрать ранее введенный адрес
             </label>
 
             <label>
@@ -119,8 +121,11 @@ function DeliveryAddressForm({
                 onChange={handleChangeSelected}
               />
               <span className="checkmark-round"></span>
-              {`${address.city}, ${address.street}, ${address.house_number}
-              ${address.appartment_number}`}
+              <span>{`${address.city}`}</span>
+              <span>{`, ${address.street}`}</span>
+              <span>{`, ${address.houseNumber}`}</span>
+              <span>{address.appartmentNumber && `, ${address.appartmentNumber}`} </span>
+
             </label>
           ))}
         </form>

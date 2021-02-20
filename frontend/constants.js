@@ -77,3 +77,7 @@ export const updateOrderLineUrl = `${getOrderLineUrl}/update_orderlines/`
 // Pickup addresses
 
 export const pickupAddressUrl = `${storeUrl}/pickup-addresses/`
+
+// Orders
+
+export const createOrderUrl = `${storeUrl}/orders/`

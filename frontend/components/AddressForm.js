@@ -32,15 +32,17 @@ const schema = yup.object().shape({
 export default function AddressForm({ changeTab }) {
   let renderedElement
   const dispatch = useDispatch()
-  const { addressType, addressId, loading, error } = useSelector(selectAddress)
+  const { loading, error } = useSelector(selectAddress)
 
   const [deliveryType, setDeliveryType] = useState('pickup')
   const [deliveryAddressCreate, setDeliveryAddressCreate] = useState(true)
 
   const [selected, setSelected] = useState({
     pickupId: -1,
+    pickAddress: {},
     pickupIsValid: false,
     deliveryId: -1,
+    deliveryAddress: {},
     deliveryIsValid: false,
   })
 
@@ -127,7 +129,7 @@ export default function AddressForm({ changeTab }) {
     if (deliveryType === 'pickup') {
       dispatch(changeAddress({
         type: 'pickup',
-        id: selected.pickupId
+        ...selected.pickupAddress
       }))
     } else if (deliveryType === 'delivery' && deliveryAddressCreate) {
       // await timeout(5000)
@@ -138,7 +140,7 @@ export default function AddressForm({ changeTab }) {
     } else if (deliveryType === 'delivery' && !deliveryAddressCreate) {
       dispatch(changeAddress({
         type: 'delivery',
-        id: selected.deliveryId
+        ...selected.deliveryAddress
       }))
     }
     // setLoading(false)

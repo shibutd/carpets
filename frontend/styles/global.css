@@ -754,12 +754,16 @@ textarea {
 .vertical-cart-button a {
   outline: none;
   color: var(--medium-gray-color);
-  transition: color 0.4s ease, background 0.4s ease;
+  transition: all 0.3s ease-in-out;
 }
 
 .vertical-cart-icon {
   background: none;
   border-radius: 50%;
+  line-height: 20px;
+  width: 52px;
+  height: 52px;
+  border: 5px solid transparent;
 }
 
 .vertical-cart-icon:hover {
@@ -785,6 +789,7 @@ textarea {
   border-radius: 5px;
   padding: 0.4rem;
   width: 18rem;
+  height: 2rem;
   font-size: 1.2rem;
   z-index: 100;
   opacity: 0;
@@ -800,13 +805,12 @@ textarea {
 }
 
 .vertical-cart-icon-pushed {
-  background: var(--blue-color);
-  color: var(--bg-gray-color);
-  border-radius: 50%;
+  color: var(--light-500-gray-color) !important;
+  background: var(--blue-color) !important;
 }
 
 .vertical-cart-icon-pushed:hover {
-  color: var(--bg-gray-color);
+  box-shadow: 0 0 8px var(--medium-gray-color);
 }
 
 .vertical-cart-icon-pushed:focus {
@@ -1309,18 +1313,44 @@ footer div {
 .checkout-payment {
   display: flex;
   flex-direction: column;
-  margin: 2rem 0;
+  margin: 4rem 0;
+}
+
+.checkout-payment-order {
+  padding: 2rem 3rem;
+}
+
+.checkout-payment-order>p {
+  margin: 1rem;
+  font-size: var(--big-text);
+}
+
+.checkout-payment-order span {
+  font-weight: bold;
+}
+
+#checkout-payment-address span::before {
+  content: ' '
+}
+
+#checkout-payment-address span:not(:last-of-type)::after {
+  content: ',';
 }
 
 .checkout-payment-form {
   align-self: center;
   min-height: 30vh;
   width: 70%;
-  padding: 3rem;
+  padding: 2rem 1rem;
   margin: 2rem 0;
   background: var(--light-gray-color);
   border-radius: 15px;
   box-shadow: 0 0 4px 1px var(--light-500-gray-color);
+}
+
+.checkout-payment-form button {
+  width: 50%;
+  align-self: center;
 }
 
 
@@ -1600,13 +1630,22 @@ footer div {
   padding: 3rem;
 }
 
-.contact-form textarea,
-input {
+.contact-form textarea, input {
+  outline: none !important;
   width: 100%;
   font-size: var(--small-text);
   padding: 0.8rem;
   margin: 1rem 0 5rem;
+  /*border:none;*/
+  /*box-shadow: 0 0 4px var(--medium-gray-color);*/
+  /*border-radius: 5px;*/
 }
+/*
+.contact-form textarea:focus, input:focus {
+  border: 1px solid var(--blue-color);
+  box-shadow: 0 0 10px #719ECE;
+}*/
+
 
 .contact-form button {
   align-self: center;

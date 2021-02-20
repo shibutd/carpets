@@ -28,7 +28,6 @@ import { convertPrice } from '../lib/utils/converters'
     if (!user) {
       favoriteIcon.value = "Войдите в аккаунт"
       setTimeout(() => {
-        favoriteIcon.classList.remove('vertical-cart-icon-pushed')
         favoriteIcon.value = "Добавить в избранное"
       }, 2000)
       return
@@ -90,6 +89,14 @@ import { convertPrice } from '../lib/utils/converters'
         </div>
       </div>
       <div className="vertical-card-right">
+        {/*<BubblyButton
+          className="vertical-cart-icon tooltip"
+          value="Добавить в избранное"
+          onClick={handleClickFavorite}
+        >
+          <HearthRegular height={20} width={20} />
+        </BubblyButton>*/}
+
         <button
           className="vertical-cart-icon tooltip"
           value="Добавить в избранное"

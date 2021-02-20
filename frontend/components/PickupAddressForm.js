@@ -10,8 +10,10 @@ function PickupAddressForm({
 
   const handleChangeSelected = (e) => {
     const value = parseInt(e.target.value)
+    const pickupAddress = (addresses.filter(address => address.id === value)[0])
     changeAddress({
       pickupId: value,
+      pickupAddress: pickupAddress || {},
       pickupIsValid: value !== -1
     })
   }

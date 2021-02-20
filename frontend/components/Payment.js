@@ -1,17 +1,49 @@
-import { useDispatch, useSelector } from 'react-redux'
+import { useState} from 'react'
+import { useRouter } from 'next/router'
+import { useSelector } from 'react-redux'
+import { selectAddress } from '../lib/slices/addressSlice'
+
+import useOrders from '../lib/hooks/useOrders'
 
 
 export default function Payment({ cart, changeTab }) {
-  const { addressType, addressId, loading } = useSelector(selectAddress)
+  const { addressType, addressId, address } = useSelector(selectAddress)
+  const { createPickupOrder, createDeliveryOrder } = useOrders()
+  const [loading, setLoading] = useState(false)
+  const router = useRouter()
 
+  const total = cart.reduce((sum, item) => {
+    return sum + item.variation.price * item.quantity
+  }, 0)
 
-  const handleClick = (e) => {
-    const value = e.target.value
-    console.log(value)
+  const handleClick = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+
+    if (addressType === 'pickup') {
+      await createPickupOrder(addressId)
+    } else {
+      await createDeliveryOrder(addressId)
+    }
+
+    router.push('/')
+    setLoading(false)
   }
 
   return (
+
     <div className="checkout-payment">
+
+      <div className="checkout-payment-order light-gray-container">
+        <h5>Ваш заказ:</h5>
+        <p>Сумма к оплате:<span>{` ${total} ₽`}</span></p>
+        <p>Тип доставки:<span>{addressType === 'pickup' ? ' Самовывоз' : ' Доставка по адресу'}</span></p>
+        <p id="checkout-payment-address">
+          Адрес доставки:
+          {Object.values(address).filter(val => val !== null)
+            .map((val, i) => <span key={i}>{val}</span>)}
+        </p>
+      </div>
 
       <div className="checkout-payment-form">
 
@@ -60,6 +92,7 @@ export default function Payment({ cart, changeTab }) {
 
       <div className="checkout-buttons">
         <button
+          disabled={loading}
           className="dark-gray-button"
           onClick={() => changeTab(-1)}
         >
