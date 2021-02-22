@@ -56,7 +56,7 @@ export default function FavoritesItem(props) {
       <div className="favorites-item-price">
         <h5>{`${convertPrice(price)} ₽`}</h5>
         <p>{inStock() ? 'Есть в наличии' : 'Нет в наличии'}</p>
-        <button onClick={() => onDelete(id)}>Удалить из избранного</button>
+        <button id="favorites-delete-button" onClick={() => onDelete(id)}>Удалить из избранного</button>
       </div>
     </div>
   )

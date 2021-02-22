@@ -26,8 +26,6 @@ const ShopAddresses = forwardRef(({ opened, handleClick }, ref) => {
     )
   }
 
-  // console.log(ref)
-
   const selectAddress = (e) => {
     setSelectedAddressIdx(e.currentTarget.dataset.div_id)
     handleClick()
@@ -75,18 +73,18 @@ const ShopAddresses = forwardRef(({ opened, handleClick }, ref) => {
         }
       </a>
       {opened &&
-      (<div className="top-nav-address-list">
-        {addresses.map((address, i) => (
-          <div
-            key={address.phoneNumber}
-            className="top-nav-address-item"
-            onClick={selectAddress}
-            data-div_id={i}
-          >
-            {address.name} &mdash; {convertPhoneNumber(address.phoneNumber)}
-          </div>
-        ))}
-      </div>)}
+        (<div className="top-nav-address-list">
+          {addresses.map((address, i) => (
+            <div
+              key={address.phoneNumber}
+              className="top-nav-address-item"
+              onClick={selectAddress}
+              data-div_id={i}
+            >
+              {address.name} &mdash; {convertPhoneNumber(address.phoneNumber)}
+            </div>
+          ))}
+        </div>)}
     </div>
   )
 })

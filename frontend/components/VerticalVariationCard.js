@@ -74,8 +74,8 @@ import { convertPrice } from '../lib/utils/converters'
               <Image
                 src={imageSrc}
                 alt={slug}
-                height={150}
-                width={150}
+                height={120}
+                width={120}
                 loading="eager"
               />
             </a>
@@ -89,14 +89,6 @@ import { convertPrice } from '../lib/utils/converters'
         </div>
       </div>
       <div className="vertical-card-right">
-        {/*<BubblyButton
-          className="vertical-cart-icon tooltip"
-          value="Добавить в избранное"
-          onClick={handleClickFavorite}
-        >
-          <HearthRegular height={20} width={20} />
-        </BubblyButton>*/}
-
         <button
           className="vertical-cart-icon tooltip"
           value="Добавить в избранное"

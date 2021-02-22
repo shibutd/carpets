@@ -18,6 +18,7 @@ function Header({ title, auth, cart }) {
   const [cartLength, setCartLength] = useState(0)
   const [openedAddresses, setOpenedAddresses] = useState(false)
   const [openCatalog, setOpenCatalog] = useState(false)
+  const [catalogLabel, setCatalogLabel] = useState("Каталог товаров")
   const addressRef = useRef(null)
   const catalogRef = useRef(null)
 
@@ -31,6 +32,14 @@ function Header({ title, auth, cart }) {
   const handleOpenCatalog = useCallback(() => {
     setOpenCatalog(prev => !prev)
   }, [])
+
+  const handleClickedBurgerMenu = () => {
+    const topNavMenu = document.querySelector('.top-nav-menu')
+    const burger = document.querySelector('.burger')
+
+    topNavMenu.classList.toggle('top-nav-menu-open')
+    burger.classList.toggle('burger-open')
+  }
 
   function showSearchNav() {
     const topNav = document.querySelector('.top-nav')
@@ -47,10 +56,23 @@ function Header({ title, auth, cart }) {
     }
   }
 
+  function showCatalogLabel() {
+    if (document.documentElement.clientWidth <= 480) {
+      setCatalogLabel("")
+    } else {
+      setCatalogLabel("Каталог товаров")
+    }
+  }
+
   useEffect(() => {
     window.addEventListener('scroll', showSearchNav)
+    window.addEventListener('resize', showCatalogLabel)
+
+    showCatalogLabel()
+
     return () => {
       window.removeEventListener('scroll', showSearchNav)
+      window.removeEventListener('resize', showCatalogLabel)
     }
   }, [])
 
@@ -61,7 +83,6 @@ function Header({ title, auth, cart }) {
     }
     setCartLength(length)
   }, [cart])
-
 
   return (
     <>
@@ -74,23 +95,30 @@ function Header({ title, auth, cart }) {
       </Head>
 
       <nav className="top-nav">
-        <Link href="/">
-          <a>
-            <Image
-              src="/icons/aladdin_logo.svg"
-              alt="logo"
-              layout="fixed"
-              width={260}
-              height={90}
-            />
-          </a>
-        </Link>
+        <div className="top-nav-logo">
+          <Link href="/">
+            <a>
+              <Image
+                src="/icons/aladdin_logo.svg"
+                alt="logo"
+                layout="intrinsic"
+                width={260}
+                height={90}
+              />
+            </a>
+          </Link>
+          <div className="burger" onClick={handleClickedBurgerMenu}>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
         <ShopAddresses
           ref={addressRef}
           opened={openedAddresses}
           handleClick={handleOpenAddresses}
         />
-        <ul>
+        <ul className="top-nav-menu">
           <li><Link href="/promotions"><a>Акции</a></Link></li>
           <li><Link href="/delivery"><a>Доставка и оплата</a></Link></li>
           <li><Link href="/shops"><a>Магазины</a></Link></li>
@@ -101,6 +129,7 @@ function Header({ title, auth, cart }) {
       <nav className="search-nav">
         <Catalog
           ref={catalogRef}
+          label={catalogLabel}
           opened={openCatalog}
           handleClick={handleOpenCatalog}
         />

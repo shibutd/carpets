@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 import { selectAddress } from '../lib/slices/addressSlice'
 
 import useOrders from '../lib/hooks/useOrders'
-
+import { convertPrice } from '../lib/utils/converters'
 
 export default function Payment({ cart, changeTab }) {
   const { addressType, addressId, address } = useSelector(selectAddress)
@@ -27,7 +27,6 @@ export default function Payment({ cart, changeTab }) {
     }
 
     router.push('/')
-    setLoading(false)
   }
 
   return (
@@ -36,7 +35,7 @@ export default function Payment({ cart, changeTab }) {
 
       <div className="checkout-payment-order light-gray-container">
         <h5>Ваш заказ:</h5>
-        <p>Сумма к оплате:<span>{` ${total} ₽`}</span></p>
+        <p>Сумма к оплате:<span>{` ${convertPrice(total)} ₽`}</span></p>
         <p>Тип доставки:<span>{addressType === 'pickup' ? ' Самовывоз' : ' Доставка по адресу'}</span></p>
         <p id="checkout-payment-address">
           Адрес доставки:

@@ -11,7 +11,7 @@ import PillowIcon from './icons/PillowIcon'
 import { categoryUrl } from '../constants'
 
 
-const Catalog = forwardRef(({ opened, handleClick }, ref) => {
+const Catalog = forwardRef(({ label, opened, handleClick }, ref) => {
   const [categories, setCategories] = useState([])
   const iconProps = { width: 22, height: 22 }
 
@@ -48,40 +48,45 @@ const Catalog = forwardRef(({ opened, handleClick }, ref) => {
   }, [])
 
   return (
-    <button ref={ref} id="catalog" onClick={handleClick}>
-      Каталог товаров
-      <GridLinesSolid
-        width={10}
-        height={10}
-        style={{marginLeft: "5px"}}
-        fill="white"
-      />
-      {opened &&
-        <div className="catalog-menu">
-          {categories.map((category) => (
-            <div
-              className="catalog-item"
-              key={category.slug}
-            >
-              <div className="catalog-item-icon">{category.icon}</div>
-                <Link href={`/categories/${category.slug}`}>
-                  <a>
+
+    <div>
+      <button ref={ref} className="catalog" onClick={handleClick}>
+        {/*Каталог товаров*/}
+        {label}
+        <GridLinesSolid
+          width={10}
+          height={10}
+          style={{marginLeft: "5px"}}
+          fill="white"
+        />
+        {opened &&
+          (<div className="catalog-menu">
+            {categories.map((category) => (
+              <Link href={`/categories/${category.slug}`} key={category.slug}>
+                <a>
+                  <div
+                    className="catalog-item"
+                  >
+                    <div className="catalog-item-icon">
+                      {category.icon}
+                    </div>
                     <div className="catalog-item-name">
                       {category.name}
                     </div>
-                  </a>
-                </Link>
-            </div>
-          ))}
-        </div>
-      }
-    </button>
+                  </div>
+                </a>
+              </Link>
+            ))}
+        </div>)}
+      </button>
+    </div>
   )
 })
 
 Catalog.displayName = Catalog
 
 Catalog.propTypes = {
+  label: PropTypes.string,
   opened: PropTypes.bool,
   handleClick: PropTypes.func,
 }

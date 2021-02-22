@@ -8,15 +8,23 @@ import useCart from '../lib/hooks/useCart'
 export default function VerticalCards({ title, children }) {
   const [moveCounter, setMoveCounter] = useState(0)
   const [cardsLength, setCardsLength] = useState(3)
-  const cardsRef = useRef(null)
   const [childrenCount, setChildrenCount] = useState(Children.count(children))
+  const cardsRef = useRef(null)
 
   const { user } = useAuth()
   const { addToFavorites } = useFavorites()
   const { handleAddToCart } = useCart()
 
+  const flexBasisMap = new Map([
+    [2, '50%'],
+    [3, '33%'],
+    [4, '25%'],
+  ])
+
   function changeCardsLength() {
-    if (document.documentElement.clientWidth <= 1280) {
+    if (document.documentElement.clientWidth < 768) {
+      setCardsLength(2)
+    } else if (document.documentElement.clientWidth < 1280) {
       setCardsLength(3)
     } else {
       setCardsLength(4)
@@ -26,6 +34,12 @@ export default function VerticalCards({ title, children }) {
   function showArrows() {
     const prevArrow = cardsRef.current.querySelector(".prev-vertical-card")
     const nextArrow = cardsRef.current.querySelector(".next-vertical-card")
+
+    if (childrenCount === 0) {
+      prevArrow.style.display = "none"
+      nextArrow.style.display = "none"
+      return
+    }
 
     switch (moveCounter) {
       case 0:
@@ -39,22 +53,39 @@ export default function VerticalCards({ title, children }) {
       default:
         prevArrow.style.display = ""
         nextArrow.style.display = ""
-    }
-
-    if (childrenCount === 0) {
-        prevArrow.style.display = "none"
-        nextArrow.style.display = "none"
+        break
     }
   }
 
   function updateCounter(value) {
     const newValue = moveCounter + value
-    if (newValue >= 0 && newValue < (childrenCount - cardsLength + 1)) {
+    if (newValue >= 0 && newValue <= (childrenCount - cardsLength)) {
       setMoveCounter(newValue)
     }
   }
 
-  function updateContent() {
+  function showContent() {
+    const cards = Array.from(
+      cardsRef.current.querySelectorAll(".vertical-card")
+    )
+
+    const counter = Math.max(
+      Math.min(moveCounter, childrenCount - cardsLength), 0
+    )
+    setMoveCounter(counter)
+
+    cards.forEach(card => {
+      card.style.display = 'none'
+      card.style.flexBasis = flexBasisMap.get(cardsLength)
+    })
+    cards.forEach(card => {
+      // if (i >= counter && i < (counter + cardsLength)) {
+        card.style.display = 'flex'
+      // }
+    })
+  }
+
+  function moveContent() {
     const cardsSlide = cardsRef.current.querySelector(".vertical-cards")
     const cards = Array.from(
       cardsRef.current.querySelectorAll(".vertical-card")
@@ -65,7 +96,9 @@ export default function VerticalCards({ title, children }) {
   }
 
   useEffect(() => {
+    changeCardsLength()
     window.addEventListener('resize', changeCardsLength)
+
     return () => {
       window.removeEventListener('resize', changeCardsLength)
     }
@@ -76,13 +109,14 @@ export default function VerticalCards({ title, children }) {
   }, [children])
 
   useEffect(() => {
-    updateContent()
+    moveContent()
     showArrows()
-  }, [moveCounter, cardsLength, childrenCount])
+  }, [moveCounter])
 
   useEffect(() => {
-    if (document.documentElement.clientWidth > 1280) setCardsLength(4)
-  }, [])
+    showContent()
+    showArrows()
+  }, [cardsLength, childrenCount])
 
   const childrenWithProps = React.Children.map(children, child => {
     if (React.isValidElement(child)) {
