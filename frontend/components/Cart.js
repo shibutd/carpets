@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import CartItem from './CartItem'
 import CartSidebar from './CartSidebar'
 import useCart from '../lib/hooks/useCart'
+import useFavorites from '../lib/hooks/useFavorites'
 
 
 export default function Cart() {
@@ -12,6 +13,8 @@ export default function Cart() {
     handleRemoveSingleFromCart,
     handleRemoveFromCart
   } = useCart()
+  const { addToFavorites: handleAddToFavorites } = useFavorites()
+  const { user } = useCart()
 
   const [totalQuantity, setTotalQuantity] = useState(0)
   const [totalPrice, setTotalPrice] = useState(0)
@@ -37,10 +40,12 @@ export default function Cart() {
           : (cart.map(item => (
             <CartItem
               key={item.variation.id}
+              user={user}
               item={item}
               addToCart={handleAddToCart}
               removeSingleFromCart={handleRemoveSingleFromCart}
               removeFromCart={handleRemoveFromCart}
+              addToFavories={handleAddToFavorites}
             />
         )))}
       </div>

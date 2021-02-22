@@ -1,22 +1,47 @@
+import { useRef, memo } from 'react'
 import PropTypes from 'prop-types'
 import Image from 'next/image'
 import Link from 'next/link'
 
+import TrashSolid from './icons/TrashSolid'
+import HearthSolid from './icons/HearthSolid'
+import MinusSolid from './icons/MinusSolid'
+import PlusSolid from './icons/PlusSolid'
 import { convertPrice, convertSize } from '../lib/utils/converters'
 
-export default function CartItem({
+function CartItem({
+  user,
   item,
   addToCart,
   removeSingleFromCart,
-  removeFromCart
+  removeFromCart,
+  addToFavories
 }) {
+  const itemRef = useRef(null)
   const { variation, quantity } = item
-  let totalItemPrice = variation.price * quantity
 
   let image = `/media/product-images/${name.replace(' ', '_')}.jpg`
 
+  const getArgsFromVariation = (variation) => {
+    const { id, product, price, size } = variation
+    const { name, slug } = product
+    return { id, name, slug, price, size }
+  }
+
+  const handleAddToFavorites = (id) => {
+    if (!user) return
+
+    addToFavories(id)
+
+    const heartIcon = itemRef.current.querySelector('#hearth-solid')
+    heartIcon.classList.add('hearth-beat')
+    setTimeout(() => {
+      heartIcon.classList.remove('hearth-beat')
+    }, 2000);
+  }
+
   return (
-    <div className="cart-products-item">
+    <div ref={itemRef} className="cart-products-item">
       <div className="cart-products-item-img">
         <Image
           src={image}
@@ -33,43 +58,42 @@ export default function CartItem({
         </Link>
         <p>Размер: {convertSize(variation.size)}</p>
       </div>
-      <div className="cart-products-item-plusminus">
-        <Image
-          src="/icons/minus-solid.svg"
-          alt="minus"
-          layout="fixed"
-          height={14}
-          width={14}
-          onClick={() => removeSingleFromCart(variation)}
-        />
-        <div className="cart-products-item-plusminus-val">
-          {quantity}
+
+      <div className="cart-products-item-actions">
+        <div className="cart-products-item-plusminus">
+          <MinusSolid
+            height={14}
+            width={14}
+            onClick={() =>
+              removeSingleFromCart(getArgsFromVariation(variation)
+            )}
+          />
+          <div className="cart-products-item-plusminus-val">
+            {quantity}
+          </div>
+          <PlusSolid
+            height={14}
+            width={14}
+            onClick={() => addToCart(getArgsFromVariation(variation))}
+          />
         </div>
-        <Image
-          src="/icons/plus-solid.svg"
-          alt="plus"
-          layout="fixed"
-          height={14}
-          width={14}
-          onClick={() => addToCart(variation)}
-        />
+        <div className="cart-products-item-price">
+          {`${convertPrice(variation.price * quantity)} ₽`}
+        </div>
       </div>
-      <div className="cart-products-item-price">
-        {`${convertPrice(totalItemPrice)} ₽`}
-      </div>
-      <div className="cart-products-item-likedelete">
-        <Image
-          src="/icons/heart-regular.svg"
-          alt=""
+
+      <div className="cart-products-item-icons">
+        <HearthSolid
+          id="hearth-solid"
           height={14}
           width={14}
+          onClick={() => handleAddToFavorites(variation.id)}
+
         />
-        <Image
-          src="/icons/trash-solid.svg"
-          alt=""
+        <TrashSolid
           height={14}
           width={14}
-          onClick={() => removeFromCart({ id: variation.id })}
+          onClick={() => removeFromCart(variation)}
         />
       </div>
     </div>
@@ -77,8 +101,12 @@ export default function CartItem({
 }
 
 CartItem.propTypes = {
+  user: PropTypes.string,
   item: PropTypes.object,
   addToCart: PropTypes.func,
   removeSingleFromCart: PropTypes.func,
   removeFromCart: PropTypes.func,
+  addToFavories: PropTypes.func,
 }
+
+export default memo(CartItem)

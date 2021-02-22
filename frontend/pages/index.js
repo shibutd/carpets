@@ -76,7 +76,7 @@ export default function Home({ categories }) {
           <VerticalVariationCard
             key={hit.id}
             id={hit.id}
-            title={hit.product.name}
+            name={hit.product.name}
             slug={hit.product.slug}
             size={hit.size}
             price={hit.price}
@@ -89,7 +89,7 @@ export default function Home({ categories }) {
           <VerticalVariationCard
             key={novelty.id}
             id={novelty.id}
-            title={novelty.product.name}
+            name={novelty.product.name}
             slug={novelty.product.slug}
             size={novelty.size}
             price={novelty.price}

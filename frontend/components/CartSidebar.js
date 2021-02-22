@@ -25,13 +25,12 @@ export default function CartSidebar({ totalQuantity, totalPrice }) {
 
       <div className="cart-props-buttons">
         {totalQuantity > 0
-          ? (<Link href="/checkout">
+          && (<Link href="/checkout">
                 <a>
                   <button>Перейти к оформлению</button>
                 </a>
               </Link>
-            )
-          : (<div></div>)}
+            )}
         <Link href="/">
           <a>
             <button className="gray-button">Вернуться к покупкам</button>

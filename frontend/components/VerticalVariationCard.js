@@ -1,4 +1,4 @@
-import { useRef, useCallback, memo } from 'react'
+import { useRef, memo } from 'react'
 import PropTypes from 'prop-types'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -10,13 +10,13 @@ import { convertPrice } from '../lib/utils/converters'
 
 
  function VerticalVariationCard(props) {
-  const { id, title, slug, size, price, images, ...rest } = props
+  const { id, name, slug, size, price, images, ...rest } = props
   const { user, addToFavorites, handleAddToCart } = rest
   const cardRef = useRef(null)
   const timerRef = useRef(null)
 
   const mainImage = images.length > 0 ? images[0].image : null
-  const imageName = title.replace(/ /g, '_').replace(/\"/g, '')
+  const imageName = name.replace(/ /g, '_').replace(/\"/g, '')
 
   const imageSrc = mainImage
     ? `/media/product-images/${imageName}.jpg`
@@ -46,7 +46,7 @@ import { convertPrice } from '../lib/utils/converters'
 
   const handleClickAddToCart = () => {
     clearTimeout(timerRef.current)
-    handleAddToCart({ name, slug, id, size, price })
+    handleAddToCart({ id, name, slug, size, price })
 
     const addToCartIcon = cardRef.current.querySelector(
       '.vertical-cart-button'
@@ -74,15 +74,15 @@ import { convertPrice } from '../lib/utils/converters'
               <Image
                 src={imageSrc}
                 alt={slug}
-                height={120}
-                width={120}
+                height={150}
+                width={150}
                 loading="eager"
               />
             </a>
           </Link>
         </div>
         <div className="vertical-card-title">
-          <Link href={`/products/${slug}`}><a>{title}</a></Link>
+          <Link href={`/products/${slug}`}><a>{name}</a></Link>
         </div>
         <div className="vertical-card-cost">
           {`${convertPrice(price)} ₽`}
@@ -109,12 +109,11 @@ import { convertPrice } from '../lib/utils/converters'
 
 VerticalVariationCard.propTypes = {
   id: PropTypes.string,
-  title: PropTypes.string,
+  name: PropTypes.string,
   slug: PropTypes.string,
   size: PropTypes.string,
   price: PropTypes.string,
   images: PropTypes.arrayOf(PropTypes.object),
-  className: PropTypes.string,
 }
 
 export default memo(VerticalVariationCard)
