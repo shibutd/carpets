@@ -4,17 +4,31 @@ import PropTypes from 'prop-types'
 import Checkbox from './Checkbox'
 import RangeSlider from './RangeSlider'
 
-export default function CategorySidebar({ properties, onChange }) {
+const formatValue = value => {
+  let newValue = ''
+  if (Number.isInteger(value)) {
+    newValue = newValue.concat(value.toString(), ',00')
+  } else {
+    newValue = newValue.concat(value.toString().replace('.', ','), '0')
+  }
+  return newValue
+}
+
+export default function CategorySidebar({
+  properties,
+  onChange,
+  toggleShowFilters
+}) {
   const { manufacturer, material, size } = properties
   // Check if we use checkboxes or sliders for sizes
   const useCheckboxForSize = (size && size[0].includes('*')) ? false : true
 
   // Checkboxes values
   const [checkboxes, setCheckboxes] = useState(() => {
-    const propertiesCopy = { ...properties }
-    if (useCheckboxForSize) {
-      delete propertiesCopy.size
-    }
+    // const propertiesCopy = { ...properties }
+    // if (useCheckboxForSize) {
+    //   delete propertiesCopy.size
+    // }
     let checkboxArray = []
 
     Object.entries(properties).forEach(([k, v]) => {
@@ -40,16 +54,6 @@ export default function CategorySidebar({ properties, onChange }) {
       sliderMinLength,
       sliderMaxLength
     } = sizes
-
-    const formatValue = (value) => {
-      let newValue = ''
-      if (Number.isInteger(value)) {
-        newValue = newValue.concat(value.toString(), ',00')
-      } else {
-        newValue = newValue.concat(value.toString().replace('.', ','), '0')
-      }
-      return newValue
-    }
 
     const newRanges = [{
         type: 'width',
@@ -77,14 +81,35 @@ export default function CategorySidebar({ properties, onChange }) {
 
   const createCheckboxes = (options) => options.map(createCheckbox)
 
+  const handleClearAllFilters = (e) => {
+    e.preventDefault()
+    setRanges([])
+    setCheckboxes(prev => prev.map(item => ({ ...item, value: false })))
+  }
+
   useEffect(() => {
     onChange(checkboxes, ranges)
   }, [checkboxes, ranges])
 
   return (
     <>
-      <h5>Фильтры</h5>
-      <form>
+      <h5>
+        Фильтры
+        <span
+          id="filter-close"
+          className="filter-toggle"
+          onClick={toggleShowFilters}
+        >
+          Скрыть
+        </span>
+        <span
+          id="filter-reset"
+          className="filter-toggle"
+          onClick={handleClearAllFilters}
+        >
+          Очистить
+        </span>
+      </h5>
       <div className="category-sidebar-properties">
         <p>Производители:</p>
           {createCheckboxes(manufacturer)}
@@ -101,7 +126,6 @@ export default function CategorySidebar({ properties, onChange }) {
         ) : (
         <RangeSlider size={size} onChange={handleRangeSliderChange} />
       )}
-      </form>
     </>
   )
 }

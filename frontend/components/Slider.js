@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react'
+import React, { useState, useEffect, useRef, useCallback, memo } from 'react'
 import PropTypes from 'prop-types'
 
 export function useSlide({ minValue, maxValue, ...config }) {
-  const {max, min} = config
+  const { min, max } = config
   const [sliderMinVal, setSliderMinVal] = useState(minValue || min)
   const [sliderMaxVal, setSliderMaxVal] = useState(maxValue || max)
-
   const [configuration, setConfiguration] = useState(config)
 
   const onChange = useCallback((minVal, maxVal) => {
@@ -25,13 +24,20 @@ export function useSlide({ minValue, maxValue, ...config }) {
   return [sliderMinVal, sliderMaxVal, configuration]
 }
 
-function Slider({ classes, label, onChange, minValue, maxValue, ...sliderProps }) {
-  const { max, min } = sliderProps
+function Slider({
+  classes,
+  label,
+  onChange,
+  minValue,
+  maxValue,
+  ...sliderProps
+}) {
   const [sliderMinVal, setSliderMinVal] = useState(minValue)
   const [sliderMaxVal, setSliderMaxVal] = useState(maxValue)
   const [mouseState, setMouseState] = useState(null)
   const sliderRef = useRef(null)
-  var range, thumbMin, thumbMax
+  const { max, min } = sliderProps
+  let range, thumbMin, thumbMax
 
   const changeMinCallback = (e) => {
     const val = parseFloat(e.target.value)
@@ -122,7 +128,7 @@ function Slider({ classes, label, onChange, minValue, maxValue, ...sliderProps }
   )
 }
 
-export default React.memo(Slider)
+export default memo(Slider)
 
 Slider.propTypes = {
   classes: PropTypes.string,

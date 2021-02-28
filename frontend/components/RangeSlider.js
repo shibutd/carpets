@@ -1,31 +1,47 @@
-import { useEffect } from 'react'
+import { useEffect, useMemo, memo } from 'react'
 import PropTypes from 'prop-types'
 
 import Slider, { useSlide } from './Slider'
 
-export default function RangeSlider({ size, onChange }) {
-  let minWidth, maxWidth, minLength, maxLength
-  const replaceComma = (word) => word.replace(',', '.')
+const replaceComma = (word) => word.replace(',', '.')
 
-  size.forEach((x) => {
-    const splitted = x.split('*')
-    const [width, length] = [
-      parseFloat(replaceComma(splitted[0])),
-      parseFloat(replaceComma(splitted[1]))
-    ]
-    if (minWidth === undefined || minWidth > width) {
-      minWidth = width
+Array.prototype.min = function() {
+  return Math.min(...this)
+}
+
+Array.prototype.max = function() {
+  return Math.max(...this)
+}
+
+function RangeSlider({ size, onChange }) {
+
+  const getWidthAndLengthFromSizes = useMemo(() => {
+    const [widthArray, lengthArray] = [[], []]
+
+    size.forEach((x) => {
+      const splitted = x.split('*')
+      const [width, length] = [
+        parseFloat(replaceComma(splitted[0])),
+        parseFloat(replaceComma(splitted[1]))
+      ]
+      widthArray.push(width)
+      lengthArray.push(length)
+    })
+
+    return {
+      minWidth: widthArray.min(),
+      maxWidth: widthArray.max(),
+      minLength: lengthArray.min(),
+      maxLength: lengthArray.max()
     }
-    if (maxWidth === undefined || maxWidth < width) {
-      maxWidth = width
-    }
-    if (minLength === undefined || minLength > length) {
-      minLength = length
-    }
-    if (maxLength === undefined || maxLength < length) {
-      maxLength = length
-    }
-  })
+  }, size)
+
+  const {
+    minWidth,
+    maxWidth,
+    minLength,
+    maxLength
+  } = getWidthAndLengthFromSizes
 
   const [sliderMinWidth, sliderMaxWidth, sliderWidthConfig] = useSlide({
       min: minWidth,
@@ -66,6 +82,8 @@ export default function RangeSlider({ size, onChange }) {
     </>
   )
 }
+
+export default memo(RangeSlider)
 
 RangeSlider.propTypes = {
   size: PropTypes.array,

@@ -54,14 +54,19 @@ export default function Category({ category }) {
       setFilterConditions([ ...conditions, ...ranges])
     }, [])
 
-  const handlePrevPage = useCallback(() => {
+  const handlePrevPage = () => {
     setPage(old => Math.max(old - 1, 0))
-  }, [])
+  }
 
-  const handleNextPage = useCallback(() => {
+  const handleNextPage = () => {
     if (!isPreviousData && data.next) {
       setPage(old => old + 1)
     }
+  }
+
+  const handleClickShowFilters = useCallback(() => {
+    const categorySidebar = document.querySelector('.category-sidebar')
+    categorySidebar.classList.toggle('is-open')
   }, [])
 
   return (
@@ -70,11 +75,23 @@ export default function Category({ category }) {
     >
       <section className="category-main">
         <h1>{name}</h1>
+
         <div className="category-wrapper">
+          <span
+            id="filter-open"
+            className="filter-toggle"
+            onClick={handleClickShowFilters}
+          >
+            Фильтры
+          </span>
           <div className="category-product-list">
             {isLoading ? (
               <div
-                style={{ display: 'flex', justifyContent: 'center', padding: '2rem' }}
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  padding: '2rem'
+                }}
               >
                 <BouncerLoading />
               </div>
@@ -114,10 +131,11 @@ export default function Category({ category }) {
               </>
             )}
           </div>
-          <div className="category-sidebar">
+          <div className="category-sidebar light-gray-container">
             <CategorySidebar
               properties={properties}
               onChange={handleChangeFilterConditions}
+              toggleShowFilters={handleClickShowFilters}
             />
           </div>
         </div>
