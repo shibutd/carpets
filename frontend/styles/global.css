@@ -382,7 +382,6 @@ textarea {
   color: black;
   z-index: 100;
   animation: move-top-to-bottom 0.5s ease;
-
 }
 
 .top-nav-address-item {
@@ -1533,6 +1532,7 @@ footer div {
 }
 
 .available-place-phone {
+  flex: 1;
   width: 30%;
   text-align: center;
 }
@@ -2334,6 +2334,10 @@ input {
     padding: 1rem 0;
   }
 
+  .top-nav-address-list {
+    left:-20%;
+  }
+
   .search-nav ul {
     position: fixed;
     bottom: 0;
@@ -2545,6 +2549,26 @@ input {
     width: 80%;
   }
 
+  .checkout-circles {
+    /*padding: 0;*/
+  }
+
+  .checkout-circle {
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    font-size: var(--big-text);
+    margin: 0 5rem;
+  }
+
+  .checkout-circle::after {
+    width: 12rem;
+  }
+
+  .checkout-payment-form {
+    width: 100%;
+  }
+
 
 }
 
@@ -2698,6 +2722,28 @@ input {
     width: 250px;
   }
 
+  #payment-button {
+    width: 100%;
+  }
+
+  .question-textarea {
+    width: 95%;
+    margin-left: 1rem;
+  }
+
+  .available-place {
+    width: 98%;
+    margin: 1rem auto;
+  }
+
+  .available-place>* {
+    padding: 1rem;
+    text-align: center;
+  }
+
+  .available-place-availablity {
+    width: 20%;
+  }
 
   /* BURGER MENU */
 
@@ -2708,4 +2754,24 @@ input {
 }
 
 @media screen and (max-width: 480px) {
+
+  .checkout-ordersummary-table td {
+    padding: 2rem 0;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+
+  .checkout-circle {
+    font-size: var(--text);
+    margin: 0 2rem;
+  }
+
+  .checkout-circle::after {
+    width: 6rem;
+  }
+
+  #favorites-delete-button {
+    text-align: right;
+  }
 }

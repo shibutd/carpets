@@ -30,15 +30,6 @@ function ProductMain({
   const checkIsInCart = () =>
     cart.find(x => x.variation.id === option.id) !== undefined
 
-  // {
-  //   const product = cart.find(x => x.variation.id === option.id)
-  //   if (product) {
-  //     return true
-  //   }
-  //   return false
-  // }
-
-
   useEffect(() => {
     setOption(variations[index])
   }, [index])

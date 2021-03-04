@@ -78,7 +78,7 @@ export default function Payment({ cart, changeTab }) {
               </div>
             </div>
             <div className="stripe-form-row">
-              <button className="" onClick={handleClick}>
+              <button id="payment-button" onClick={handleClick}>
                 Отправить платеж
               </button>
             </div>
