@@ -1436,6 +1436,7 @@ footer div {
   padding: 0.5rem 1rem;
   margin-left: 2rem;
   font-size: var(--big-text);
+  cursor: pointer;
 }
 
 /* PRODUCT BUTTONS */
@@ -1457,24 +1458,28 @@ footer div {
   padding: 2rem 0 4rem;
 }
 
-.product-desc-tab {
-  padding: 1rem 0;
+.product-desc-tabs {
+  display: flex;
+  flex: 1 1;
   border-bottom: 1px solid var(--medium-gray-color);
+  list-style: none;
 }
 
-.product-desc-tab span {
-  cursor: pointer;
+.product-desc-tabs li {
+  flex: 1;
+  text-align: center;
+  vertical-align: middle;
   font-size: var(--big-text);
-  margin-right: 10rem;
+  padding: 1rem 0;
   user-select: none;
+  cursor: pointer;
 }
 
-.product-desc-tab span:hover {
+.product-desc-tabs li:hover {
   color: var(--blue-color);
 }
 
 .active-tab {
-  padding: 1rem 0;
   border-bottom: 2px solid var(--blue-color);
 }
 
@@ -1517,11 +1522,9 @@ footer div {
 .available-place {
   display: flex;
   width: 100%;
-  padding: 1rem;
+  padding: 2rem;
   margin-bottom: 2rem;
-  font-size: 2rem;
-  background: rgb(200, 200, 200);
-  border-radius: 5px;
+  font-size: var(--big-text);
 }
 
 .available-place-address {
@@ -1539,7 +1542,6 @@ footer div {
   text-align: right;
   padding-right: 2rem;
 }
-
 
 .product-desc-question p {
   margin-bottom: 2rem;
@@ -1686,16 +1688,7 @@ input {
   font-size: var(--small-text);
   padding: 0.8rem;
   margin: 1rem 0 5rem;
-  /*border:none;*/
-  /*box-shadow: 0 0 4px var(--medium-gray-color);*/
-  /*border-radius: 5px;*/
 }
-
-/*
-.contact-form textarea:focus, input:focus {
-  border: 1px solid var(--blue-color);
-  box-shadow: 0 0 10px #719ECE;
-}*/
 
 
 .contact-form button {
@@ -2438,6 +2431,14 @@ input {
 
 @media screen and (max-width: 768px) {
 
+  button {
+    font-size: 1.2rem;
+  }
+
+  .top-nav-address-list {
+    left:0;
+  }
+
   .vertical-card {
     min-height: 15rem;
   }
@@ -2506,10 +2507,55 @@ input {
     margin-top: 15px;
   }
 
+  /* PRODUCT SLUG PAGE */
+
+  .product-main {
+    flex-direction: column;
+  }
+
+  .product-main-images {
+    padding: 2rem;
+    margin: auto;
+  }
+
+  .product-main-buttons {
+    flex-wrap: wrap;
+  }
+
+  .product-desc-tabs li {
+    line-height: 12px;
+  }
+
+  /* CONTACT US PAGE */
+
+  .contact h5 {
+    text-align: center;
+  }
+
+  .contact-form {
+    width: 100%;
+  }
+
+  .register-form button {
+    width: 60%;
+    font-size: var(--text);
+  }
+
+  .register-form-input {
+    width: 80%;
+  }
+
 
 }
 
 @media screen and (max-width: 640px) {
+
+  :root {
+  --big-text: 1.4rem;
+  --text: 1.2rem;
+  --small-text: 0.4rem;
+  }
+
   .carousel {
     display: none;
   }
@@ -2641,6 +2687,17 @@ input {
   .category-sidebar {
     width: 60%;
   }
+
+  /* PRODUCT SLUG PAGE */
+
+  .product-main-props {
+    padding: 1rem;
+  }
+
+  .catalog-menu {
+    width: 250px;
+  }
+
 
   /* BURGER MENU */
 

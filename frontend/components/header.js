@@ -47,6 +47,8 @@ function Header({ title, auth, cart }) {
 
     const scrolled = document.scrollingElement.scrollTop
 
+
+
     if (scrolled >= topNav.clientHeight + searchNav.clientHeight) {
       topNav.style.marginBottom = `${searchNav.clientHeight}px`
       searchNav.classList.add('search-nav-fixed')
@@ -69,6 +71,7 @@ function Header({ title, auth, cart }) {
     window.addEventListener('resize', showCatalogLabel)
 
     showCatalogLabel()
+    showSearchNav()
 
     return () => {
       window.removeEventListener('scroll', showSearchNav)

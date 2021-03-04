@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import PropTypes from 'prop-types'
 
 
@@ -14,15 +14,7 @@ export default function ProductDesc({
     askQuestionTextareaValue,
     setAskQuestionTextareaValue
   ] = useState('')
-  let renderingComponent = ''
-
-  useEffect(() => {
-    const tabs = Array.from(document.querySelectorAll(".tab"))
-    tabs.forEach(
-      tab => tab.className = tab.className.replace(" active-tab", "")
-    )
-    tabs[currentTab - 1].className += " active-tab"
-  }, [currentTab])
+  let renderingComponent = null
 
   const handleAskQuestion = (e) => {
     e.preventDefault()
@@ -132,14 +124,14 @@ export default function ProductDesc({
     renderingComponent = (
       <div className="product-desc-available property">
         {quantities?.map(qunatity => (
-          <div key={qunatity.address} className="available-place">
+          <div key={qunatity.address} className="available-place light-gray-container">
             <div className="available-place-address">
               {qunatity.address}
             </div>
             <div className="available-place-phone">
               +7 (343) 237 47 47
             </div>
-            <div className="available-place-availablity">
+            <div className="available-place-availablity ">
               {qunatity.amount > 0 ? "Есть в наличии" : "Нет в наличии"}
             </div>
           </div>
@@ -170,12 +162,32 @@ export default function ProductDesc({
 
   return (
     <>
-    <div className="product-desc-tab">
-      <span className="tab" onClick={() => setCurrentTab(1)}>Описание</span>
-      <span className="tab" onClick={() => setCurrentTab(2)}>Характеристики</span>
-      <span className="tab" onClick={() => setCurrentTab(3)}>Наличие в магазинах</span>
-      <span className="tab" onClick={() => setCurrentTab(4)}>Вопрос-ответ</span>
-    </div>
+    <ul className="product-desc-tabs">
+      <li
+        className={currentTab === 1 ? 'active-tab' : ''}
+        onClick={() => setCurrentTab(1)}
+      >
+        Описание
+      </li>
+      <li
+        className={currentTab === 2 ? 'active-tab' : ''}
+        onClick={() => setCurrentTab(2)}
+      >
+        Характеристики
+      </li>
+      <li
+        className={currentTab === 3 ? 'active-tab' : ''}
+        onClick={() => setCurrentTab(3)}
+      >
+        Наличие в магазинах
+      </li>
+      <li
+        className={currentTab === 4 ? 'active-tab' : ''}
+        onClick={() => setCurrentTab(4)}
+      >
+        Вопрос-ответ
+      </li>
+    </ul>
     { renderingComponent }
     </>
   )

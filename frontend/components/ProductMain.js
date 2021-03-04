@@ -17,9 +17,9 @@ function ProductMain({
   index,
   onOptionChange,
 }) {
-  const [option, setOption] = useState(
-    () => variations.length > index ? variations[index] : {}
-  )
+  const [option, setOption] = useState(() =>
+    variations.length > index ? variations[index] : {})
+  const [isInCart, setIsInCart] = useState(false)
   const { addToFavorites } = useFavorites()
   const {
     cart,
@@ -27,28 +27,25 @@ function ProductMain({
     handleRemoveFromCart,
   } = useCart()
 
-  const checkIsInCart = () => {
-    const product = cart.find(x => x.variation.id === option.id)
-    if (product) {
-      return true
-    }
-    return false
-  }
+  const checkIsInCart = () =>
+    cart.find(x => x.variation.id === option.id) !== undefined
 
-  const [isInCart, setIsInCart] = useState(false)
+  // {
+  //   const product = cart.find(x => x.variation.id === option.id)
+  //   if (product) {
+  //     return true
+  //   }
+  //   return false
+  // }
+
 
   useEffect(() => {
     setOption(variations[index])
   }, [index])
 
   useEffect(() => {
-    const productInCart = checkIsInCart()
-    setIsInCart(productInCart)
-  }, [cart])
-
-  useEffect(() => {
     setIsInCart(checkIsInCart())
-  }, [])
+  }, [cart, option])
 
   // if (image !== undefined && image.startsWith('http')) {
   let image = `/media/product-images/${name.replace(/ /g, '_')}.jpg`

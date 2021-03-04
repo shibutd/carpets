@@ -43,13 +43,15 @@ export default function Promotions() {
           >
             <BouncerLoading />
           </div>
-        ) : (
+        ) : promotions.length > 0 ? (
           promotions.map((promotion) => (
             <div key={promotion.id} className="promotion">
               <h5>{promotion.title}</h5>
               <p>{promotion.description}</p>
             </div>
           ))
+        ) : (
+          <p>Здесь пока ничего нет :(</p>
         )}
       </section>
     </Layout>

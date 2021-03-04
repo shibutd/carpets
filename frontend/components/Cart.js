@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 
 import CartItem from './CartItem'
 import CartSidebar from './CartSidebar'
+import useAuth from '../lib/hooks/useAuth'
 import useCart from '../lib/hooks/useCart'
 import useFavorites from '../lib/hooks/useFavorites'
 
@@ -14,7 +15,7 @@ export default function Cart() {
     handleRemoveFromCart
   } = useCart()
   const { addToFavorites: handleAddToFavorites } = useFavorites()
-  const { user } = useCart()
+  const { user } = useAuth()
 
   const [totalQuantity, setTotalQuantity] = useState(0)
   const [totalPrice, setTotalPrice] = useState(0)

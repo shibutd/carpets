@@ -3,15 +3,7 @@ import PropTypes from 'prop-types'
 
 import Slider, { useSlide } from './Slider'
 
-const replaceComma = (word) => word.replace(',', '.')
-
-Array.prototype.min = function() {
-  return Math.min(...this)
-}
-
-Array.prototype.max = function() {
-  return Math.max(...this)
-}
+const replaceCommaWithDot = word => word.replace(',', '.')
 
 function RangeSlider({ size, onChange }) {
 
@@ -21,18 +13,18 @@ function RangeSlider({ size, onChange }) {
     size.forEach((x) => {
       const splitted = x.split('*')
       const [width, length] = [
-        parseFloat(replaceComma(splitted[0])),
-        parseFloat(replaceComma(splitted[1]))
+        parseFloat(replaceCommaWithDot(splitted[0])),
+        parseFloat(replaceCommaWithDot(splitted[1]))
       ]
       widthArray.push(width)
       lengthArray.push(length)
     })
 
     return {
-      minWidth: widthArray.min(),
-      maxWidth: widthArray.max(),
-      minLength: lengthArray.min(),
-      maxLength: lengthArray.max()
+      minWidth: Math.min(...widthArray),
+      maxWidth: Math.max(...widthArray),
+      minLength: Math.min(...lengthArray),
+      maxLength: Math.max(...lengthArray),
     }
   }, size)
 
