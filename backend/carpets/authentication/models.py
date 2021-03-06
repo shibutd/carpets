@@ -99,8 +99,15 @@ class UserAddress(models.Model):
     )
 
     class Meta:
-        verbose_name = 'адрес'
-        verbose_name_plural = 'адреса'
+        verbose_name = 'адрес пользователя'
+        verbose_name_plural = 'адреса пользователей'
+
+    def __str__(self):
+        return '%s, %s, %s' % (
+            self.city,
+            self.street,
+            self.house_number,
+        )
 
 
 class UserFavorite(models.Model):

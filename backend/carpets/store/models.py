@@ -44,8 +44,8 @@ class Product(models.Model):
     date_updated = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = 'товар'
-        verbose_name_plural = 'товары'
+        verbose_name = 'Товар'
+        verbose_name_plural = 'Товары'
         indexes = [
             GinIndex(fields=('name', 'description'), name='search_idx')
         ]
@@ -67,8 +67,8 @@ class ProductCategory(models.Model):
     image = models.ImageField(upload_to='category-images')
 
     class Meta:
-        verbose_name = 'производитель'
-        verbose_name_plural = 'производители'
+        verbose_name = 'Категория'
+        verbose_name_plural = 'Категории'
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
@@ -85,8 +85,8 @@ class ProductManufacturer(models.Model):
     name = models.CharField(max_length=60)
 
     class Meta:
-        verbose_name = 'производитель'
-        verbose_name_plural = 'производители'
+        verbose_name = 'Производитель'
+        verbose_name_plural = 'Производители'
 
     def __str__(self):
         return self.name
@@ -99,8 +99,8 @@ class ProductMaterial(models.Model):
     name = models.CharField(max_length=60)
 
     class Meta:
-        verbose_name = 'материал'
-        verbose_name_plural = 'материалы'
+        verbose_name = 'Материал'
+        verbose_name_plural = 'Материалы'
 
     def __str__(self):
         return self.name
@@ -113,8 +113,8 @@ class ProductUnit(models.Model):
     name = models.CharField(max_length=30)
 
     class Meta:
-        verbose_name = 'единица'
-        verbose_name_plural = 'единицы'
+        verbose_name = 'Единица'
+        verbose_name_plural = 'Единицы'
 
     def __str__(self):
         return self.name
@@ -130,14 +130,14 @@ class ProductImage(models.Model):
         on_delete=models.CASCADE,
     )
     image = models.ImageField(upload_to='product-images')
-    thumbnail = models.ImageField(
-        upload_to="product-thumbnails",
-        null=True,
-    )
+    # thumbnail = models.ImageField(
+    #     upload_to="product-thumbnails",
+    #     null=True,
+    # )
 
     class Meta:
-        verbose_name = 'изображение товара'
-        verbose_name_plural = 'изображения товаров'
+        verbose_name = 'Изображение товара'
+        verbose_name_plural = 'Изображения товаров'
 
 
 class VariationInStockManager(models.Manager):
@@ -176,6 +176,16 @@ class ProductVariation(models.Model):
 
     objects = VariationInStockManager()
 
+    class Meta:
+        verbose_name = 'Вариант товара'
+        verbose_name_plural = 'Варианты товаров'
+
+    def __str__(self):
+        return '%s - %s' % (
+            self.product.name,
+            self.size
+        )
+
 
 class VariationQuantity(models.Model):
     """
@@ -193,14 +203,18 @@ class VariationQuantity(models.Model):
     )
     amount = models.PositiveIntegerField(default=0)
 
+    class Meta:
+        verbose_name = 'Наличие в магазинах'
+        verbose_name_plural = 'Наличие в магазинах'
+
 
 class VariationTag(models.Model):
     name = models.CharField(max_length=20)
     slug = models.SlugField(max_length=20, unique=True)
 
     class Meta:
-        verbose_name = 'тег'
-        verbose_name_plural = 'теги'
+        verbose_name = 'Тег'
+        verbose_name_plural = 'Теги'
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
@@ -242,8 +256,8 @@ class Order(PolymorphicModel):
     date_added = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name = 'заказ'
-        verbose_name_plural = 'заказы'
+        verbose_name = 'Заказ'
+        verbose_name_plural = 'Заказы'
 
     def __str__(self):
         return '%s - %s' % (
@@ -263,6 +277,10 @@ class PickupOrder(Order):
         null=True,
     )
 
+    class Meta:
+        verbose_name = 'Самовывоз'
+        verbose_name_plural = 'Заказы самовывоза'
+
 
 class PickupAddress(models.Model):
     """
@@ -274,9 +292,25 @@ class PickupAddress(models.Model):
         null=True,
         validators=[phone_regex_validator],
     )
+    longitude = models.DecimalField(
+        max_digits=9,
+        decimal_places=6,
+        null=True,
+        blank=True,
+    )
+    latitude = models.DecimalField(
+        max_digits=9,
+        decimal_places=6,
+        null=True,
+        blank=True,
+    )
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = 'Адрес самовывоза'
+        verbose_name_plural = 'Адреса самовывоза'
 
 
 class DeliveryOrder(Order):
@@ -289,6 +323,10 @@ class DeliveryOrder(Order):
         blank=True,
         null=True,
     )
+
+    class Meta:
+        verbose_name = 'Доставка'
+        verbose_name_plural = 'Заказы на доставку'
 
 
 class OrderLine(models.Model):
@@ -313,3 +351,7 @@ class Promotion(models.Model):
     """
     title = models.CharField(max_length=120)
     description = models.TextField()
+
+    class Meta:
+        verbose_name = 'Акция'
+        verbose_name_plural = 'Акции'

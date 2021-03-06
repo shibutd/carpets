@@ -69,8 +69,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-if DEBUG and 'test' not in sys.argv:
-    MIDDLEWARE = ['store.middlewares.QueryCountDebugMiddleware'] + MIDDLEWARE
+# if DEBUG and 'test' not in sys.argv:
+#     MIDDLEWARE = ['store.middlewares.QueryCountDebugMiddleware'] + MIDDLEWARE
 
 
 ROOT_URLCONF = 'carpets.urls'

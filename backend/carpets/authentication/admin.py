@@ -3,13 +3,25 @@ from django.contrib import admin
 from authentication.models import CustomUser, UserAddress
 
 
+class RestrictAddChangeDeleteMixin:
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
 class CustomUserAdmin(admin.ModelAdmin):
     list_display = ('email', 'is_staff', 'is_superuser')
     search_fields = ('email',)
     ordering = ('email',)
 
 
-class UserAddressAdmin(admin.ModelAdmin):
+class UserAddressAdmin(RestrictAddChangeDeleteMixin, admin.ModelAdmin):
     list_display = (
         'user',
         'city',
