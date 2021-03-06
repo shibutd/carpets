@@ -400,10 +400,19 @@ class OrderCreateView(generics.CreateAPIView):
             status=OrderStatus.PAID,
         )
 
+        orderlines = []
         for orderline in order.lines.all():
-            orderline.order = created_order
+            orderlines.append(
+                OrderLine(
+                    order=created_order,
+                    variation=orderline.variation,
+                    quantity=orderline.quantity
+                )
+            )
+            # orderline.order = created_order
+        OrderLine.objects.bulk_create(orderlines)
 
-        created_order.save()
+        # created_order.save()
         order.delete()
 
 
