@@ -1,6 +1,7 @@
 import { useState, useEffect, memo } from 'react'
 import PropTypes from 'prop-types'
 import Image from 'next/image'
+import Tippy from '@tippyjs/react'
 
 import BubblyButton from './BubblyButton'
 import HearthRegular from './icons/HearthRegular'
@@ -90,13 +91,19 @@ function ProductMain({
               Убрать
             </button>
           )}
-          <button
-            className="product-favorite tooltip"
-            value="Добавить в избранное"
-            onClick={() => addToFavorites(option.id)}
+          <Tippy
+            theme='blue'
+            interactive={true}
+            delay={[100, null]}
+            content="Добавить в избранное"
           >
-            <HearthRegular height={17} width={17} color={"white"} />
-          </button>
+            <button
+              className="product-favorite"
+              onClick={() => addToFavorites(option.id)}
+            >
+              <HearthRegular height={17} width={17} color={"white"} />
+            </button>
+          </Tippy>
         </div>
       </div>
     </>

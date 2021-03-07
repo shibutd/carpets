@@ -2,15 +2,12 @@ import { useState, useMemo, memo } from 'react'
 import PropTypes from 'prop-types'
 import Link from 'next/link'
 import { usePopper } from 'react-popper';
-// import { useDispatch } from 'react-redux'
 
-// import { logout } from '../lib/slices/authSlice'
 import SvgUserRegular from './icons/SvgUserRegular'
 import SvgUserSolid from './icons/SvgUserSolid'
 
 
  function UserIcon({ user, onLogout }) {
-  // const dispatch = useDispatch()
   const [dropdownShow, setDropdownShow] = useState(false)
   const [referenceElement, setReferenceElement] = useState(null)
   const [popperElement, setPopperElement] = useState(null)

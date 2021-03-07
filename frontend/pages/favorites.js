@@ -30,7 +30,6 @@ export default function Favorites() {
 
   useEffect(() => {
     if (user) {
-      console.log('can get my favorites')
       getFavorites().then((res) => {
         setFavoriteItems(res ? res.data : [])
         setFavoritesLoading(false)

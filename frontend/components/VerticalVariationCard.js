@@ -2,6 +2,7 @@ import { useRef, memo } from 'react'
 import PropTypes from 'prop-types'
 import Link from 'next/link'
 import Image from 'next/image'
+import Tippy from '@tippyjs/react'
 
 import BubblyButton from './BubblyButton'
 import HearthRegular from './icons/HearthRegular'
@@ -51,13 +52,10 @@ import { convertPrice } from '../lib/utils/converters'
     const addToCartIcon = cardRef.current.querySelector(
       '.vertical-cart-button'
     )
-
     addToCartIcon.classList.add('vertical-cart-button-pushed')
-    // addToCartIcon.classList.add('tooltip')
 
     timerRef.current = setTimeout(() => {
       addToCartIcon.classList.remove('vertical-cart-button-pushed')
-      // addToCartIcon.classList.remove('tooltip')
     }, 2000)
 
   }
@@ -89,13 +87,19 @@ import { convertPrice } from '../lib/utils/converters'
         </div>
       </div>
       <div className="vertical-card-right">
-        <button
-          className="vertical-cart-icon tooltip"
-          value="Добавить в избранное"
-          onClick={handleClickFavorite}
+        <Tippy
+          theme='blue'
+          interactive={true}
+          delay={[100, null]}
+          content="Добавить в избранное"
         >
-          <HearthRegular height={20} width={20} />
-        </button>
+          <button
+            className="vertical-cart-icon"
+            onClick={handleClickFavorite}
+          >
+            <HearthRegular height={20} width={20} />
+          </button>
+        </Tippy>
         <BubblyButton
           className="vertical-cart-button"
           onClick={handleClickAddToCart}

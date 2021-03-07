@@ -292,13 +292,13 @@ class PickupAddress(models.Model):
         null=True,
         validators=[phone_regex_validator],
     )
-    longitude = models.DecimalField(
+    latitude = models.DecimalField(
         max_digits=9,
         decimal_places=6,
         null=True,
         blank=True,
     )
-    latitude = models.DecimalField(
+    longitude = models.DecimalField(
         max_digits=9,
         decimal_places=6,
         null=True,

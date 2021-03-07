@@ -44,7 +44,7 @@ class ProductImageSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = ProductImage
-        fields = ('image', 'thumbnail')
+        fields = ('image',)
 
 
 class ProductSerializer(DynamicFieldsModelSerializer):
@@ -194,7 +194,7 @@ class PickupAddressSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PickupAddress
-        fields = ('id', 'name', 'phone_number')
+        fields = ('id', 'name', 'phone_number', 'longitude', 'latitude')
 
 
 class OrderLineListSerializer(serializers.ListSerializer):

@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types'
+
 import { convertPrice } from '../lib/utils/converters'
 
 export default function OrderSummary({ cart, changeTab }) {
@@ -48,4 +50,9 @@ export default function OrderSummary({ cart, changeTab }) {
       </div>
     </div>
   )
+}
+
+OrderSummary.propTypes = {
+  cart: PropTypes.arrayOf(PropTypes.object),
+  changeTab: PropTypes.func
 }

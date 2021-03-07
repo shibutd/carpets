@@ -47,8 +47,6 @@ function Header({ title, auth, cart }) {
 
     const scrolled = document.scrollingElement.scrollTop
 
-
-
     if (scrolled >= topNav.clientHeight + searchNav.clientHeight) {
       topNav.style.marginBottom = `${searchNav.clientHeight}px`
       searchNav.classList.add('search-nav-fixed')
@@ -94,6 +92,9 @@ function Header({ title, auth, cart }) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="description" content="Алладин96 - магазин ковров в Екатеринбурге"/ >
         <meta name="robots" content="index,follow" />
+        <style type="text/css">
+          @import url('https://unpkg.com/tippy.js/dist/tippy.css');
+        </style>
         <title>{title}</title>
       </Head>
 
@@ -142,16 +143,16 @@ function Header({ title, auth, cart }) {
             <UserIcon user={user} onLogout={logoutUser} />
           </li>
           {user &&
-          (<li>
-            <Link href="/favorites">
-              <a>
-                <div className="search-nav-icon">
-                  <HearthRegular width={18} height={18} />
-                  <p>Избранное</p>
-                </div>
-              </a>
-            </Link>
-          </li>)}
+            (<li>
+              <Link href="/favorites">
+                <a>
+                  <div className="search-nav-icon">
+                    <HearthRegular width={18} height={18} />
+                    <p>Избранное</p>
+                  </div>
+                </a>
+              </Link>
+            </li>)}
           <li>
             <Link href="/shopping-cart">
               <a>

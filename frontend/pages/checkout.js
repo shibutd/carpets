@@ -83,26 +83,7 @@ export default function Checkout() {
               3
             </div>
           </div>
-
           {renderComponent}
-
-          {/*<div className="checkout-buttons">
-            <button
-              id="backwardbutton"
-              onClick={() => handleChangeCurrentTab(-1)}
-              style={(currentTab === 1) ? { opacity: 0 } : {}}
-            >
-              &#10094; Назад
-            </button>
-            <button
-              id="forwardbutton"
-              onClick={() => handleChangeCurrentTab(1)}
-              style={(currentTab === 3) ? { opacity: 0 } : {}}
-            >
-              Далее &#10095;
-            </button>
-          </div>*/}
-
         </div>
       </section>
     </Layout>
