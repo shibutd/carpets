@@ -1,3 +1,4 @@
+from django.db.models import Min, FloatField
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import serializers
 from rest_polymorphic.serializers import PolymorphicSerializer
@@ -52,6 +53,7 @@ class ProductSerializer(DynamicFieldsModelSerializer):
     Serializer for product.
     """
     images = ProductImageSerializer(many=True)
+    minimum_price = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
@@ -59,10 +61,17 @@ class ProductSerializer(DynamicFieldsModelSerializer):
             'name',
             'slug',
             'images',
+            'minimum_price',
         )
         extra_kwargs = {
             'slug': {'validators': []},
         }
+
+    def get_minimum_price(self, obj):
+        minimum_price = obj.variations.aggregate(
+            Min('price', output_field=FloatField())
+        )
+        return minimum_price['price__min']
 
 
 class VariationQuantitySerializer(serializers.ModelSerializer):
@@ -83,7 +92,7 @@ class ProductVariationSerializer(DynamicFieldsModelSerializer):
         source='size.value'
     )
     quantities = VariationQuantitySerializer(many=True)
-    product = ProductSerializer()
+    product = ProductSerializer(exclude_fields=('minimum_price',))
 
     class Meta:
         model = ProductVariation
@@ -95,7 +104,10 @@ class ProductVariationWithoutImagesSerializer(DynamicFieldsModelSerializer):
     size = serializers.ReadOnlyField(
         source='size.value'
     )
-    product = ProductSerializer(exclude_fields=('images',), required=False)
+    product = ProductSerializer(
+        exclude_fields=('images', 'minimum_price'),
+        required=False
+    )
 
     class Meta:
         model = ProductVariation
