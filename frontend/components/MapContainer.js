@@ -5,7 +5,7 @@ export function MapContainer(props) {
     maxWidth: '90%',
     height: '80%',
     borderRadius: '15px',
-    margin: '2rem auto'
+    marginTop: '15px'
   }
 
   return (

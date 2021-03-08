@@ -1,36 +1,117 @@
-import { useState} from 'react'
+import { useState, forwardRef } from 'react'
+import PropTypes from 'prop-types'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useSelector } from 'react-redux'
-import { selectAddress } from '../lib/slices/addressSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import Modal from 'react-modal'
 
+import BouncerLoading from './BouncerLoading'
+import CheckMarkIcon from './icons/CheckMarkIcon'
+import WarningIcon from './icons/WarningIcon'
 import useOrders from '../lib/hooks/useOrders'
+import { selectAddress, resetAddress } from '../lib/slices/addressSlice'
+import { resetCart } from '../lib/slices/cartSlice'
 import { convertPrice } from '../lib/utils/converters'
 
+Modal.setAppElement('#__next')
+
+const MyLink = forwardRef(({ onClick, href }, ref) => {
+  return (
+    <a href={href} onClick={onClick} ref={ref}>
+      Вернуться на главную страницу
+    </a>
+  )
+})
+
+const ModalContainer = ({ loading, error, handleClickReturn }) => {
+
+  if (loading) return (
+    <div className="modal-payment-message modal-payment-loading">
+      <BouncerLoading />
+      <span>Обработка платежа...</span>
+    </div>
+  )
+
+  if (!loading) return (
+    <>
+      {error
+        ? (
+          <div className="modal-payment-message">
+            <WarningIcon width={25} height={25} />
+            <span>Во время обработки платежа произошла ошибка!</span>
+          </div>
+          ) : (
+          <div className="modal-payment-message">
+            <CheckMarkIcon width={25} height={25} />
+            <span>Ваш заказ успешно оформлен!</span>
+          </div>
+        )}
+      <Link href="/" passHref className="modal-payment-link">
+        <MyLink onClick={handleClickReturn} />
+      </Link>
+    </>
+  )
+}
+
 export default function Payment({ cart, changeTab }) {
-  const { addressType, addressId, address } = useSelector(selectAddress)
-  const { createPickupOrder, createDeliveryOrder } = useOrders()
-  const [loading, setLoading] = useState(false)
   const router = useRouter()
+  const dispatch = useDispatch()
+  const {
+    addressType,
+    addressId,
+    address,
+    loading,
+    error,
+  } = useSelector(selectAddress)
+  const [showModal, setShowModal] = useState(false)
+  const { createPickupOrder, createDeliveryOrder } = useOrders()
 
   const total = cart.reduce((sum, item) => {
     return sum + item.variation.price * item.quantity
   }, 0)
 
-  const handleClick = async (e) => {
+  const addressStringRepresentation = (address) => {
+    const addressFileredValues = Object.entries(address)
+      .filter(entry =>
+        entry[1] !== null
+          && !['latitude', 'longitude'].includes(entry[0])
+      )
+
+    return (
+      <>
+        {addressFileredValues.map((val, i) =>
+          <span key={i}>{val[1]}</span>
+        )}
+      </>
+    )
+  }
+
+  const resetAndReturnToIndexPage = async () => {
+    router.push('/')
+    await dispatch(resetAddress())
+    await dispatch(resetCart())
+  }
+
+  const handleCloseModal = async () => {
+    if (error) {
+      setShowModal(false)
+      return
+    }
+    await resetAndReturnToIndexPage()
+  }
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    setLoading(true)
+    setShowModal(true)
 
     if (addressType === 'pickup') {
       await createPickupOrder(addressId)
     } else {
       await createDeliveryOrder(addressId)
     }
-
-    router.push('/')
   }
 
   return (
-
     <div className="checkout-payment">
 
       <div className="checkout-payment-order light-gray-container">
@@ -39,8 +120,7 @@ export default function Payment({ cart, changeTab }) {
         <p>Тип доставки:<span>{addressType === 'pickup' ? ' Самовывоз' : ' Доставка по адресу'}</span></p>
         <p id="checkout-payment-address">
           Адрес доставки:
-          {Object.values(address).filter(val => val !== null)
-            .map((val, i) => <span key={i}>{val}</span>)}
+          {addressStringRepresentation(address)}
         </p>
       </div>
 
@@ -78,7 +158,7 @@ export default function Payment({ cart, changeTab }) {
               </div>
             </div>
             <div className="stripe-form-row">
-              <button id="payment-button" onClick={handleClick}>
+              <button id="payment-button" onClick={handleSubmit}>
                 Отправить платеж
               </button>
             </div>
@@ -91,7 +171,7 @@ export default function Payment({ cart, changeTab }) {
 
       <div className="checkout-buttons">
         <button
-          disabled={loading}
+          disabled={showModal}
           className="dark-gray-button"
           onClick={() => changeTab(-1)}
         >
@@ -104,6 +184,23 @@ export default function Payment({ cart, changeTab }) {
         </button>
       </div>
 
+      <Modal
+        className="modal modal-payment"
+        isOpen={showModal}
+        onRequestClose={handleCloseModal}
+        shouldCloseOnOverlayClick={true}
+      >
+        <ModalContainer
+          loading={loading}
+          error={error}
+          handleClickReturn={resetAndReturnToIndexPage}
+        />
+      </Modal>
     </div>
   )
+}
+
+Payment.propTypes = {
+  cart: PropTypes.arrayOf(PropTypes.object),
+  changeTab: PropTypes.func
 }
