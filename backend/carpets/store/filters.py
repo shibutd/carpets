@@ -163,7 +163,7 @@ class PolymorphicModelFilter(admin.SimpleListFilter):
     def queryset(self, request, queryset):
         if self.value() is not None:
             model = apps.get_model('store', self.value())
-            return queryset.filter( Q(instance_of=model) )
+            return queryset.filter(Q(instance_of=model))
         return queryset
 
 
@@ -192,4 +192,4 @@ class StatusFilter(admin.SimpleListFilter):
     def queryset(self, request, queryset):
         if self.value() in map(str, (OrderStatus.PAID, OrderStatus.COMPLETED)):
             return queryset.filter(status=self.value())
-        return queryset
+        return queryset.filter(~Q(status=OrderStatus.NEW))
