@@ -53,31 +53,33 @@ export default function Favorites() {
       <section className="favorites">
         <h1>Избранное</h1>
         <div className="favorites-wrapper">
-          {favoriteItems?.length > 0 ? (
-            favoriteItems.map((item) => (
-              <FavoritesItem
-                key={item.id}
-                id={item.id}
-                size={item.size}
-                price={item.price}
-                name={item.product.name}
-                slug={item.product.slug}
-                images={item.product.images}
-                quantities={item.quantities}
-                onDelete={handleRemoveFavorite}
-              />
-            ))) : (
-              favoritesLoading ? (
-                <div
-                  style={{ display: 'flex', justifyContent: 'center', padding: '2rem' }}
-                >
+          {favoriteItems?.length > 0
+            ? (
+              favoriteItems.map((item) => (
+                <FavoritesItem
+                  key={item.id}
+                  id={item.id}
+                  size={item.size}
+                  price={item.price}
+                  name={item.product.name}
+                  slug={item.product.slug}
+                  images={item.product.images}
+                  quantities={item.quantities}
+                  onDelete={handleRemoveFavorite}
+                />
+              )))
+            : (
+            favoritesLoading
+              ? (
+                <div className="bouncer-wrapper">
                   <BouncerLoading />
                 </div>
               ) : (
-            <div className="favorites-empty">
-            <p>В избранном пусто :(</p>
-            <p>Добавляйте товары в избранное, чтобы быстрее находить их позже</p>
-          </div>))}
+              <div className="favorites-empty">
+                <p>В избранном пусто :(</p>
+                <p>Добавляйте товары в избранное, чтобы быстрее находить их позже</p>
+              </div>)
+          )}
         </div>
       </section>
     </Layout>

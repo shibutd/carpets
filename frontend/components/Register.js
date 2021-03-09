@@ -25,12 +25,7 @@ function Register() {
   const { user, error, tryToRegisterUser } = useAuth()
   const [processing, setProcessing] = useState(false)
   const { register, handleSubmit, errors } = useForm({
-    resolver: yupResolver(schema),
-    defaultValues: {
-      email: "admin@admin.com",
-      password: "54321qwe",
-      confirmPassword: "54321qwe",
-    },
+    resolver: yupResolver(schema)
   })
   const redirect = router.query.redirect
 

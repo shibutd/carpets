@@ -45,7 +45,7 @@ export default function VerticalProductCard(props) {
 VerticalProductCard.propTypes = {
   title: PropTypes.string,
   slug: PropTypes.string,
-  price: PropTypes.string,
+  price: PropTypes.number,
   images: PropTypes.arrayOf(PropTypes.object),
   className: PropTypes.string,
 }

@@ -45,6 +45,8 @@ function Header({ title, auth, cart }) {
     const topNav = document.querySelector('.top-nav')
     const searchNav = document.querySelector('.search-nav')
 
+    if (!topNav || !searchNav) return
+
     const scrolled = document.scrollingElement.scrollTop
 
     if (scrolled >= topNav.clientHeight + searchNav.clientHeight) {
@@ -92,9 +94,10 @@ function Header({ title, auth, cart }) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="description" content="Алладин96 - магазин ковров в Екатеринбурге"/ >
         <meta name="robots" content="index,follow" />
-        <style type="text/css">
-          @import url('https://unpkg.com/tippy.js/dist/tippy.css');
-        </style>
+        <link
+          rel="stylesheet"
+          href="https://unpkg.com/tippy.js/dist/tippy.css"
+        />
         <title>{title}</title>
       </Head>
 

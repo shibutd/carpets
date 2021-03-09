@@ -5,13 +5,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework_simplejwt.serializers import (
-    TokenObtainPairSerializer,
-    TokenRefreshSerializer
-)
+from rest_framework_simplejwt.serializers import TokenRefreshSerializer
 
 from authentication.serializers import (
     CustomUserSerializer,
+    CustomTokenObtainPairSerializer,
     UserAddressSerializer,
 )
 from authentication.models import UserAddress
@@ -39,7 +37,7 @@ class CustomUserViewSet(viewsets.ViewSet):
 
     @action(detail=False, methods=['post'])
     def token_obtain_pair(self, request, *args, **kwargs):
-        serializer = TokenObtainPairSerializer(data=request.data)
+        serializer = CustomTokenObtainPairSerializer(data=request.data)
 
         serializer.is_valid(raise_exception=True)
 

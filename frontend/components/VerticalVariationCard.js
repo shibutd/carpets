@@ -1,4 +1,4 @@
-import { useRef, memo } from 'react'
+import { useState, useRef, memo } from 'react'
 import PropTypes from 'prop-types'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -13,6 +13,7 @@ import { convertPrice } from '../lib/utils/converters'
  function VerticalVariationCard(props) {
   const { id, name, slug, size, price, images, ...rest } = props
   const { user, addToFavorites, handleAddToCart } = rest
+  const [tipContent, setTipContent] = useState("Добавить в избранное")
   const cardRef = useRef(null)
   const timerRef = useRef(null)
 
@@ -23,26 +24,33 @@ import { convertPrice } from '../lib/utils/converters'
     ? `/media/product-images/${imageName}.jpg`
     : `/media/product-images/No_Image.jpg`
 
+  const displayedSize = (size) => {
+    if (size.includes('*')) {
+      return size.replace(/\*/g, ' x ')
+    }
+    return size
+  }
+
   const handleClickFavorite = () => {
     const favoriteIcon = cardRef.current.querySelector('.vertical-cart-icon')
 
     if (!user) {
-      favoriteIcon.value = "Войдите в аккаунт"
+      setTipContent("Войдите в аккаунт")
       setTimeout(() => {
-        favoriteIcon.value = "Добавить в избранное"
+        setTipContent("Добавить в избранное")
       }, 2000)
       return
     }
 
+    addToFavorites(id)
+
     favoriteIcon.classList.add('vertical-cart-icon-pushed')
-    favoriteIcon.value = "Добавлено!"
+    setTipContent("Добавлено!")
 
     setTimeout(() => {
       favoriteIcon.classList.remove('vertical-cart-icon-pushed')
-      favoriteIcon.value = "Добавить в избранное"
+      setTipContent("Добавить в избранное")
     }, 2000)
-
-    addToFavorites(id)
   }
 
   const handleClickAddToCart = () => {
@@ -82,6 +90,9 @@ import { convertPrice } from '../lib/utils/converters'
         <div className="vertical-card-title">
           <Link href={`/products/${slug}`}><a>{name}</a></Link>
         </div>
+        <div className="vertical-card-size">
+          {displayedSize(size)}
+        </div>
         <div className="vertical-card-cost">
           {`${convertPrice(price)} ₽`}
         </div>
@@ -89,9 +100,10 @@ import { convertPrice } from '../lib/utils/converters'
       <div className="vertical-card-right">
         <Tippy
           theme='blue'
-          interactive={true}
+          offset={[0,-5]}
           delay={[100, null]}
-          content="Добавить в избранное"
+          content={tipContent}
+          hideOnClick={false}
         >
           <button
             className="vertical-cart-icon"

@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from "yup"
 
-
 import BouncerLoading from './BouncerLoading'
 import PickupAddressForm from './PickupAddressForm'
 import DeliveryAddressForm from './DeliveryAddressForm'
@@ -48,13 +47,7 @@ export default function AddressForm({ changeTab }) {
 
   const { register, errors: formErrors, formState, getValues } = useForm({
     mode: 'onChange',
-    resolver: yupResolver(schema),
-    defaultValues: {
-      city: 'Екатеринбург',
-      street: 'Фролова',
-      houseNumber: 27,
-      appartmentNumber: 100,
-    },
+    resolver: yupResolver(schema)
   })
 
   const {
@@ -103,7 +96,6 @@ export default function AddressForm({ changeTab }) {
   }, [deliveryType, selected, formState])
 
   const handleChangeSelected = useCallback((args) => {
-    // console.log(args)
     setSelected({ ...selected, ...args })
   }, [])
 
@@ -112,38 +104,23 @@ export default function AddressForm({ changeTab }) {
     setDeliveryAddressCreate(value === 'true' ? true : false)
   }, [])
 
-  // useEffect(() => {
-  //   console.log(selected)
-  // }, [selected])
-
-  // const timeout = (ms) => {
-  //   return new Promise(resolve => {
-  //     setTimeout(resolve, ms)
-  //   })
-  // }
-
   const handleChangeTab = async () => {
     if (isDisabled) return
 
-    // setLoading(true)
     if (deliveryType === 'pickup') {
       dispatch(changeAddress({
         type: 'pickup',
         ...selected.pickupAddress
       }))
     } else if (deliveryType === 'delivery' && deliveryAddressCreate) {
-      // await timeout(5000)
       const disp = await dispatch(createAddress(getValues()))
-      if (disp.meta.requestStatus === 'rejected') {
-        return
-      }
+      if (disp.meta.requestStatus === 'rejected') return
     } else if (deliveryType === 'delivery' && !deliveryAddressCreate) {
       dispatch(changeAddress({
         type: 'delivery',
         ...selected.deliveryAddress
       }))
     }
-    // setLoading(false)
     changeTab(1)
   }
 

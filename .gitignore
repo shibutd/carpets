@@ -122,6 +122,5 @@ media/*
 
 # MY RULES
 work-dir/
-# backend/media/
 frontend/public/images/
 backend/carpets/media/

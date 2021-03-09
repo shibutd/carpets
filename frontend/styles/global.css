@@ -309,6 +309,13 @@ textarea {
 
 /* BOUNCING BALLS LOADING */
 
+.bouncer-wrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 4rem 0;
+}
+
 .bouncer-loading {
   display: flex;
   justify-content: space-around;
@@ -765,9 +772,17 @@ textarea {
 }
 
 .vertical-card-image,
-.vertical-card-title,
 .vertical-card-cost {
   padding: 1.2rem;
+}
+
+.vertical-card-title {
+  padding: 1.2rem 1.2rem 0;
+}
+
+
+.vertical-card-size {
+  padding: 0 1.2rem;
 }
 
 .vertical-card-image img {

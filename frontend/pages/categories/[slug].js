@@ -26,10 +26,50 @@ export async function getServerSideProps({ query }) {
   }
 }
 
+function Pagination({
+  page,
+  changeToPrevPage,
+  changeToNextPage,
+  prevPageButtonDisabled,
+  nextPageButtonDisabled
+}) {
+  return (
+    <div className="page-section">
+      <button
+        onClick={changeToPrevPage}
+        disabled={prevPageButtonDisabled}
+      >
+        &#x276E;
+      </button>
+        <div className="page-section-number">{page}</div>
+      <button
+        onClick={changeToNextPage}
+        disabled={nextPageButtonDisabled}
+      >
+       &#x276F;
+      </button>
+    </div>
+  )
+}
+
+function ProductGrid({ products }) {
+  return (
+    <div className="category-products-grid">
+      {(products.map((product) => (
+        <VerticalProductCard
+          key={product.slug}
+          title={product.name}
+          slug={product.slug}
+          price={product.minimumPrice}
+          images={product.images}
+        />)))}
+    </div>
+  )
+}
+
 export default function Category({ category }) {
   const { name, slug, properties } = category
   const [filterConditions, setFilterConditions] = useState([])
-
   const [page, setPage] = useState(1)
   const {
     isLoading,
@@ -48,21 +88,20 @@ export default function Category({ category }) {
     }
   )
 
-  const handleChangeFilterConditions = useCallback(
-    (checkboxes, ranges) => {
-      let conditions = checkboxes.filter(item => item.value)
-      setFilterConditions([ ...conditions, ...ranges])
-    }, [])
+  const handleChangeFilterConditions = useCallback((checkboxes, ranges) => {
+    let conditions = checkboxes.filter(item => item.value)
+    setFilterConditions([ ...conditions, ...ranges])
+  }, [])
 
-  const handlePrevPage = () => {
+  const handlePrevPage = useCallback(() => {
     setPage(old => Math.max(old - 1, 0))
-  }
+  }, [])
 
-  const handleNextPage = () => {
+  const handleNextPage = useCallback(() => {
     if (!isPreviousData && data.next) {
       setPage(old => old + 1)
     }
-  }
+  }, [isPreviousData, data])
 
   const handleClickShowFilters = useCallback(() => {
     const categorySidebar = document.querySelector('.category-sidebar')
@@ -86,12 +125,7 @@ export default function Category({ category }) {
           </span>
           <div className="category-product-list">
             {isLoading ? (
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  padding: '2rem'
-                }}
+              <div className="bouncer-wrapper"
               >
                 <BouncerLoading />
               </div>
@@ -103,31 +137,16 @@ export default function Category({ category }) {
               </div>
             ) : (
               <>
-                <div className="category-products-grid">
-                  {(data.results.map((product) => (
-                    <VerticalProductCard
-                      key={product.slug}
-                      title={product.name}
-                      slug={product.slug}
-                      price={product.minimumPrice}
-                      images={product.images}
-                    />)))}
-                </div>
-                <div className="page-section">
-                  <button
-                    onClick={handlePrevPage}
-                    disabled={page === 1}
-                  >
-                    &#x276E;
-                  </button>
-                    <div className="page-section-number">{page}</div>
-                  <button
-                    onClick={handleNextPage}
-                   disabled={isPreviousData || !data.next}
-                  >
-                   &#x276F;
-                  </button>
-                </div>
+                <ProductGrid
+                  products={data?.results || []}
+                />
+                <Pagination
+                  page={page}
+                  changeToPrevPage={handlePrevPage}
+                  changeToNextPage={handleNextPage}
+                  prevPageButtonDisabled={page === 1}
+                  nextPageButtonDisabled={isPreviousData || !data.next}
+                />
               </>
             )}
           </div>
@@ -142,6 +161,18 @@ export default function Category({ category }) {
       </section>
     </Layout>
   )
+}
+
+Pagination.propTypes = {
+  page: PropTypes.number,
+  changeToPrevPage: PropTypes.func,
+  changeToNextPage: PropTypes.func,
+  prevPageButtonDisabled: PropTypes.bool,
+  nextPageButtonDisabled: PropTypes.bool,
+}
+
+ProductGrid.propTypes = {
+  products: PropTypes.arrayOf(PropTypes.object),
 }
 
 Category.propTypes = {

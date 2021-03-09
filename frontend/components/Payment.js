@@ -60,10 +60,10 @@ export default function Payment({ cart, changeTab }) {
     addressType,
     addressId,
     address,
-    loading,
     error,
   } = useSelector(selectAddress)
   const [showModal, setShowModal] = useState(false)
+  const [loading, setLoading] = useState(false)
   const { createPickupOrder, createDeliveryOrder } = useOrders()
 
   const total = cart.reduce((sum, item) => {
@@ -103,12 +103,14 @@ export default function Payment({ cart, changeTab }) {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setShowModal(true)
+    setLoading(true)
 
     if (addressType === 'pickup') {
       await createPickupOrder(addressId)
     } else {
       await createDeliveryOrder(addressId)
     }
+    setLoading(false)
   }
 
   return (

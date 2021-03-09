@@ -52,8 +52,6 @@ const ShopsTable = ({ shops, selectShop, openMap }) => {
           <td width="1%">
             <Tippy
               theme='blue'
-              interactive={true}
-              interactiveBorder={20}
               delay={[100, null]}
               content="Показать на карте"
             >

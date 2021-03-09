@@ -21,6 +21,7 @@ function ProductMain({
   const [option, setOption] = useState(() =>
     variations.length > index ? variations[index] : {})
   const [isInCart, setIsInCart] = useState(false)
+  const [tipContent, setTipContent] = useState("Добавить в избранное")
   const { addToFavorites } = useFavorites()
   const {
     cart,
@@ -30,6 +31,23 @@ function ProductMain({
 
   const checkIsInCart = () =>
     cart.find(x => x.variation.id === option.id) !== undefined
+
+  const handleClickFavorite = () => {
+    if (!user) {
+      setTipContent("Войдите в аккаунт")
+      setTimeout(() => {
+        setTipContent("Добавить в избранное")
+      }, 2000)
+      return
+    }
+
+    addToFavorites(option.id)
+
+    setTipContent("Добавлено!")
+    setTimeout(() => {
+      setTipContent("Добавить в избранное")
+    }, 2000)
+  }
 
   useEffect(() => {
     setOption(variations[index])
@@ -95,11 +113,11 @@ function ProductMain({
             theme='blue'
             interactive={true}
             delay={[100, null]}
-            content="Добавить в избранное"
+            content={tipContent}
           >
             <button
               className="product-favorite"
-              onClick={() => addToFavorites(option.id)}
+              onClick={handleClickFavorite}
             >
               <HearthRegular height={17} width={17} color={"white"} />
             </button>
