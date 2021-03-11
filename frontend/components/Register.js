@@ -1,4 +1,4 @@
-import { useState, memo } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { useForm } from 'react-hook-form'
@@ -20,7 +20,7 @@ const schema = yup.object().shape({
     .required('Введите пароль повторно'),
 })
 
-function Register() {
+export default function Register() {
   const router = useRouter()
   const { user, error, tryToRegisterUser } = useAuth()
   const [processing, setProcessing] = useState(false)
@@ -40,65 +40,71 @@ function Register() {
     return <div></div>
   }
 
+  console.log(error)
+
   return (
     <section className="register">
       <h1>Регистрация</h1>
-      <p>Я уже зарегистрировался. </p>
+      <span>Я уже зарегистрировался. </span>
       <Link href={`/login${redirect ? `?redirect=${redirect}` : ''}`}>
         <a>Войти в аккаунт</a>
       </Link>
-      <form
-        className="register-form"
-        onSubmit={handleSubmit(handleLoginFormSubmit)}
-      >
-        {error && <p>&#9888; {error}</p>}
 
-        <div className="register-form-input">
-          <label htmlFor="email">
-            Электронная почта
-          </label>
-          <input
-            name="email"
-            id="email"
-            ref={register}
-          />
-          {errors.email && <p>&#9888; {errors.email.message}</p>}
-        </div>
+      <div className="wrapper">
+        <form
+          className="form form--register"
+          onSubmit={handleSubmit(handleLoginFormSubmit)}
+        >
+          {error && <p className="form-error form-error--center">&#9888; {error}</p>}
 
-        <div className="register-form-input">
-          <label htmlFor="password">
-            Пароль
-          </label>
-          <input
-            type="password"
-            name="password"
-            id="password"
-            ref={register}
-          />
-          {errors.password && <p>&#9888; {errors.password.message}</p>}
-        </div>
+          <div className="form-vertical">
+            <label className="form-label" htmlFor="email">
+              Электронная почта
+            </label>
+            <input
+              className="form-input"
+              name="email"
+              id="email"
+              ref={register}
+            />
+            {errors.email
+              && <p className="form-error">&#9888; {errors.email.message}</p>}
+          </div>
 
-        <div className="register-form-input">
-          <label htmlFor="confirmPassword">
-            Подтвердите пароль
-          </label>
-          <input
-            type="password"
-            name="confirmPassword"
-            id="confirmPassword"
-            ref={register}
-          />
-          {errors.confirmPassword && (
-            <p>&#9888; {errors.confirmPassword.message}</p>
-          )}
-        </div>
+          <div className="form-vertical">
+            <label className="form-label" htmlFor="password">
+              Пароль
+            </label>
+            <input
+              className="form-input"
+              type="password"
+              name="password"
+              id="password"
+              ref={register}
+            />
+            {errors.password && <p>&#9888; {errors.password.message}</p>}
+          </div>
 
-        <button disabled={processing} type="submit">
-          Зарегистрироваться
-        </button>
-      </form>
+          <div className="form-vertical">
+            <label className="form-label" htmlFor="confirmPassword">
+              Подтвердите пароль
+            </label>
+            <input
+              className="form-input"
+              type="password"
+              name="confirmPassword"
+              id="confirmPassword"
+              ref={register}
+            />
+            {errors.confirmPassword &&
+              <p className="form-error">&#9888; {errors.confirmPassword.message}</p>}
+          </div>
+
+          <button disabled={processing} type="submit">
+            Зарегистрироваться
+          </button>
+        </form>
+      </div>
     </section>
   )
 }
-
-export default memo(Register)

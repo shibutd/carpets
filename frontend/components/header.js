@@ -10,7 +10,7 @@ import HearthRegular from './icons/HearthRegular'
 import Search from './Search'
 import ShopAddresses from './ShopAddresses'
 import Catalog from './Catalog'
-import useOnClickOutSide from '../lib/hooks/useOnClickOutSide'
+import useOnClickOutSide from '../lib/hooks/useOnClickOutside'
 
 
 function Header({ title, auth, cart }) {

@@ -15,7 +15,7 @@ class RestrictAddChangeDeleteMixin:
         return False
 
 
-class CustomUserAdmin(admin.ModelAdmin):
+class CustomUserAdmin(RestrictAddChangeDeleteMixin, admin.ModelAdmin):
     list_display = ('email', 'is_staff', 'is_superuser')
     search_fields = ('email',)
     ordering = ('email',)

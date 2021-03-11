@@ -1,4 +1,4 @@
-import { useState, memo } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { useForm } from 'react-hook-form'
@@ -17,14 +17,14 @@ const schema = yup.object().shape({
     .required('Введите пароль'),
 })
 
-function Login() {
+export default function Login() {
   const router = useRouter()
+  const redirect = router.query.redirect
   const { user, error, tryToLoginUser } = useAuth()
   const [processing, setProcessing] = useState(false)
   const { register, handleSubmit, errors } = useForm({
     resolver: yupResolver(schema)
   })
-  const redirect = router.query.redirect
 
   const handleLoginFormSubmit = async (data) => {
     setProcessing(true)
@@ -40,48 +40,53 @@ function Login() {
   return (
     <section className="register">
       <h1>Войти в аккаунт</h1>
-      <p>У меня нет аккаунта. </p>
+      <span>У меня нет аккаунта. </span>
       <Link href={`/register${redirect ? `?redirect=${redirect}` : ''}`}>
         <a>Зарегистрироваться</a>
       </Link>
 
-      <form
-        className="register-form"
-        onSubmit={handleSubmit(handleLoginFormSubmit)}
-      >
-        {error && <p>&#9888; {error}</p>}
+      <div className="wrapper">
+        <form
+          className="form form--register"
+          onSubmit={handleSubmit(handleLoginFormSubmit)}
+        >
+          {error &&
+            <p className="form-error form-error--center">&#9888; {error}</p>}
 
-        <div className="register-form-input">
-          <label htmlFor="email">
-            Электронная почта
-          </label>
-          <input
-            name="email"
-            id="email"
-            ref={register}
-          />
-          {errors.email && <p>&#9888; {errors.email.message}</p>}
-        </div>
+          <div className="form-vertical">
+            <label className="form-label" htmlFor="email">
+              Электронная почта
+            </label>
+            <input
+              className="form-input"
+              name="email"
+              id="email"
+              ref={register}
+            />
+            {errors.email
+              && <p className="form-error">&#9888; {errors.email.message}</p>}
+          </div>
 
-        <div className="register-form-input">
-          <label htmlFor="password">
-            Пароль
-          </label>
-          <input
-            type="password"
-            name="password"
-            id="password"
-            ref={register}
-          />
-          {errors.password && <p>&#9888; {errors.password.message}</p>}
-        </div>
+          <div className="form-vertical">
+            <label className="form-label" htmlFor="password">
+              Пароль
+            </label>
+            <input
+              className="form-input"
+              type="password"
+              name="password"
+              id="password"
+              ref={register}
+            />
+            {errors.password &&
+              <p className="form-error">&#9888; {errors.password.message}</p>}
+          </div>
 
-        <button disabled={processing} type="submit">
-          Войти
-        </button>
-      </form>
+          <button disabled={processing} type="submit">
+            Войти
+          </button>
+        </form>
+      </div>
     </section>
   )
 }
-
-export default memo(Login)

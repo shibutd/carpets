@@ -7,7 +7,7 @@ import Tippy from '@tippyjs/react'
 import BubblyButton from './BubblyButton'
 import HearthRegular from './icons/HearthRegular'
 import ShoppingCartSolid from './icons/ShoppingCartSolid'
-import { convertPrice } from '../lib/utils/converters'
+import { convertPrice, convertSize } from '../lib/utils/converters'
 
 
  function VerticalVariationCard(props) {
@@ -23,13 +23,6 @@ import { convertPrice } from '../lib/utils/converters'
   const imageSrc = mainImage
     ? `/media/product-images/${imageName}.jpg`
     : `/media/product-images/No_Image.jpg`
-
-  const displayedSize = (size) => {
-    if (size.includes('*')) {
-      return size.replace(/\*/g, ' x ')
-    }
-    return size
-  }
 
   const handleClickFavorite = () => {
     const favoriteIcon = cardRef.current.querySelector('.vertical-cart-icon')
@@ -91,7 +84,7 @@ import { convertPrice } from '../lib/utils/converters'
           <Link href={`/products/${slug}`}><a>{name}</a></Link>
         </div>
         <div className="vertical-card-size">
-          {displayedSize(size)}
+          {convertSize(size)}
         </div>
         <div className="vertical-card-cost">
           {`${convertPrice(price)} ₽`}

@@ -6,7 +6,7 @@ import Carousel from '../components/Carousel'
 import CategoryCard from '../components/CategoryCard'
 import VerticalCards from '../components/VerticalCards'
 import VerticalVariationCard from '../components/VerticalVariationCard'
-import { categoryUrl, hitsUrl, noveltiesUrl } from '../constants'
+import { nodeCategoryUrl, hitsUrl, noveltiesUrl } from '../constants'
 
 const carouselImages = [
   { id: 1, src: "carousel-img1.jpg" },
@@ -15,7 +15,7 @@ const carouselImages = [
 ]
 
 export async function getStaticProps() {
-  const res = await fetch(categoryUrl)
+  const res = await fetch(nodeCategoryUrl)
   let categories = await res.json()
 
   if (!categories) {

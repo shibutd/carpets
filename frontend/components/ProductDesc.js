@@ -146,9 +146,9 @@ export default function ProductDesc({
         <p>Для этого товара пока нет вопросов</p>
         <p>Задавайте вопросы и наши эксперты помогут вам найти ответ:</p>
 
-        <form onSubmit={handleAskQuestion}>
+        <form className="form form--product-ask" onSubmit={handleAskQuestion}>
           <textarea
-            className="question-textarea"
+            className="form-textarea"
             rows="4"
             cols="30"
             value={askQuestionTextareaValue}

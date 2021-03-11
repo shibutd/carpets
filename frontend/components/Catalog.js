@@ -8,7 +8,7 @@ import PalasyIcon from './icons/PalasyIcon'
 import BlanketIcon from './icons/BlanketIcon'
 import PillowIcon from './icons/PillowIcon'
 
-import { categoryUrl } from '../constants'
+import { clientCategoryUrl } from '../constants'
 
 
 const Catalog = forwardRef(({ label, opened, handleClick }, ref) => {
@@ -33,7 +33,7 @@ const Catalog = forwardRef(({ label, opened, handleClick }, ref) => {
       return await res.json()
     }
 
-    fetchCategories(categoryUrl).then((data) => {
+    fetchCategories(clientCategoryUrl).then((data) => {
 
       const categoriesWithIcons = data.map((category) => {
         const categoryIcon = icons.find(
@@ -51,7 +51,6 @@ const Catalog = forwardRef(({ label, opened, handleClick }, ref) => {
 
     <div>
       <button ref={ref} className="catalog" onClick={handleClick}>
-        {/*Каталог товаров*/}
         {label}
         <GridLinesSolid
           width={10}

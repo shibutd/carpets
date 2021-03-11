@@ -25,10 +25,11 @@ export default function Contact() {
       <section className="contact">
         <h1>Обратная связь</h1>
         <h5>Здесь Вы можете задать вопрос, оставить жалобу или внести предложение:</h5>
-        <div className="contact-wrapper">
-          <form className="contact-form" onSubmit={handleSubmit}>
+        <div className="wrapper">
+          <form className="form form--contact" onSubmit={handleSubmit}>
             <textarea
-              rows="10"
+              className="form-textarea"
+              rows="15"
               cols="30"
               value={textAreaValue}
               onChange={(e) => setTextAreaValue(e.target.value)}
@@ -37,6 +38,7 @@ export default function Contact() {
               Телефон или Email для связи:
             </label>
             <input
+              className="form-input"
               name="text"
               type="text"
               value={contactValue}

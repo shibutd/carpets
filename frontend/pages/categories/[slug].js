@@ -7,12 +7,12 @@ import VerticalProductCard from '../../components/VerticalProductCard'
 import CategorySidebar from '../../components/CategorySidebar'
 import BouncerLoading from '../../components/BouncerLoading'
 import { fetchProducts } from '../../lib/utils/fetchProducts'
-import { categoryUrl } from '../../constants'
+import { nodeCategoryUrl } from '../../constants'
 
 
 export async function getServerSideProps({ query }) {
   const { slug } = query
-  const res = await fetch(`${categoryUrl}/${slug}`)
+  const res = await fetch(`${nodeCategoryUrl}/${slug}`)
   const category = await res.json()
 
   if (!category) {
@@ -125,8 +125,7 @@ export default function Category({ category }) {
           </span>
           <div className="category-product-list">
             {isLoading ? (
-              <div className="bouncer-wrapper"
-              >
+              <div className="bouncer-wrapper">
                 <BouncerLoading />
               </div>
             ) : isError ? (

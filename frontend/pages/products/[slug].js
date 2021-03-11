@@ -6,14 +6,13 @@ import ProductMain from '../../components/ProductMain'
 import ProductDesc from '../../components/ProductDesc'
 import VerticalCards from '../../components/VerticalCards'
 import VerticalVariationCard from '../../components/VerticalVariationCard'
-import useFavorites from '../../lib/hooks/useFavorites'
-import { productUrl } from '../../constants'
+import { nodeProductUrl } from '../../constants'
 
 const similarProducts = []
 
 export async function getServerSideProps({ query }) {
   const { slug } = query
-  const res = await fetch(`${productUrl}/${slug}/`)
+  const res = await fetch(`${nodeProductUrl}/${slug}/`)
   const data = await res.json()
 
   if (!data) {

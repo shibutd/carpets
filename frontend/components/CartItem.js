@@ -20,7 +20,7 @@ function CartItem({
   const itemRef = useRef(null)
   const { variation, quantity } = item
 
-  let image = `/media/product-images/${name.replace(' ', '_')}.jpg`
+  let imageUrl = `/media/product-images/${name.replace(/ /g, '_')}.jpg`
 
   const getArgsFromVariation = (variation) => {
     const { id, product, price, size } = variation
@@ -30,7 +30,6 @@ function CartItem({
 
   const handleAddToFavorites = (id) => {
     if (!user) return
-
     addToFavories(id)
 
     const heartIcon = itemRef.current.querySelector('#hearth-solid')
@@ -44,7 +43,7 @@ function CartItem({
     <div ref={itemRef} className="cart-products-item">
       <div className="cart-products-item-img">
         <Image
-          src={image}
+          src={imageUrl}
           alt=""
           height={120}
           width={120}
@@ -52,9 +51,7 @@ function CartItem({
       </div>
       <div className="cart-products-item-name">
         <Link href={`/products/${variation.product.slug}`}>
-          <a>
-            {variation.product.name}
-          </a>
+          <a>{variation.product.name}</a>
         </Link>
         <p>Размер: {convertSize(variation.size)}</p>
       </div>

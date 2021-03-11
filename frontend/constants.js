@@ -1,8 +1,10 @@
-const targetUrl = 'http://127.0.0.1:8000'
+const nodeUrl = process.env.NODE_BASE_URL
+
+const clientUrl = process.env.NEXT_PUBLIC_CLIENT_BASE_URL
 
 // Authentication urls
 
-const authenticationUrl = `${targetUrl}/auth`
+const authenticationUrl = `${clientUrl}/auth`
 
 // User url
 
@@ -20,19 +22,25 @@ export const userAddressUrl = `${authenticationUrl}/user-addresses/`
 
 
 // Interaction with store
-export const storeUrl = `${targetUrl}/store`
+export const nodeStoreUrl = `${nodeUrl}/store`
+
+export const clientStoreUrl = `${clientUrl}/store`
 
 // Products urls
-export const productUrl = `${storeUrl}/products`
+export const nodeProductUrl = `${nodeStoreUrl}/products`
+
+export const clientProductUrl = `${clientStoreUrl}/products`
 
 // Categories url
-export const categoryUrl = `${storeUrl}/categories`
+export const nodeCategoryUrl = `${nodeStoreUrl}/categories`
+
+export const clientCategoryUrl = `${clientStoreUrl}/categories`
 
 // Promotions url
-export const promotionUrl = `${storeUrl}/promotions`
+export const promotionUrl = `${clientStoreUrl}/promotions`
 
 // Products variations url
-export const productVariationUrl = `${storeUrl}/product-variations`
+export const productVariationUrl = `${clientStoreUrl}/product-variations`
 
 // Specific tag urls
 
@@ -68,7 +76,7 @@ export const removeFromFavoritesUrl = (variationId) => {
 }
 
 // Orderlines url
-export const getOrderLineUrl = `${storeUrl}/orderlines`
+export const getOrderLineUrl = `${clientStoreUrl}/orderlines`
 
 // Update orderlines
 export const updateOrderLineUrl = `${getOrderLineUrl}/update_orderlines/`
@@ -76,8 +84,8 @@ export const updateOrderLineUrl = `${getOrderLineUrl}/update_orderlines/`
 
 // Pickup addresses
 
-export const pickupAddressUrl = `${storeUrl}/pickup-addresses/`
+export const pickupAddressUrl = `${clientStoreUrl}/pickup-addresses/`
 
 // Orders
 
-export const createOrderUrl = `${storeUrl}/orders/`
+export const createOrderUrl = `${clientStoreUrl}/orders/`

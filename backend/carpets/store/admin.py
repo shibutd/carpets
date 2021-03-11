@@ -1,11 +1,7 @@
-import locale
-
 from django.contrib import admin
-from django.utils.html import format_html
 from polymorphic.admin import (
     PolymorphicParentModelAdmin,
     PolymorphicChildModelAdmin,
-    PolymorphicChildModelFilter,
 )
 
 from store.models import (
@@ -16,7 +12,6 @@ from store.models import (
     VariationQuantity,
     VariationTag,
     PickupAddress,
-    OrderStatus,
     Order,
     PickupOrder,
     DeliveryOrder,
@@ -26,8 +21,6 @@ from store.models import (
 from store.filters import PolymorphicModelFilter, StatusFilter
 from authentication.admin import RestrictAddChangeDeleteMixin
 
-
-locale.setlocale(locale.LC_ALL, 'ru_RU')
 
 admin.site.site_header = 'Aladdin carpets administration'
 

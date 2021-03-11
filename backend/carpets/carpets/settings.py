@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
-import sys
 from datetime import timedelta
 from dotenv import load_dotenv
 
@@ -33,7 +32,8 @@ SECRET_KEY = os.environ.get(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 0)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = (os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ") if
+                 os.environ.get("DJANGO_ALLOWED_HOSTS") else ['127.0.0.1'])
 
 
 # Application definition
@@ -106,7 +106,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.environ.get('POSTGRES_DB', 'aladdin_db'),
         'USER': os.environ.get('POSTGRES_USER', 'postgres'),
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', ''),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'postgres'),
         'HOST': os.environ.get('POSTGRES_HOST', '127.0.0.1'),
         'PORT': 5432
     },
@@ -193,8 +193,9 @@ SIMPLE_JWT = {
 CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     "http://localhost:3000",
+    'http://frontend:3000',
 ]
-
+# CORS_ALLOW_ALL_ORIGINS = True
 
 # PHONENUMBER FIELD
 

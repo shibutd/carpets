@@ -5,6 +5,7 @@ import Tippy from '@tippyjs/react'
 
 import BubblyButton from './BubblyButton'
 import HearthRegular from './icons/HearthRegular'
+import useAuth from '../lib/hooks/useAuth'
 import useCart from '../lib/hooks/useCart'
 import useFavorites from '../lib/hooks/useFavorites'
 import { convertPrice, convertSize } from '../lib/utils/converters'
@@ -22,6 +23,7 @@ function ProductMain({
     variations.length > index ? variations[index] : {})
   const [isInCart, setIsInCart] = useState(false)
   const [tipContent, setTipContent] = useState("Добавить в избранное")
+  const { user } = useAuth()
   const { addToFavorites } = useFavorites()
   const {
     cart,
@@ -111,9 +113,9 @@ function ProductMain({
           )}
           <Tippy
             theme='blue'
-            interactive={true}
             delay={[100, null]}
             content={tipContent}
+            hideOnClick={false}
           >
             <button
               className="product-favorite"

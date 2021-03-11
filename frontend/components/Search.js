@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 import SearchSolid from './icons/SearchSolid'
 import CloseSignSolid from './icons/CloseSignSolid'
-import { productUrl } from '../constants'
+import { clientProductUrl } from '../constants'
 
 export default function Search() {
   const [value, setValue] = useState('')
@@ -31,7 +31,7 @@ export default function Search() {
 
   useEffect(() => {
     async function fetchData(query) {
-      const url = `${productUrl}?search=${query.replace(/ /g, '+')}`
+      const url = `${clientProductUrl}?search=${query.replace(/ /g, '+')}`
       const res = await fetch(url, {
         method: "get",
         signal,
@@ -52,7 +52,6 @@ export default function Search() {
         setLoading(false)
       }).catch(e => {
         e.name === 'AbortError'
-          // ? console.log('This is ok, request cacelled')
           ? null
           : console.log(e.message)
       })

@@ -118,13 +118,7 @@ export default function Shops() {
             <ModalContainer selectedShop={selectedShop} />
           </Modal>
           {shopsLoading ? (
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'center',
-                padding: '2rem'
-              }}
-            >
+            <div className="bouncer-loading">
               <BouncerLoading />
             </div>
           ) : shops.length > 0 ? (
