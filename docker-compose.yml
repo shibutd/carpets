@@ -2,16 +2,14 @@ version: '3'
 
 services:
   backend:
-    build:
-      context: ./backend/
-      dockerfile: Dockerfile
+    build: ./backend
     restart: always
     volumes:
-      - ./backend:/backend
+      - static_volume:/backend/staticfiles
     ports:
       - 8000:8000
     env_file:
-      - ./backend/.env.dev
+      - ./backend/.env.prod
     depends_on:
       - db
     entrypoint: ./scripts/backend-entrypoint.sh
@@ -21,27 +19,28 @@ services:
     restart: always
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    ports:
-      - 5432:5432
     env_file:
-      - ./backend/.env.dev
+      - ./backend/.env.prod
 
   frontend:
-    build:
-      context: ./frontend/
-      dockerfile: Dockerfile
+    build: ./frontend
     restart: always
-    volumes:
-      - ./frontend/components:/frontend/components
-      - ./frontend/lib:/frontend/lib
-      - ./frontend/pages:/frontend/pages
-      - ./frontend/styles:/frontend/styles
     ports:
       - 3000:3000
-    env_file:
-      - ./frontend/.env.local
+    depends_on:
+      - backend
+      - nginx
+    entrypoint: ./scripts/frontend-entrypoint.sh
+
+  nginx:
+    build: ./nginx
+    volumes:
+      - static_volume:/backend/staticfiles
+    ports:
+      - 80:80
     depends_on:
       - backend
 
 volumes:
   postgres_data:
+  static_volume:

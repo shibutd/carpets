@@ -3,8 +3,7 @@ FROM node:12-alpine
 WORKDIR /frontend
 
 COPY ./package*.json /frontend/
-RUN npm install
+
+RUN npm install --production
 
 COPY . /frontend/
-
-CMD ["npm", "run", "dev"]

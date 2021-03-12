@@ -118,7 +118,7 @@ export default function Shops() {
             <ModalContainer selectedShop={selectedShop} />
           </Modal>
           {shopsLoading ? (
-            <div className="bouncer-loading">
+            <div className="bouncer-wrapper">
               <BouncerLoading />
             </div>
           ) : shops.length > 0 ? (

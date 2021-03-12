@@ -70,7 +70,6 @@ class ProductFilter(filters.FilterSet):
         Allow filter product sizes string with range:
         'width', 'length'.
         """
-        print(value)
         category = self.request.query_params.get('category')
         if category is None:
             return queryset

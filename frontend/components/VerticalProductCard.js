@@ -2,18 +2,11 @@ import PropTypes from 'prop-types'
 import Link from 'next/link'
 import Image from 'next/image'
 
-import { convertPrice } from '../lib/utils/converters'
+import { convertPrice, getValidImageSrc } from '../lib/utils/converters'
 
 
 export default function VerticalProductCard(props) {
-  const { title, slug, price, images } = props
-
-  const mainImage = images.length > 0 ? images[0].image : null
-  const imageName = title.replace(/ /g, '_').replace(/\"/g, '')
-
-  const imageSrc = mainImage
-    ? `/media/product-images/${imageName}.jpg`
-    : `/media/product-images/No_Image.jpg`
+  const { name, slug, price, images } = props
 
   return (
     <div className="category-card">
@@ -22,7 +15,7 @@ export default function VerticalProductCard(props) {
           <Link href={`/products/${slug}`}>
             <a>
               <Image
-                src={imageSrc}
+                src={getValidImageSrc(images)}
                 alt={slug}
                 height={170}
                 width={170}
@@ -32,7 +25,7 @@ export default function VerticalProductCard(props) {
           </Link>
         </div>
         <div className="vertical-card-title">
-          <Link href={`/products/${slug}`}><a>{title}</a></Link>
+          <Link href={`/products/${slug}`}><a>{name}</a></Link>
         </div>
         <div className="vertical-card-cost">
           от {`${convertPrice(price)} ₽`}
@@ -43,7 +36,7 @@ export default function VerticalProductCard(props) {
 }
 
 VerticalProductCard.propTypes = {
-  title: PropTypes.string,
+  name: PropTypes.string,
   slug: PropTypes.string,
   price: PropTypes.number,
   images: PropTypes.arrayOf(PropTypes.object),

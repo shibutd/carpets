@@ -17,7 +17,12 @@ from dotenv import load_dotenv
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-dotenv_path = os.path.join(BASE_DIR, '.env.dev')
+ENVIRONMENT = os.environ.get('ENVIRONMENT', 'development')
+
+dotenv_path = os.path.join(
+    os.path.dirname(BASE_DIR),
+    '.env.prod'
+)
 load_dotenv(dotenv_path)
 
 # Quick-start development settings - unsuitable for production
@@ -51,6 +56,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_filters',
     'phonenumber_field',
+    'storages',
 
     'django_extensions',
 
@@ -150,12 +156,39 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
-
+STATIC_ROOT = os.path.join(
+    os.path.dirname(BASE_DIR),
+    'staticfiles/'
+)
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
+# AWS ACCOUNT SETTINGS
+AWS_STORAGE_BUCKET_NAME = os.environ.get(
+    'AWS_STORAGE_BUCKET_NAME',
+    'aladdin-carpets'
+)
+AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+AWS_S3_REGION_NAME = os.environ.get('AWS_S3_REGION_NAME', '')
+AWS_S3_CUSTOM_DOMAIN = '{0}.s3.{1}.amazonaws.com'.format(
+    AWS_STORAGE_BUCKET_NAME,
+    AWS_S3_REGION_NAME
+)
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+
+MEDIA_URL = 'https://%s/' % AWS_S3_CUSTOM_DOMAIN
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+STATICFILES_FINDERS = [
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+]
+
+# USER MODEL
 AUTH_USER_MODEL = 'authentication.CustomUser'
 
 
@@ -190,12 +223,13 @@ SIMPLE_JWT = {
 
 # CORS HEADERS
 
-CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:3000",
-    "http://localhost:3000",
-    'http://frontend:3000',
-]
-# CORS_ALLOW_ALL_ORIGINS = True
+CORS_ORIGINS = os.environ.get("CORS_ALLOWED_ORIGINS")
+
+# if CORS_ORIGINS:
+#     CORS_ALLOWED_ORIGINS = CORS_ORIGINS.split(' ')
+# else:
+CORS_ALLOW_ALL_ORIGINS = True
+
 
 # PHONENUMBER FIELD
 

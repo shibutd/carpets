@@ -7,7 +7,11 @@ import Tippy from '@tippyjs/react'
 import BubblyButton from './BubblyButton'
 import HearthRegular from './icons/HearthRegular'
 import ShoppingCartSolid from './icons/ShoppingCartSolid'
-import { convertPrice, convertSize } from '../lib/utils/converters'
+import {
+  convertPrice,
+  convertSize,
+  getValidImageSrc
+} from '../lib/utils/converters'
 
 
  function VerticalVariationCard(props) {
@@ -16,13 +20,6 @@ import { convertPrice, convertSize } from '../lib/utils/converters'
   const [tipContent, setTipContent] = useState("Добавить в избранное")
   const cardRef = useRef(null)
   const timerRef = useRef(null)
-
-  const mainImage = images.length > 0 ? images[0].image : null
-  const imageName = name.replace(/ /g, '_').replace(/\"/g, '')
-
-  const imageSrc = mainImage
-    ? `/media/product-images/${imageName}.jpg`
-    : `/media/product-images/No_Image.jpg`
 
   const handleClickFavorite = () => {
     const favoriteIcon = cardRef.current.querySelector('.vertical-cart-icon')
@@ -58,7 +55,6 @@ import { convertPrice, convertSize } from '../lib/utils/converters'
     timerRef.current = setTimeout(() => {
       addToCartIcon.classList.remove('vertical-cart-button-pushed')
     }, 2000)
-
   }
 
   return (
@@ -71,7 +67,7 @@ import { convertPrice, convertSize } from '../lib/utils/converters'
           <Link href={`/products/${slug}`}>
             <a>
               <Image
-                src={imageSrc}
+                src={getValidImageSrc(images)}
                 alt={slug}
                 height={150}
                 width={150}

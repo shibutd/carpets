@@ -87,6 +87,7 @@ celerybeat-schedule
 
 # dotenv
 .env.dev
+.env.prod
 
 # virtualenv
 .venv
@@ -122,5 +123,8 @@ media/*
 
 # MY RULES
 work-dir/
-frontend/public/images/
+frontend/public/images/*
+!frontend/public/images/no_image.jpg
+frontend/public/media/
 backend/carpets/media/
+staticfiles
