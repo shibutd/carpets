@@ -122,12 +122,11 @@ media/*
 
 # MY RULES
 work-dir/
-<<<<<<< HEAD
-frontend/public/images/
-=======
 frontend/public/images/*
 !frontend/public/images/no_image.jpg
+!frontend/public/images/carousel-img1.jpg
+!frontend/public/images/carousel-img2.jpg
+!frontend/public/images/carousel-img3.jpg
 frontend/public/media/
->>>>>>> 848a373280b6ad84af734eeed622e1f3f5fa4d3c
 backend/carpets/media/
 staticfiles
