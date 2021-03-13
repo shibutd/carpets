@@ -8,7 +8,11 @@ import HearthRegular from './icons/HearthRegular'
 import useAuth from '../lib/hooks/useAuth'
 import useCart from '../lib/hooks/useCart'
 import useFavorites from '../lib/hooks/useFavorites'
-import { convertPrice, convertSize } from '../lib/utils/converters'
+import {
+  convertPrice,
+  convertSize,
+  getValidImageSrc
+} from '../lib/utils/converters'
 
 
 function ProductMain({
@@ -59,15 +63,11 @@ function ProductMain({
     setIsInCart(checkIsInCart())
   }, [cart, option])
 
-  // if (image !== undefined && image.startsWith('http')) {
-  let image = `/media/product-images/${name.replace(/ /g, '_')}.jpg`
-  // }
-
   return (
     <>
       <div className="product-main-images">
         <Image
-          src={image}
+          src={getValidImageSrc(images)}
           alt={slug}
           height={500}
           width={500}

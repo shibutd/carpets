@@ -16,6 +16,10 @@ psycopg2 = "*"
 djangorestframework-camel-case = "*"
 django-filter = "*"
 django-rest-polymorphic = "*"
+uvicorn = "*"
+gunicorn = "*"
+boto3 = "*"
+django-storages = "*"
 
 [dev-packages]
 django-extensions = "*"
