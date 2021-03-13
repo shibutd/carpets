@@ -20,7 +20,8 @@ function CartItem({
   const itemRef = useRef(null)
   const { variation, quantity } = item
 
-  let imageUrl = `/media/product-images/${name.replace(/ /g, '_')}.jpg`
+  const imageName = name.replace(/ /g, '_').replace(/\"/g, '')
+  const imageSrc = `https://${process.env.NEXT_PUBLIC_MEDIA_URL}/product-images/${imageName}.jpg`
 
   const getArgsFromVariation = (variation) => {
     const { id, product, price, size } = variation
@@ -43,7 +44,7 @@ function CartItem({
     <div ref={itemRef} className="cart-products-item">
       <div className="cart-products-item-img">
         <Image
-          src={imageUrl}
+          src={imageSrc}
           alt=""
           height={120}
           width={120}

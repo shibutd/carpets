@@ -58,7 +58,7 @@ function ProductGrid({ products }) {
       {(products.map((product) => (
         <VerticalProductCard
           key={product.slug}
-          title={product.name}
+          name={product.name}
           slug={product.slug}
           price={product.minimumPrice}
           images={product.images}
