@@ -81,6 +81,7 @@ export default function Register() {
               name="password"
               id="password"
               ref={register}
+              autoComplete="on"
             />
             {errors.password && <p>&#9888; {errors.password.message}</p>}
           </div>
@@ -95,6 +96,7 @@ export default function Register() {
               name="confirmPassword"
               id="confirmPassword"
               ref={register}
+              autoComplete="on"
             />
             {errors.confirmPassword &&
               <p className="form-error">&#9888; {errors.confirmPassword.message}</p>}

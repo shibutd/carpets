@@ -9,11 +9,10 @@ import BouncerLoading from './BouncerLoading'
 import PickupAddressForm from './PickupAddressForm'
 import DeliveryAddressForm from './DeliveryAddressForm'
 import {
-  createAddress,
+  createDeliveryAddress,
   changeAddress,
   selectAddress,
 } from '../lib/slices/addressSlice'
-import { fetchPickupAddresses } from '../lib/utils/fetchPickupAddresses'
 import { fetchUserAddresses } from '../lib/utils/fetchUserAddresses'
 
 const schema = yup.object().shape({
@@ -31,7 +30,7 @@ const schema = yup.object().shape({
 export default function AddressForm({ changeTab }) {
   let renderedElement
   const dispatch = useDispatch()
-  const { loading, error } = useSelector(selectAddress)
+  const { loading, error, pickupAddresses } = useSelector(selectAddress)
 
   const [deliveryType, setDeliveryType] = useState('pickup')
   const [deliveryAddressCreate, setDeliveryAddressCreate] = useState(true)
@@ -49,20 +48,6 @@ export default function AddressForm({ changeTab }) {
     mode: 'onChange',
     resolver: yupResolver(schema)
   })
-
-  const {
-    // isLoading,
-    // isError,
-    data: pickupAddresses,
-  } = useQuery(
-    'pickupAddresses',
-    () => fetchPickupAddresses(),
-    {
-      staleTime: 6000,
-      cacheTime: 60000,
-      refetchOnWindowFocus: false,
-    }
-  )
 
   const {
     // isLoading,
@@ -113,7 +98,7 @@ export default function AddressForm({ changeTab }) {
         ...selected.pickupAddress
       }))
     } else if (deliveryType === 'delivery' && deliveryAddressCreate) {
-      const disp = await dispatch(createAddress(getValues()))
+      const disp = await dispatch(createDeliveryAddress(getValues()))
       if (disp.meta.requestStatus === 'rejected') return
     } else if (deliveryType === 'delivery' && !deliveryAddressCreate) {
       dispatch(changeAddress({

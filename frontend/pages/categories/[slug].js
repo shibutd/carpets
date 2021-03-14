@@ -12,7 +12,7 @@ import { nodeCategoryUrl } from '../../constants'
 
 export async function getServerSideProps({ query }) {
   const { slug } = query
-  const res = await fetch(`${nodeCategoryUrl}/${slug}`)
+  const res = await fetch(`${nodeCategoryUrl}${slug}/`)
   const category = await res.json()
 
   if (!category) {

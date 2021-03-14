@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback, memo } from 'react'
 import PropTypes from 'prop-types'
+import { useDispatch, useSelector } from 'react-redux'
 import Image from 'next/image'
 import Head from 'next/head'
 import Link from 'next/link'
@@ -11,29 +12,48 @@ import Search from './Search'
 import ShopAddresses from './ShopAddresses'
 import Catalog from './Catalog'
 import useOnClickOutSide from '../lib/hooks/useOnClickOutside'
-
+import {
+  getPickupAddresses,
+  selectAddress,
+} from '../lib/slices/addressSlice'
 
 function Header({ title, auth, cart }) {
   const { user, logoutUser } = auth
-  const [cartLength, setCartLength] = useState(0)
-  const [openedAddresses, setOpenedAddresses] = useState(false)
-  const [openCatalog, setOpenCatalog] = useState(false)
-  const [catalogLabel, setCatalogLabel] = useState("Каталог товаров")
+  const dispatch = useDispatch()
+  const { pickupAddresses: addresses } = useSelector(selectAddress)
+  const [state, setState] = useState({
+    cartLength: 0,
+    openAddressesTab: false,
+    openCatalog: false,
+    catalogLabel: "Каталог товаров",
+    addresses: [],
+    categories: []
+  })
   const addressRef = useRef(null)
   const catalogRef = useRef(null)
 
-  useOnClickOutSide(addressRef, () => setOpenedAddresses(false))
-  useOnClickOutSide(catalogRef, () => setOpenCatalog(false))
+  useOnClickOutSide(addressRef, () =>
+    setStateWithValue('openAddressesTab', false)
+  )
+  useOnClickOutSide(catalogRef, () =>
+    setStateWithValue('openCatalog', false)
+  )
 
-  const handleOpenAddresses = useCallback(() => {
-    setOpenedAddresses(prev => !prev)
-  }, [])
+  const setStateWithValue = (property, value) =>
+    setState(state => ({ ...state, [property]: value }))
 
-  const handleOpenCatalog = useCallback(() => {
-    setOpenCatalog(prev => !prev)
-  }, [])
+  const setStateToggleValue = (property) =>
+    setState(state => ({ ...state, [property]: !state[property] }))
 
-  const handleClickedBurgerMenu = () => {
+  const handleOpenAddressesTab = useCallback(() =>
+    setStateToggleValue('openAddressesTab')
+  , [])
+
+  const handleOpenCatalog = useCallback(() =>
+    setStateToggleValue('openCatalog')
+  , [])
+
+  const handleClickBurgerMenu = () => {
     const topNavMenu = document.querySelector('.top-nav-menu')
     const burger = document.querySelector('.burger')
 
@@ -60,13 +80,17 @@ function Header({ title, auth, cart }) {
 
   function showCatalogLabel() {
     if (document.documentElement.clientWidth <= 480) {
-      setCatalogLabel("")
+      setStateWithValue('catalogLabel', '')
     } else {
-      setCatalogLabel("Каталог товаров")
+      setStateWithValue('catalogLabel', 'Каталог товаров')
     }
   }
 
   useEffect(() => {
+    if (addresses.length === 0) {
+      dispatch(getPickupAddresses())
+    }
+
     window.addEventListener('scroll', showSearchNav)
     window.addEventListener('resize', showCatalogLabel)
 
@@ -84,7 +108,7 @@ function Header({ title, auth, cart }) {
     for (let i = 0; i < cart.length; i++) {
       length += cart[i].quantity
     }
-    setCartLength(length)
+    setStateWithValue('cartLength', length)
   }, [cart])
 
   return (
@@ -114,16 +138,17 @@ function Header({ title, auth, cart }) {
               />
             </a>
           </Link>
-          <div className="burger" onClick={handleClickedBurgerMenu}>
-            <span></span>
-            <span></span>
-            <span></span>
+          <div className="burger" onClick={handleClickBurgerMenu}>
+            <span />
+            <span />
+            <span/ >
           </div>
         </div>
         <ShopAddresses
           ref={addressRef}
-          opened={openedAddresses}
-          handleClick={handleOpenAddresses}
+          addresses={addresses}
+          opened={state.openAddressesTab}
+          handleClick={handleOpenAddressesTab}
         />
         <ul className="top-nav-menu">
           <li><Link href="/promotions"><a>Акции</a></Link></li>
@@ -136,8 +161,8 @@ function Header({ title, auth, cart }) {
       <nav className="search-nav">
         <Catalog
           ref={catalogRef}
-          label={catalogLabel}
-          opened={openCatalog}
+          label={state.catalogLabel}
+          opened={state.openCatalog}
           handleClick={handleOpenCatalog}
         />
         <Search />
@@ -145,8 +170,8 @@ function Header({ title, auth, cart }) {
           <li>
             <UserIcon user={user} onLogout={logoutUser} />
           </li>
-          {user &&
-            (<li>
+          {user && (
+            <li>
               <Link href="/favorites">
                 <a>
                   <div className="search-nav-icon">
@@ -155,14 +180,15 @@ function Header({ title, auth, cart }) {
                   </div>
                 </a>
               </Link>
-            </li>)}
+            </li>
+          )}
           <li>
             <Link href="/shopping-cart">
               <a>
                 <div
-                  id={(cartLength > 0) ? "shopping-cart" : ""}
+                  id={(state.cartLength > 0) ? "shopping-cart" : ""}
                   className="search-nav-icon"
-                  value={(cartLength > 0) ? cartLength : ""}
+                  value={(state.cartLength > 0) ? state.cartLength : ""}
                 >
                   <ShoppingCartSolid width={18} height={18} />
                   <p>Корзина</p>

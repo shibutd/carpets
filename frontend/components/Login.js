@@ -77,6 +77,7 @@ export default function Login() {
               name="password"
               id="password"
               ref={register}
+              autoComplete="on"
             />
             {errors.password &&
               <p className="form-error">&#9888; {errors.password.message}</p>}

@@ -1,5 +1,6 @@
 import { useState, useEffect, memo, forwardRef } from 'react'
 import PropTypes from 'prop-types'
+import { useDispatch, useSelector } from 'react-redux'
 import Link from 'next/link'
 
 import GridLinesSolid from './icons/GridLinesSolid'
@@ -7,45 +8,42 @@ import KovryIcon from './icons/KovryIcon'
 import PalasyIcon from './icons/PalasyIcon'
 import BlanketIcon from './icons/BlanketIcon'
 import PillowIcon from './icons/PillowIcon'
+import { getCategories, selectCategory } from '../lib/slices/categorySlice'
 
-import { clientCategoryUrl } from '../constants'
+const iconProps = { width: 22, height: 22 }
 
+const icons = [
+  { category: "kovry", icon: <KovryIcon { ...iconProps } /> },
+  { category: "palasy", icon: <PalasyIcon { ...iconProps } /> },
+  { category: "odeiala", icon: <BlanketIcon { ...iconProps } /> },
+  { category: "postelnoe-bele", icon: <PillowIcon { ...iconProps } /> },
+]
 
 const Catalog = forwardRef(({ label, opened, handleClick }, ref) => {
-  const [categories, setCategories] = useState([])
-  const iconProps = { width: 22, height: 22 }
-
-  const icons = [
-    { category: "kovry", icon: <KovryIcon { ...iconProps } /> },
-    { category: "palasy", icon: <PalasyIcon { ...iconProps } /> },
-    { category: "odeiala", icon: <BlanketIcon { ...iconProps } /> },
-    { category: "postelnoe-bele", icon: <PillowIcon { ...iconProps } /> },
-  ]
+  const [categoriesWithIcons, setCategoriesWithIcons] = useState([])
+  const dispatch = useDispatch()
+  const { categories } = useSelector(selectCategory)
 
   useEffect(() => {
-    async function fetchCategories(url) {
-      const res = await fetch(url)
-
-      if (!res.ok) {
-        return []
+    async function fetchCategories() {
+      if (categories.length === 0) {
+        await dispatch(getCategories())
       }
 
-      return await res.json()
+      const categoriesWithIcons = categories.reduce((acc, current) => {
+        const categoryIcon = icons.find(x => x.category === current.slug)
+        const icon = categoryIcon ? categoryIcon.icon : null
+        console.log(current)
+        return [ ...acc, { ...current, icon }]
+      }, [])
+
+      console.log(categoriesWithIcons)
+
+      setCategoriesWithIcons(categoriesWithIcons)
     }
 
-    fetchCategories(clientCategoryUrl).then((data) => {
-
-      const categoriesWithIcons = data.map((category) => {
-        const categoryIcon = icons.find(
-          (x) => (x.category === category.slug)
-        )
-        const icon = categoryIcon ? categoryIcon.icon : null
-        return { ...category, icon }
-      })
-
-      setCategories(categoriesWithIcons)
-    })
-  }, [])
+    fetchCategories()
+  }, [categories])
 
   return (
 
@@ -58,9 +56,9 @@ const Catalog = forwardRef(({ label, opened, handleClick }, ref) => {
           style={{marginLeft: "5px"}}
           fill="white"
         />
-        {opened &&
-          (<div className="catalog-menu">
-            {categories.map((category) => (
+        {opened && (
+          <div className="catalog-menu">
+            {categoriesWithIcons.map(category => (
               <Link href={`/categories/${category.slug}`} key={category.slug}>
                 <a>
                   <div

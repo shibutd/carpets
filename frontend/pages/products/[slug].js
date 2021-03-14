@@ -12,7 +12,7 @@ const similarProducts = []
 
 export async function getServerSideProps({ query }) {
   const { slug } = query
-  const res = await fetch(`${nodeProductUrl}/${slug}/`)
+  const res = await fetch(`${nodeProductUrl}${slug}/`)
   const data = await res.json()
 
   if (!data) {

@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
+import { useDispatch, useSelector } from 'react-redux'
 import Modal from 'react-modal'
 import Tippy from '@tippyjs/react'
 
@@ -7,7 +8,11 @@ import Layout from '../components/Layout'
 import BouncerLoading from '../components/BouncerLoading'
 import MapContainer from '../components/MapContainer'
 import LocationIcon from '../components/icons/LocationIcon'
-import { pickupAddressUrl } from '../constants'
+import {
+  getPickupAddresses,
+  selectAddress,
+} from '../lib/slices/addressSlice'
+
 
 Modal.setAppElement('#__next')
 
@@ -73,8 +78,11 @@ const ShopsTable = ({ shops, selectShop, openMap }) => {
 }
 
 export default function Shops() {
-  const [shops, setShops] = useState([])
-  const [shopsLoading, setShopsLoading] = useState(true)
+  const dispatch = useDispatch()
+  const {
+    pickupAddresses: shops,
+    pickupAddressesLoding: loading
+  } = useSelector(selectAddress)
   const [selectedShop, setSelectedShop] = useState(null)
   const [showModal, setShowModal] = useState(false)
 
@@ -87,19 +95,9 @@ export default function Shops() {
   }, [])
 
   useEffect(() => {
-    async function fetchData(url) {
-      const res = await fetch(url)
-      let data = await res.json()
-
-      if (!data) {
-        return []
-      }
-
-      setShopsLoading(false)
-      return data
+    if (shops.length === 0) {
+      dispatch(getPickupAddresses())
     }
-
-    fetchData(pickupAddressUrl).then(data => setShops(data))
   }, [])
 
   return (
@@ -117,7 +115,7 @@ export default function Shops() {
           >
             <ModalContainer selectedShop={selectedShop} />
           </Modal>
-          {shopsLoading ? (
+          {loading ? (
             <div className="bouncer-wrapper">
               <BouncerLoading />
             </div>

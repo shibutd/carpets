@@ -27,3 +27,17 @@ export function getValidImageSrc(images) {
   const imageSrc = images.length > 0 ? images[0].image : null
   return imageSrc ?? '/images/no_image.jpg'
 }
+
+export function convertPhoneNumber(number) {
+  return ''.concat(
+    number.slice(0, 2),
+    ' (',
+    number.slice(2, 5),
+    ') ',
+    number.slice(-7, -4),
+    ' ',
+    number.slice(-4, -2),
+    ' ',
+    number.slice(-2),
+  )
+}

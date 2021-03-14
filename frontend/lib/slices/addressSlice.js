@@ -3,13 +3,26 @@ import {
   createSelector,
   createSlice,
 } from '@reduxjs/toolkit'
+import axios from 'axios'
 
 import { authAxios } from '../utils/authAxios'
-import { userAddressUrl } from '../../constants'
+import { userAddressUrl, pickupAddressUrl } from '../../constants'
 
+export const getPickupAddresses = createAsyncThunk(
+  'address/getPrickAddressses',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(pickupAddressUrl)
 
-export const createAddress = createAsyncThunk(
-  'address/createAddress',
+      return response.data
+    } catch (error) {
+      return rejectWithValue({ error: error.response.data})
+    }
+  }
+)
+
+export const createDeliveryAddress = createAsyncThunk(
+  'address/createDeliveryAddress',
   async (address, { dispatch, getState, rejectWithValue }) => {
     try {
       const axios = await authAxios(dispatch, getState().auth)
@@ -30,11 +43,13 @@ export const createAddress = createAsyncThunk(
 const addressSlice = createSlice({
   name: 'address',
   initialState: {
-    addressType: null,
-    addressId: null,
-    address: {},
     loading: false,
     error: null,
+    selectedAddressType: null,
+    selectedAddressId: null,
+    selectedAddress: {},
+    pickupAddresses: [],
+    pickupAddressesLoding: false
   },
   reducers: {
     changeAddress: (state, action) => {
@@ -50,21 +65,34 @@ const addressSlice = createSlice({
     }
   },
   extraReducers: {
-    [createAddress.pending]: (state) => {
+    // Get Pickup Addresses
+    [getPickupAddresses.pending]: (state) => {
+      state.pickupAddressesLoding = true
+    },
+    [getPickupAddresses.fulfilled]: (state, action) => {
+      state.pickupAddressesLoding = false
+      state.pickupAddresses = action.payload
+    },
+    [getPickupAddresses.rejected]: (state) => {
+      state.pickupAddressesLoding = false
+      state.pickupAddresses = []
+    },
+
+    // Create Delivery Address
+    [createDeliveryAddress.pending]: (state) => {
       state.loading = true
       delete state.error
     },
-    [createAddress.fulfilled]: (state, action) => {
-      console.log(action.payload)
+    [createDeliveryAddress.fulfilled]: (state, action) => {
       const { type, id, ...address } = action.payload
       state.loading = false
-      state.addressType = type
-      state.addressId = id
-      state.address = address
+      state.selectedAddressType = type
+      state.selectedAddressId = id
+      state.selectedAddress = address
     },
-    [createAddress.rejected]: (state, action) => {
+    [createDeliveryAddress.rejected]: (state, action) => {
       state.loading = false
-      state.addressId = null
+      state.selectedAddressId = null
       state.error = action.payload.error.detail
     },
   }
@@ -77,6 +105,8 @@ export const selectAddress = createSelector(
     address: state.address.address,
     loading: state.address.loading,
     error: state.address.error,
+    pickupAddresses: state.address.pickupAddresses,
+    pickupAddressesLoding: state.address.pickupAddressesLoding
   }),
   (state) => state
 )

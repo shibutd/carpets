@@ -1,79 +1,49 @@
-import { useState, useEffect, memo, forwardRef } from 'react'
+import { useState, memo, forwardRef } from 'react'
 import PropTypes from 'prop-types'
 
 import ChevronDownSolid from './icons/ChevronDownSolid'
 import ChevronUpSolid from './icons/ChevronUpSolid'
-import { pickupAddressUrl } from '../constants'
+import { convertPhoneNumber } from '../lib/utils/converters'
 
-const ShopAddresses = forwardRef(({ opened, handleClick }, ref) => {
-  const [addresses, setAddresses] = useState([
-    { name: '', phoneNumber: '+79121448812' }
-  ])
+const Button = ({ opened, handleClick }) => {
+  const properties = { width: 10, height: 10, style: { marginLeft: '5px' } }
+
+  return (
+    <button onClick={handleClick}>
+      Адреса магазинов
+      {!opened ? (
+        <ChevronDownSolid { ...properties } />
+      ) : (
+        <ChevronUpSolid { ...properties } />
+      )}
+    </button>
+  )
+}
+
+const ShopAddresses = forwardRef((
+  { opened, addresses, handleClick },
+  ref
+) => {
   const [selectedAddressIdx, setSelectedAddressIdx] = useState(0)
-
-  const convertPhoneNumber = (number) => {
-    let convertedNumber = ''
-    return convertedNumber.concat(
-      number.slice(0, 2),
-      ' (',
-      number.slice(2, 5),
-      ') ',
-      number.slice(-7, -4),
-      ' ',
-      number.slice(-4, -2),
-      ' ',
-      number.slice(-2),
-    )
-  }
 
   const selectAddress = (e) => {
     setSelectedAddressIdx(e.currentTarget.dataset.div_id)
     handleClick()
   }
 
-  useEffect(() => {
-    async function fetchAddresses(url) {
-      const res = await fetch(url)
-
-      if (!res.ok) {
-        return []
-      }
-
-      return await res.json()
-    }
-
-    fetchAddresses(pickupAddressUrl).then((data) => {
-      setAddresses(data)
-    })
-
-  }, [])
-
   return (
     <div ref={ref} className="top-nav-address">
-      <button onClick={handleClick}>
-        Адреса магазинов
-        {!opened ? (
-          <ChevronDownSolid
-            width={10}
-            height={10}
-            style={{marginLeft: "5px"}}
-          />
-        ) : (
-          <ChevronUpSolid
-            width={10}
-            height={10}
-            style={{marginLeft: "5px"}}
-          />
-        )}
-      </button>
+      <Button opened={opened} handleClick={handleClick} />
       <a href="#">
         {(addresses.length > selectedAddressIdx)
-          ? convertPhoneNumber(addresses[selectedAddressIdx].phoneNumber)
+          ? convertPhoneNumber(
+              addresses[selectedAddressIdx].phoneNumber
+            )
           : ''
         }
       </a>
-      {opened &&
-        (<div className="top-nav-address-list">
+      {opened && (
+        <div className="top-nav-address-list">
           {addresses.map((address, i) => (
             <div
               key={address.phoneNumber}
@@ -84,15 +54,22 @@ const ShopAddresses = forwardRef(({ opened, handleClick }, ref) => {
               {address.name} &mdash; {convertPhoneNumber(address.phoneNumber)}
             </div>
           ))}
-        </div>)}
+        </div>
+      )}
     </div>
   )
 })
 
 ShopAddresses.displayName = ShopAddresses
 
+Button.propTypes = {
+  opened: PropTypes.bool,
+  handleClick: PropTypes.func,
+}
+
 ShopAddresses.propTypes = {
   opened: PropTypes.bool,
+  addresses: PropTypes.arrayOf(PropTypes.object),
   handleClick: PropTypes.func,
 }
 
