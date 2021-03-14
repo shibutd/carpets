@@ -74,7 +74,7 @@ class ProductCategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
 
     def has_image(self, obj):
-        return obj.image is not None
+        return bool(obj.image)
 
     has_image.boolean = True
     has_image.short_description = "Изображение"
