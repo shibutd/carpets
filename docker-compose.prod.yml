@@ -5,14 +5,14 @@ services:
     build: ./backend
     restart: always
     volumes:
-      - ./backend:/backend
+      - static_volume:/backend/staticfiles
     ports:
       - 8000:8000
     env_file:
-      - ./backend/.env.dev
+      - ./backend/.env.prod
     depends_on:
       - db
-    entrypoint: ./scripts/backend-dev-entrypoint.sh
+    entrypoint: ./scripts/backend-prod-entrypoint.sh
 
   db:
     image: postgres:12-alpine
@@ -20,21 +20,27 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     env_file:
-      - ./backend/.env.dev
+      - ./backend/.env.prod
 
   frontend:
     build: ./frontend
     restart: always
-    volumes:
-      - ./frontend/components:/frontend/components
-      - ./frontend/lib:/frontend/lib
-      - ./frontend/pages:/frontend/pages
-      - ./frontend/styles:/frontend/styles
     ports:
       - 3000:3000
     depends_on:
       - backend
-    entrypoint: ./scripts/frontend-dev-entrypoint.sh
+      - nginx
+    entrypoint: ./scripts/frontend-prod-entrypoint.sh
+
+  nginx:
+    build: ./nginx
+    volumes:
+      - static_volume:/backend/staticfiles
+    ports:
+      - 80:80
+    depends_on:
+      - backend
 
 volumes:
   postgres_data:
+  static_volume:
