@@ -33,11 +33,8 @@ const Catalog = forwardRef(({ label, opened, handleClick }, ref) => {
       const categoriesWithIcons = categories.reduce((acc, current) => {
         const categoryIcon = icons.find(x => x.category === current.slug)
         const icon = categoryIcon ? categoryIcon.icon : null
-        console.log(current)
         return [ ...acc, { ...current, icon }]
       }, [])
-
-      console.log(categoriesWithIcons)
 
       setCategoriesWithIcons(categoriesWithIcons)
     }
