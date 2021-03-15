@@ -105,7 +105,9 @@ export default function Category({ category }) {
 
   const handleClickShowFilters = useCallback(() => {
     const categorySidebar = document.querySelector('.category-sidebar')
+    const body = document.getElementsByTagName('body')[0]
     categorySidebar.classList.toggle('is-open')
+    body.classList.toggle('no-scroll')
   }, [])
 
   return (

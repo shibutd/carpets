@@ -78,11 +78,7 @@ export default function VerticalCards({ title, children }) {
       card.style.display = 'none'
       card.style.flexBasis = flexBasisMap.get(cardsLength)
     })
-    cards.forEach(card => {
-      // if (i >= counter && i < (counter + cardsLength)) {
-        card.style.display = 'flex'
-      // }
-    })
+    cards.forEach(card => card.style.display = 'flex')
   }
 
   function moveContent() {

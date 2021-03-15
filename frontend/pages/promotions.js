@@ -43,7 +43,7 @@ export default function Promotions() {
             </div>
           ))
         ) : (
-          <p>Здесь пока ничего нет :(</p>
+          <div className="error-message">Здесь пока ничего нет :(</div>
         )}
       </section>
     </Layout>

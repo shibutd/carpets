@@ -20,23 +20,23 @@ export default function CategorySidebar({
   toggleShowFilters
 }) {
   const { manufacturer, material, size } = properties
+  // Key for rerendering slider - when we need to reset values
+  const [rangeSliderKey, setRangeSliderKey] = useState(1)
+
   // Check if we use checkboxes or sliders for sizes
   const useCheckboxForSize = (size && size[0].includes('*')) ? false : true
-
   // Checkboxes values
+
   const [checkboxes, setCheckboxes] = useState(() => {
-    // const propertiesCopy = { ...properties }
-    // if (useCheckboxForSize) {
-    //   delete propertiesCopy.size
-    // }
     let checkboxArray = []
-
     Object.entries(properties).forEach(([k, v]) => {
-      v.forEach((x) => checkboxArray.push({ type: k, name: x, value: false }))
+      v.forEach(x =>
+        checkboxArray.push({ type: k, name: x, value: false })
+      )
     })
-
     return checkboxArray
   })
+
   // Range Slider values
   const [ranges, setRanges] = useState([])
 
@@ -83,7 +83,7 @@ export default function CategorySidebar({
 
   const handleClearAllFilters = (e) => {
     e.preventDefault()
-    setRanges([])
+    setRangeSliderKey(prev => prev + 1)
     setCheckboxes(prev => prev.map(item => ({ ...item, value: false })))
   }
 
@@ -124,7 +124,11 @@ export default function CategorySidebar({
             {createCheckboxes(size)}
           </div>
         ) : (
-        <RangeSlider size={size} onChange={handleRangeSliderChange} />
+        <RangeSlider
+          key={rangeSliderKey}
+          size={size}
+          onChange={handleRangeSliderChange}
+        />
       )}
     </>
   )
@@ -133,4 +137,5 @@ export default function CategorySidebar({
 CategorySidebar.propTypes = {
   properties: PropTypes.object,
   onChange: PropTypes.func,
+  toggleShowFilters: PropTypes.func,
 }

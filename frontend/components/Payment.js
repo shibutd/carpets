@@ -57,9 +57,9 @@ export default function Payment({ cart, changeTab }) {
   const router = useRouter()
   const dispatch = useDispatch()
   const {
-    addressType,
-    addressId,
-    address,
+    selectedAddressType,
+    selectedAddressId,
+    selectedAddress,
     error,
   } = useSelector(selectAddress)
   const [showModal, setShowModal] = useState(false)
@@ -70,7 +70,7 @@ export default function Payment({ cart, changeTab }) {
     return sum + item.variation.price * item.quantity
   }, 0)
 
-  const addressStringRepresentation = (address) => {
+  const addressStringRepresentation = address => {
     const addressFileredValues = Object.entries(address)
       .filter(entry =>
         entry[1] !== null
@@ -86,30 +86,44 @@ export default function Payment({ cart, changeTab }) {
     )
   }
 
-  const resetAndReturnToIndexPage = async () => {
-    router.push('/')
-    await dispatch(resetAddress())
-    await dispatch(resetCart())
+  const openModal = () => {
+    setShowModal(true)
+    const body = document.getElementsByTagName('body')[0]
+    body.classList.add('no-scroll')
   }
 
-  const handleCloseModal = async () => {
+  const closeModal = () => {
+    setShowModal(false)
+    const body = document.getElementsByTagName('body')[0]
+    body.classList.remove('no-scroll')
+  }
+
+  const resetAndReturnToIndexPage = () => {
+    closeModal()
+    router.push('/')
+    dispatch(resetAddress())
+    dispatch(resetCart())
+  }
+
+  const handleCloseModal = () => {
     if (error) {
-      setShowModal(false)
+      closeModal()
       return
     }
-    await resetAndReturnToIndexPage()
+    resetAndReturnToIndexPage()
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    setShowModal(true)
+    openModal()
     setLoading(true)
 
-    if (addressType === 'pickup') {
-      await createPickupOrder(addressId)
+    if (selectedAddressType === 'pickup') {
+      await createPickupOrder(selectedAddressId)
     } else {
-      await createDeliveryOrder(addressId)
+      await createDeliveryOrder(selectedAddressId)
     }
+
     setLoading(false)
   }
 
@@ -119,10 +133,16 @@ export default function Payment({ cart, changeTab }) {
       <div className="checkout-payment-order light-gray-container">
         <h5>Ваш заказ:</h5>
         <p>Сумма к оплате:<span>{` ${convertPrice(total)} ₽`}</span></p>
-        <p>Тип доставки:<span>{addressType === 'pickup' ? ' Самовывоз' : ' Доставка по адресу'}</span></p>
+        <p>Тип доставки:
+          <span>
+            {selectedAddressType === 'pickup'
+              ? ' Самовывоз'
+              : ' Доставка по адресу'}
+          </span>
+        </p>
         <p id="checkout-payment-address">
           Адрес доставки:
-          {addressStringRepresentation(address)}
+          {addressStringRepresentation(selectedAddress)}
         </p>
       </div>
 
@@ -187,7 +207,8 @@ export default function Payment({ cart, changeTab }) {
       </div>
 
       <Modal
-        className="modal modal-payment"
+        className="modal modal-payment fade fade--fast"
+        overlayClassName="modal-overlay fade fade--fast"
         isOpen={showModal}
         onRequestClose={handleCloseModal}
         shouldCloseOnOverlayClick={true}

@@ -10,7 +10,7 @@ export default function OrderSummary({ cart, changeTab }) {
   return (
     <div className="checkout-ordersummary">
       <p>Внимательно проверьте заказ:</p>
-      <table className="checkout-ordersummary-table light-gray-container">
+      <table className="table table--checkout">
         <thead>
           <tr>
             <td>№</td>

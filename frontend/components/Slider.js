@@ -35,6 +35,7 @@ function Slider({
   const [sliderMinVal, setSliderMinVal] = useState(minValue)
   const [sliderMaxVal, setSliderMaxVal] = useState(maxValue)
   const [mouseState, setMouseState] = useState(null)
+  const [touchState, setTouchState] = useState(null)
   const sliderRef = useRef(null)
   const { max, min } = sliderProps
   let range, thumbMin, thumbMax
@@ -83,10 +84,9 @@ function Slider({
   }, [minValue, maxValue])
 
   useEffect(() => {
-    if (mouseState === 'up') {
+    if (mouseState === 'up' || touchState === 'untouched')
       onChange(sliderMinVal, sliderMaxVal)
-    }
-  }, [mouseState])
+  }, [mouseState, touchState])
 
   return (
     <div ref={sliderRef} className="slider">
@@ -105,6 +105,8 @@ function Slider({
         onChange={changeMinCallback}
         onMouseDown={() => setMouseState('down')}
         onMouseUp={() => setMouseState('up')}
+        onTouchStart={() => setTouchState('touched')}
+        onTouchEnd ={() => setTouchState('untouched')}
       />
       <input
         type="range"
@@ -115,6 +117,8 @@ function Slider({
         onChange={changeMaxCallback}
         onMouseDown={() => setMouseState('down')}
         onMouseUp={() => setMouseState('up')}
+        onTouchStart={() => setTouchState('touched')}
+        onTouchEnd ={() => setTouchState('untouched')}
       />
 
       <div className="slider-input">

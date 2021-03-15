@@ -12,6 +12,7 @@ import {
   getPickupAddresses,
   selectAddress,
 } from '../lib/slices/addressSlice'
+import { convertPhoneNumber } from '../lib/utils/converters'
 
 
 Modal.setAppElement('#__next')
@@ -23,7 +24,7 @@ const ModalContainer = ({ selectedShop }) => {
   const { name, latitude, longitude } = selectedShop
   return (
     <>
-      <h5 id="shop-name">{`Магазин "${name}" на карте:`}</h5>
+      <h5>{`${name}:`}</h5>
       <MapContainer position={{ lat: latitude, lng: longitude }} />
     </>
   )
@@ -39,41 +40,41 @@ const ShopsTable = ({ shops, selectShop, openMap }) => {
   }
 
   return (
-    <table className="checkout-ordersummary-table shops-table light-gray-container">
-      <thead>
-        <tr>
-          <td>№</td>
-          <td>Адрес</td>
-          <td>Телефон</td>
-          <td></td>
-        </tr>
-      </thead>
-      <tbody>
-      {shops.map((shop, idx) => (
-        <tr key={shop.id}>
-          <td>{idx + 1}.</td>
-          <td>{shop.name}</td>
-          <td>{shop.phoneNumber}</td>
-          <td width="1%">
-            <Tippy
-              theme='blue'
-              delay={[100, null]}
-              content="Показать на карте"
-            >
-              <div>
-                <LocationIcon
-                  id="location-icon"
-                  width={28}
-                  height={28}
-                  onClick={() => handleOpenMap(idx)}
-                />
-              </div>
-            </Tippy>
-          </td>
-        </tr>
-      ))}
-      </tbody>
-    </table>
+      <table className="table table--shops">
+        <thead>
+          <tr>
+            <td>№</td>
+            <td>Адрес</td>
+            <td>Телефон</td>
+            <td></td>
+          </tr>
+        </thead>
+        <tbody>
+        {shops.map((shop, idx) => (
+          <tr key={shop.id}>
+            <td>{idx + 1}.</td>
+            <td>{shop.name}</td>
+            <td>{convertPhoneNumber(shop.phoneNumber)}</td>
+            <td>
+              <Tippy
+                theme='blue'
+                delay={[100, null]}
+                content="Показать на карте"
+              >
+                <div>
+                  <LocationIcon
+                    className="location-icon"
+                    width={28}
+                    height={28}
+                    onClick={() => handleOpenMap(idx)}
+                  />
+                </div>
+              </Tippy>
+            </td>
+          </tr>
+        ))}
+        </tbody>
+      </table>
   )
 }
 
@@ -86,12 +87,25 @@ export default function Shops() {
   const [selectedShop, setSelectedShop] = useState(null)
   const [showModal, setShowModal] = useState(false)
 
+  const openModal = () => {
+    setShowModal(true)
+    const body = document.getElementsByTagName('body')[0]
+    body.classList.add('no-scroll')
+  }
+
+  const closeModal = () => {
+    setShowModal(false)
+    const body = document.getElementsByTagName('body')[0]
+    body.classList.remove('no-scroll')
+  }
+
   const handleSelectShop = useCallback((shop) => {
     setSelectedShop(shop)
   }, [])
 
   const handleOpenModal = useCallback(() => {
-    setShowModal(true)
+    // setShowModal(true)
+    openModal()
   }, [])
 
   useEffect(() => {
@@ -108,9 +122,10 @@ export default function Shops() {
         <h1>Магазины</h1>
         <div className="shops-wrapper">
           <Modal
-            className="modal modal-shops"
+            className="modal modal-shops fade fade--fast"
+            overlayClassName="modal-overlay fade fade--fast"
             isOpen={showModal}
-            onRequestClose={() => setShowModal(false)}
+            onRequestClose={closeModal}
             shouldCloseOnOverlayClick={true}
           >
             <ModalContainer selectedShop={selectedShop} />

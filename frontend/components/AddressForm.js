@@ -129,9 +129,12 @@ export default function AddressForm({ changeTab }) {
   return (
     <div className="checkout-addressform">
       <p>Выберите тип доставки:</p>
-      <form className="checkout-addressform-choice">
-          <label>
+
+      <div className="checkout-addressform-choice light-gray-container">
+        <form className="form form--choice">
+          <label className="form-label">
             <input
+              className="form-input"
               type="radio"
               value="pickup"
               checked={deliveryType === "pickup"}
@@ -141,8 +144,9 @@ export default function AddressForm({ changeTab }) {
             Самовывоз
           </label>
 
-          <label>
+          <label className="form-label">
             <input
+              className="form-input"
               type="radio"
               value="delivery"
               checked={deliveryType === "delivery"}
@@ -151,7 +155,8 @@ export default function AddressForm({ changeTab }) {
             <span className="checkmark-round"></span>
             Доставка
           </label>
-      </form>
+        </form>
+      </div>
       {renderedElement}
       <div className="checkout-buttons">
         <button

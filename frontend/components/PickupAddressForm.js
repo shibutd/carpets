@@ -21,7 +21,7 @@ function PickupAddressForm({
   return (
     <>
       <p>Выберите пункт самовывоза:</p>
-      <div className="checkout-addressform-address">
+      <div className="checkout-addressform-address light-gray-container">
         <select value={pickupId} onChange={handleChangeSelected}>
           <option value={-1}>{"..."}</option>
           {addresses.map(address => (

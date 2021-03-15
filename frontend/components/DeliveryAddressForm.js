@@ -28,9 +28,11 @@ function DeliveryAddressForm({
       <p>Введите адрес доставки:</p>
 
       {addresses.length > 0 && (
-        <form className="checkout-addressform-choice">
-            <label>
+        <div className="checkout-addressform-choice light-gray-container">
+          <form className="form form--choice">
+            <label className="form-label">
               <input
+                className="form-input"
                 type="radio"
                 value={false}
                 checked={addressCreate === false}
@@ -40,8 +42,9 @@ function DeliveryAddressForm({
               Выбрать ранее введенный адрес
             </label>
 
-            <label>
+            <label className="form-label">
               <input
+                className="form-input"
                 type="radio"
                 value={true}
                 checked={addressCreate === true}
@@ -50,87 +53,97 @@ function DeliveryAddressForm({
               <span className="checkmark-round"></span>
               Создать новый адрес
             </label>
-        </form>
+          </form>
+        </div>
       )}
 
       {addressCreate
         ? (
-        <div className="checkout-addressform-address">
-          <form className="checkout-addressform-address-form fade">
+        <div className="checkout-addressform-address light-gray-container">
+          <form className="form form--address fade">
             {error && <p>&#9888; {error}</p>}
 
-            <div className="">
-              <label htmlFor="city">
+            <div className="form-horizontal">
+              <label className="form-label" htmlFor="city">
                 Город*
               </label>
               <input
+                className="form-input"
                 name="city"
                 id="city"
                 ref={register}
               />
-              {formErrors.city && <p>&#9888; {formErrors.city.message}</p>}
+              {formErrors.city
+                && <p className="form-error">&#9888; {formErrors.city.message}</p>}
             </div>
 
-            <div className="">
-              <label htmlFor="street">
+            <div className="form-horizontal">
+              <label className="form-label" htmlFor="street">
                 Улица*
               </label>
               <input
+                className="form-input"
                 name="street"
                 id="street"
                 ref={register}
               />
-              {formErrors.street && <p>&#9888; {formErrors.street.message}</p>}
+              {formErrors.street
+                && <p className="form-error">&#9888; {formErrors.street.message}</p>}
             </div>
 
-            <div className="">
-              <label htmlFor="houseNumber">
+            <div className="form-horizontal">
+              <label className="form-label" htmlFor="houseNumber">
                 Дом*
               </label>
               <input
+                className="form-input"
                 name="houseNumber"
                 id="houseNumber"
                 ref={register}
               />
-              {formErrors.houseNumber && <p>&#9888; {formErrors.houseNumber.message}</p>}
+              {formErrors.houseNumber
+                && <p className="form-error">&#9888; {formErrors.houseNumber.message}</p>}
             </div>
 
-            <div className="">
-              <label htmlFor="appartmentNumber">
+            <div className="form-horizontal">
+              <label className="form-label" htmlFor="appartmentNumber">
                 Квартира
               </label>
               <input
+                className="form-input"
                 name="appartmentNumber"
                 id="appartmentNumber"
                 ref={register}
               />
-              {formErrors.appartmentNumber && <p>&#9888; {formErrors.appartmentNumber.message}</p>}
+              {formErrors.appartmentNumber
+                && <p className="form-error">&#9888; {formErrors.appartmentNumber.message}</p>}
             </div>
 
           </form>
 
         </div>
-      ) : (
-        <form className="checkout-addressform-choice">
-          {addresses.map(address => (
-            <label key={address.id}>
-              <input
-                type="radio"
-                value={address.id}
-                checked={deliveryId === address.id}
-                onChange={handleChangeSelected}
-              />
-              <span className="checkmark-round"></span>
-              <span>{`${address.city}`}</span>
-              <span>{`, ${address.street}`}</span>
-              <span>{`, ${address.houseNumber}`}</span>
-              <span>{address.appartmentNumber && `, ${address.appartmentNumber}`} </span>
-
-            </label>
-          ))}
-        </form>
+        ) : (
+        <div className="checkout-addressform-choice light-gray-container">
+          <form className="form form--choice">
+            {addresses.map(address => (
+              <label key={address.id} className="form-label">
+                <input
+                  className="form-input"
+                  type="radio"
+                  value={address.id}
+                  checked={deliveryId === address.id}
+                  onChange={handleChangeSelected}
+                />
+                <span className="checkmark-round"></span>
+                <span>{`${address.city}`}</span>
+                <span>{`, ${address.street}`}</span>
+                <span>{`, ${address.houseNumber}`}</span>
+                <span>{address.appartmentNumber && `, ${address.appartmentNumber}`} </span>
+              </label>
+            ))}
+          </form>
+        </div>
       )}
-
     </>
   )
 }

@@ -54,14 +54,14 @@ const addressSlice = createSlice({
   reducers: {
     changeAddress: (state, action) => {
       const { type, id, ...address } = action.payload
-      state.addressType = type
-      state.addressId = id
-      state.address = address
+      state.selectedAddressType = type
+      state.selectedAddressId = id
+      state.selectedAddress = address
     },
     resetAddress: (state) => {
-      state.addressType = null
-      state.addressId = null
-      state.address = {}
+      state.selectedAddressType = null
+      state.selectedAddressId = null
+      state.selectedAddress = {}
     }
   },
   extraReducers: {
@@ -100,9 +100,9 @@ const addressSlice = createSlice({
 
 export const selectAddress = createSelector(
   (state) => ({
-    addressType: state.address.addressType,
-    addressId: state.address.addressId,
-    address: state.address.address,
+    selectedAddressType: state.address.selectedAddressType,
+    selectedAddressId: state.address.selectedAddressId,
+    selectedAddress: state.address.selectedAddress,
     loading: state.address.loading,
     error: state.address.error,
     pickupAddresses: state.address.pickupAddresses,

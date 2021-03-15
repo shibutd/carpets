@@ -1,5 +1,9 @@
 module.exports = {
   images: {
-    domains: ['aladdin-carpets.s3.eu-central-1.amazonaws.com'],
+    domains: [
+      'aladdin-carpets.s3.eu-central-1.amazonaws.com',
+      'backend',
+      'localhost'
+    ],
   },
 }
