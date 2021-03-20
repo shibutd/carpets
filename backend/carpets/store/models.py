@@ -177,8 +177,8 @@ class ProductVariation(models.Model):
     objects = VariationInStockManager()
 
     class Meta:
-        verbose_name = 'Вариант товара'
-        verbose_name_plural = 'Варианты товаров'
+        verbose_name = 'Вариация товара'
+        verbose_name_plural = 'Вариации товаров'
 
     def __str__(self):
         return '%s - %s' % (
@@ -353,5 +353,5 @@ class Promotion(models.Model):
     description = models.TextField()
 
     class Meta:
-        verbose_name = 'Акция'
-        verbose_name_plural = 'Акции'
+        verbose_name = 'Промо-акция'
+        verbose_name_plural = 'Промо-акции'

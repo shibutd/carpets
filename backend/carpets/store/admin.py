@@ -22,9 +22,6 @@ from store.filters import PolymorphicModelFilter, StatusFilter
 from authentication.admin import RestrictAddChangeDeleteMixin
 
 
-admin.site.site_header = 'Aladdin carpets administration'
-
-
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
     extra = 1
@@ -46,7 +43,6 @@ class VariationQuantityInline(admin.StackedInline):
 class ProductAdmin(admin.ModelAdmin):
     list_display = (
         'name',
-        'slug',
         'category',
         'manufacturer',
         'material',
@@ -78,14 +74,6 @@ class ProductCategoryAdmin(admin.ModelAdmin):
 
     has_image.boolean = True
     has_image.short_description = "Изображение"
-
-
-class ProductImageAdmin(admin.ModelAdmin):
-    list_display = ('product_name',)
-    search_fields = ('product__name',)
-
-    def product_name(self, obj):
-        return obj.product.name
 
 
 class ProductVariationAdmin(admin.ModelAdmin):
@@ -186,7 +174,6 @@ class PromotionAdmin(admin.ModelAdmin):
 
 admin.site.register(Product, ProductAdmin)
 admin.site.register(ProductCategory, ProductCategoryAdmin)
-admin.site.register(ProductImage, ProductImageAdmin)
 admin.site.register(ProductVariation, ProductVariationAdmin)
 admin.site.register(VariationTag, VariationTagAdmin)
 admin.site.register(PickupAddress, PickupAddressAdmin)

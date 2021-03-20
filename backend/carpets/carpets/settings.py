@@ -42,6 +42,7 @@ ALLOWED_HOSTS = (os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ") if
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -139,7 +140,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru-ru'
 
 TIME_ZONE = 'UTC'
 
@@ -234,3 +235,20 @@ else:
 
 PHONENUMBER_DB_FORMAT = 'NATIONAL'
 PHONENUMBER_DEFAULT_REGION = 'RU'
+
+
+# JAZZMIN ADMIN
+
+JAZZMIN_SETTINGS = {
+    "site_title": "Аладдин96 администрирование",
+    "site_header": "Аладдин96",
+    "site_logo": "store/aladdin_logo.svg",
+    "welcome_sign": "Панель адиминистрирования",
+    "copyright": "Аладдин96",
+    "related_modal_active": True
+}
+
+JAZZMIN_UI_TWEAKS = {
+    "theme": "materia",
+    "dark_mode_theme": "superhero",
+}
