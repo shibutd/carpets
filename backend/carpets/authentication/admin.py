@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.auth.models import Group
 
 from authentication.models import CustomUser, UserAddress
 
@@ -33,5 +34,6 @@ class UserAddressAdmin(RestrictAddChangeDeleteMixin, admin.ModelAdmin):
     search_fields = ('user__email', 'city', 'street')
 
 
+admin.site.unregister(Group)
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(UserAddress, UserAddressAdmin)

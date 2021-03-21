@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import sys
 from datetime import timedelta
 from dotenv import load_dotenv
 
@@ -61,6 +62,7 @@ INSTALLED_APPS = [
 
     'authentication',
     'store',
+    'orders',
 ]
 
 MIDDLEWARE = [
@@ -74,8 +76,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# if DEBUG and 'test' not in sys.argv:
-#     MIDDLEWARE = ['store.middlewares.QueryCountDebugMiddleware'] + MIDDLEWARE
+if DEBUG and 'test' not in sys.argv:
+    MIDDLEWARE = ['store.middlewares.QueryCountDebugMiddleware'] + MIDDLEWARE
 
 
 ROOT_URLCONF = 'carpets.urls'
@@ -245,7 +247,8 @@ JAZZMIN_SETTINGS = {
     "site_logo": "store/aladdin_logo.svg",
     "welcome_sign": "Панель адиминистрирования",
     "copyright": "Аладдин96",
-    "related_modal_active": True
+    "related_modal_active": True,
+    "custom_css": ['custom_admin_styles.css']
 }
 
 JAZZMIN_UI_TWEAKS = {

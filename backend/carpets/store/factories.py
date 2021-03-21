@@ -9,9 +9,11 @@ from store.models import (
     ProductCategory,
     ProductVariation,
     VariationSize,
+    PickupAddress,
+)
+from orders.models import (
     Order,
     OrderLine,
-    PickupAddress,
 )
 
 

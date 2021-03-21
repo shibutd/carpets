@@ -2,8 +2,8 @@ from django.test import TestCase
 from django.core.exceptions import ValidationError
 
 from authentication.factories import UserAddressFactory
-from store.models import (
-    PickupAddress, Order, PickupOrder, DeliveryOrder, phone_regex_validator)
+from store.models import PickupAddress, phone_regex_validator
+from orders.models import Order, PickupOrder, DeliveryOrder
 
 
 class OrderTests(TestCase):

@@ -90,12 +90,19 @@ class UserAddress(models.Model):
         'CustomUser',
         on_delete=models.CASCADE,
     )
-    city = models.CharField(max_length=60)
-    street = models.CharField(max_length=60)
-    house_number = models.PositiveIntegerField()
+    city = models.CharField(
+        max_length=60,
+        verbose_name='Город',
+    )
+    street = models.CharField(
+        max_length=60,
+        verbose_name='Улица',
+    )
+    house_number = models.PositiveIntegerField(verbose_name='Номер дома')
     appartment_number = models.PositiveIntegerField(
         blank=True,
-        null=True
+        null=True,
+        verbose_name='Номер квартиры',
     )
 
     class Meta:

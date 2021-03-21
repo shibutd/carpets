@@ -1,4 +1,3 @@
-from django.apps import apps
 from django.urls import reverse
 
 from rest_framework import status
@@ -17,14 +16,15 @@ from store.factories import (
     PickupAddressFactory,
 )
 from authentication.models import UserFavorite
-from store.models import (
+from store.models import ProductVariation
+from orders.models import (
     Order,
     OrderLine,
     PickupOrder,
     DeliveryOrder,
     OrderStatus,
-    ProductVariation
 )
+
 
 class ProductTests(APITestCase):
 

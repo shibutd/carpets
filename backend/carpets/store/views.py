@@ -25,11 +25,13 @@ from store.models import (
     ProductCategory,
     ProductVariation,
     VariationQuantity,
+    PickupAddress,
+    Promotion,
+)
+from orders.models import (
     Order,
     OrderLine,
     OrderStatus,
-    PickupAddress,
-    Promotion,
 )
 
 

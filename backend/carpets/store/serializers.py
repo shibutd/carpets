@@ -11,12 +11,14 @@ from store.models import (
     ProductVariation,
     VariationTag,
     VariationQuantity,
-    Order,
-    PickupOrder,
     PickupAddress,
-    DeliveryOrder,
-    OrderLine,
     Promotion,
+)
+from orders.models import (
+    Order,
+    OrderLine,
+    PickupOrder,
+    DeliveryOrder,
 )
 
 
