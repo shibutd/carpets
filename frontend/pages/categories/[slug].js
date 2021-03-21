@@ -6,6 +6,7 @@ import Layout from '../../components/Layout'
 import VerticalProductCard from '../../components/VerticalProductCard'
 import CategorySidebar from '../../components/CategorySidebar'
 import BouncerLoading from '../../components/BouncerLoading'
+import FilterIcon from '../../components/icons/FilterIcon'
 import { fetchProducts } from '../../lib/utils/fetchProducts'
 import { nodeCategoryUrl } from '../../constants'
 
@@ -115,16 +116,27 @@ export default function Category({ category }) {
       title={`${name} | Алладин96.ру`}
     >
       <section className="category-main">
-        <h1>{name}</h1>
-
-        <div className="category-wrapper">
-          <span
+        <div className="category-header">
+          <h1>{name}</h1>
+          <div
             id="filter-open"
             className="filter-toggle"
             onClick={handleClickShowFilters}
           >
-            Фильтры
-          </span>
+            <FilterIcon id="filter-icon" width={17} height={17} />
+            <p>Фильтры</p>
+          </div>
+        </div>
+
+        <div className="category-wrapper">
+          {/*<div
+            id="filter-open"
+            className="filter-toggle"
+            onClick={handleClickShowFilters}
+          >
+            <FilterIcon id="filter-icon" width={15} height={15} />
+            <p>Фильтры</p>
+          </div>*/}
           <div className="category-product-list">
             {isLoading ? (
               <div className="bouncer-wrapper">

@@ -122,6 +122,7 @@ function Header({ title, auth, cart }) {
           rel="stylesheet"
           href="https://unpkg.com/tippy.js/dist/tippy.css"
         />
+        <link rel="icon" href="/icons/favicon.svg" />
         <title>{title}</title>
       </Head>
 

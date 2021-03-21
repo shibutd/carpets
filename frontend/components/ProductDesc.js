@@ -28,7 +28,6 @@ export default function ProductDesc({
     renderingComponent = (
       <div className="product-desc-desc property">
         {description ? <p>description</p> : <p>Здесь пока ничего нет :(</p>}
-        {/*<p>Сверхтонкие воздушные ковры из мягкой вискозы и хлопка Grazia от фабрики Ragolle выполнены в классических, неоклассических и современных дизайнах. Здесь можно встретить как стилизацию под восточные ковры, так и оригинальные будто состаренные ковры в стиле пэчворк. <br />Благодаря содержащейся в бельгийских коврах вискозе они невероятно тонкие. На ощупь такие же мягкие и красиво переливаются и блестят на солнце, как натуральные шёлковые. Ковры не будут терять яркости цветов при попадании солнечных лучей и надолго сохранят насыщенные оттенки.</p>*/}
       </div>
     )
   }
@@ -132,7 +131,7 @@ export default function ProductDesc({
               +7 (343) 237 47 47
             </div>
             <div className="available-place-availablity ">
-              {qunatity.amount > 0 ? "Есть в наличии" : "Нет в наличии"}
+              {qunatity.amount > 0 ? "Есть в наличии" : "Под заказ"}
             </div>
           </div>
         ))}
@@ -144,7 +143,7 @@ export default function ProductDesc({
     renderingComponent = (
       <div className="product-desc-question property">
         <p>Для этого товара пока нет вопросов</p>
-        <p>Задавайте вопросы и наши эксперты помогут вам найти ответ:</p>
+        <p>Здесь Вы можете задать вопрос о товаре, наши специалисты помогут найти ответ:</p>
 
         <form className="form form--product-ask" onSubmit={handleAskQuestion}>
           <textarea

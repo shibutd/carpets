@@ -69,8 +69,8 @@ function ProductMain({
         <Image
           src={getValidImageSrc(images)}
           alt={slug}
-          height={500}
-          width={500}
+          layout="fill"
+          objectFit="contain"
         />
       </div>
 
@@ -78,17 +78,20 @@ function ProductMain({
         <h2>{name}</h2>
         <div className="product-main-size">
           <h5>Выбрать размер:</h5>
-          <select
-            name="select"
-            value={option.id}
-            onChange={onOptionChange}
-          >
-            {variations.map(variation => (
-              <option key={variation.id} value={variation.id}>
-                {convertSize(variation.size)}
-              </option>
-            ))}
-          </select>
+          <div className="custom-select">
+            <select
+              className="select-selected"
+              name="select"
+              value={option.id}
+              onChange={onOptionChange}
+            >
+              {variations.map(variation => (
+                <option key={variation.id} value={variation.id}>
+                  {convertSize(variation.size)}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
         <h3>{`${convertPrice(option.price)} ₽`}</h3>
         <div className="product-main-buttons">
