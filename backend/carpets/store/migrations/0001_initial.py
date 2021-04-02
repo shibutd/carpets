@@ -3,6 +3,10 @@
 import django.contrib.postgres.indexes
 import django.core.validators
 from django.db import migrations, models
+from django.contrib.postgres.operations import (
+    BtreeGinExtension,
+    TrigramExtension,
+)
 import django.db.models.deletion
 import phonenumber_field.modelfields
 import uuid
@@ -16,6 +20,8 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        BtreeGinExtension(),
+        TrigramExtension(),
         migrations.CreateModel(
             name='PickupAddress',
             fields=[

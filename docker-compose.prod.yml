@@ -6,8 +6,8 @@ services:
     restart: always
     volumes:
       - static_volume:/backend/staticfiles
-    ports:
-      - 8000:8000
+    expose:
+      - 8000
     env_file:
       - ./backend/.env.prod
     depends_on:
@@ -25,8 +25,8 @@ services:
   frontend:
     build: ./frontend
     restart: always
-    ports:
-      - 3000:3000
+    expose:
+      - 3000
     depends_on:
       - backend
       - nginx

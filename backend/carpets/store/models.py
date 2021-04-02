@@ -65,10 +65,12 @@ class Product(models.Model):
     def image_tag(self):
         qs = self.images.all()
         if qs.exists():
-            return mark_safe('<img src="{0}" alt="{1}">'.format(
-                qs[0].image.url,
-                self.slug,
-            ))
+            return mark_safe(
+                '<img src="{0}" alt="{1}" width="100">'.format(
+                    qs[0].image.url,
+                    self.slug,
+                )
+            )
         return mark_safe('<div></div>')
 
     image_tag.short_description = 'Изображение'
@@ -97,7 +99,7 @@ class ProductCategory(models.Model):
         return self.name
 
     def image_tag(self):
-        return mark_safe('<img src="{0}" alt="{1}">'.format(
+        return mark_safe('<img src="{0}" alt="{1}" width="80">'.format(
             self.image.url,
             self.slug,
         ))
